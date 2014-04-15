@@ -3,44 +3,33 @@
 #include "../interfaces/iweapon.cpp"
 #include "../interfaces/ipilot.cpp"
 
+/**
+ * all ships directly implement this interface
+ */
+
 class IShip : public IDestroyable {
 	public:
-		virtual int get_render_class() {
-			return(this->render_class);
-		}
-		virtual std::vector<float> get_a() {
-			return(this->a);
-		}
-		virtual float get_phi_dot() {
-			return(this->phi_dot);
-		}
-		virtual IWeapon *get_weapons() {
-			return(this->weapons);
-		}
-		virtual int get_weapon_index() {
-			return(this->weapon_index);
-		}
-		virtual void set_render_class(int render_class) {
-			this->render_class = render_class;
-		}
-		virtual void set_a(std::vector<float> a) {
-			this->a = a;
-		}
-		virtual void set_phi_dot(float phi_dot) {
-			this->phi_dot = phi_dot;
-		}
-		virtual void add_weapon(IWeapon *weapon);
+		virtual int get_render_class();
+		virtual std::vector<float> get_a();
+		virtual IWeapon *get_weapons();
+		virtual int get_weapon_index();
+
+		virtual void set_render_class(int render_class);
+		virtual void set_a(std::vector<float> a);
+		/* alias pitch() */
+		virtual void set_o_dot(float o_dot);
 
 		/* drop the correct weapon */
-		virtual void drop_weapon(int index);
-		virtual void set_weapon_index(int index) {
-			this->weapon_index = index;
-		}
+		virtual void del_weapon(IWeapon *weapon);
+		virtual void add_weapon(IWeapon *weapon);
+		virtual void set_weapon_index(int index);
+
 	private:
 		int render_class;
 		std::vector<float> a;		// acceleration
-		float phi_dot;			// rotation of the axis of rotation
-
+		float o_dot;			// angular velocity about the orientation (pitch) axis o -- o_dot < 0 : clockwise
 		IWeapon *weapons;
 		int weapon_index;		// current active weapon
+		float max_v;			// maximum cruising speed of the ship -- limits set_v() (override function from IProjectile)
+		float max_a;			// maximum acceleration of the ship -- limits set_a()
 };
