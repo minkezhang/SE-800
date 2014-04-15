@@ -1,4 +1,9 @@
+#include "../interfaces/igroup.cpp"
 #include "../interfaces/iship.cpp"
+
+/**
+ * AI and players implement this interface
+ */
 
 class IPilot {
 	public:

@@ -1,10 +1,6 @@
 #include <vector>
 #include "../interfaces/iprojectile.cpp"
 
-/**
- * insert comment here :v
- */
-
 class IObject : public IProjectile {
 	public:
 		virtual int get_id() {

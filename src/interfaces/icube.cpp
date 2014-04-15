@@ -1,5 +1,9 @@
 #include <vector>
 
+/**
+ * TODO: still need to include featurese from Justin's phone
+ */
+
 class ICube {
 	public:
 		virtual int get_id();

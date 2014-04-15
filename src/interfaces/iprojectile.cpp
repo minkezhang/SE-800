@@ -1,7 +1,9 @@
 #include <vector>
 
 /**
- * insert comment here :v
+ * base class for objects that move
+ *
+ * asteroids inherit directly from this interface
  */
 
 class IProjectile {

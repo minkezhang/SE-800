@@ -1,3 +1,6 @@
+#include "../interfaces/ipilot.cpp"
+#include "../interfaces/iteam.cpp"
+
 class IGroup {
 	public:
 		virtual ITeam *get_team();

@@ -1,5 +1,9 @@
 #include "../interfaces/iprojectile.cpp"
 
+/**
+ * bullets and bombs would inherit from tihs interface
+ */
+
 class IMunition : public IProjectile {
 	public:
 		// virtual void flight_pattern();
