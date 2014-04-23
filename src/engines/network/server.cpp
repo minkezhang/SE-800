@@ -25,8 +25,10 @@ extern int num_ready_pthreads;
 
 /* run_client:
 * This is the function which each spawned p_thread will
-* run. Parses commands from clients and responds to
-* client accordingly.
+* run.
+* First, initializes client-controlled ship.
+* Then, Parses UI input from clients and sends back an
+* updated list of objects to render.
 */
 void *run_client(void *args){
     struct workerArgs *wa;
@@ -35,12 +37,12 @@ void *run_client(void *args){
     pthread_detach(pthread_self());
 
 
-    // Create player-controllable ship for client.
+    // Init player-controllable ship for client.
     // client_ship_init(wa->socket, wa->worldEngine);
 
     // Send controllable ship ID to client (so client can identiy itself.)
 
-    // This client is ready to render.
+    // This client is now ready to render graphics.
     pthread_mutex_lock(&lock);
     num_ready_pthreads++;
     pthread_mutex_unlock(&lock);
@@ -168,7 +170,7 @@ int main(int argc, char *argv[])
   {
     // Start running Server Engine cycles upon 2-player connect.
     printf("TWO PLAYERS CONNECTED!\n");
-    // Sleep until both clients are ready to render. (using mutex?)
+    // Sleep until both clients are ready to render graphcs.
     // Start Physics/Game Engine cycle.
     // Start AI Engine cycle.
     // Start rendering cycle (where network requests objects that each client
