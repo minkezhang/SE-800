@@ -8,7 +8,7 @@
  *	3) the shutdown sequence
  */
 
-class IEngine {
+class Engine {
 	public:
 		virtual void ignite();
 		virtual void cycle();

@@ -2,62 +2,48 @@
 #define _GRAPHICS_H
 
 #include <list>
+//  std::map used to search for object IDs in constant time.
 #include <map>
-#include "../common/iengine.h"
 
-class GraphicsEngine : public IEngine {
-        public:
-                GraphicsEngine();
-                ~GraphicsEngine();
+#include "../common/engine.h"
+#include "../../classes/ship.h"
 
-        private:
-                int team_id;
-                std::list<Grid> map_grids;
-                //  std::map used to search for object IDs in constant time.
-                std::map<int, AI_ship> old_rendered_ai_ships;
-                std::map<int, Asteroid> old_rendered_asteroids;
-                player_ship old_rendered_player_ship;
-                std::map<int, AI_ship> new_rendered_ai_ships;
-                std::map<int, Asteroid> new_rendered_asteroids;
-                player_ship new_rendered_player_ship;
+class GraphicsEngine : public Engine {
+	public:
+		GraphicsEngine();
+		~GraphicsEngine();
 
-                // draw_world: Draws world cube from preloaded dimensions and
-                // assets.
-                void draw_world();
+		/**
+		 * Consider allowing the NetworkEngine to fill the current object list -- the graphics engine would therefore only need to check
+		 *	cur_objects is not empty and render on-demand
+		 *
+		 * challenges to consider -- sync NetworkEngine with GraphicsEngine cycle frequency (60Hz), unreliability of network, etc.
+		 */
+		void fill_cur_objects(Projectile *projectiles);
 
-                // update_camera: Positions the camera behind the newest
-                // position of the player ship. If the ship roll and pitch
-                // have changed from the last cycle, interpolates the camera
-                // view based on the changes of roll and pitch.
-                void update_camera(); 
+	private:
+		int team_id;
 
-                // draw_objects: Draw and/or interpolate the position of each
-                // object found in list of map grids.
-                // This means, draw all new_rendered_* objects.
-                // If any of these objects are present as old_rendered_* objs,
-                // (and have thus been rendered in last cycle), 
-                // interpolate object position based on object's new location.
-                void draw_objects();
+		std::map<int, Ship> old_ships;			// all ships, including current ship
+		std::map<int, Asteroid> old_asteroids;
 
-                void set_light_source();
+		std::map<int, Ship> cur_ships;
+		std::map<int, Asteroid> cur_asteroids;
 
-                void set_shader();
+		std::vector<float> size;			// size of world
+		void render_world();				// draw world cube from pre-loaded dimensions and assets
+		void render_camera();				// position the camera behind rendered ship -- interpolate camera position based on timestep delta
 
-                // update_obj_data: Called after get_map_grids. Fills in
-                // new_rendered_* objects with updated map grid objects.
-                void update_obj_data();
+		void render_objects();				// draw and interpolate position of each object kept in memory
 
-                // set_obj_data_as_old: Called at the end of cycle. Sets
-                // all new_rendered_* objects to old_rendered_* objects.
-                void set_obj_data_as_old();
+		void set_light_source();
+		void set_shader();
 
-
-                // Functions to interface with Network.
-
-                // get_map_grids: Sends client ID to server and waits for
-                // list of map grids to render. Can also be receive the
-                // world state upon alt. network configuration.
-                void get_map_grids_from_net();
+		/**
+		 * see public function for alternative strategy
+		 * void fill_cur_objects();			// gets new objects -- an incoming network packet handler
+		 */
+		void fill_old_objects();			// copies cur_objects into old_objects at the end of the cycle
 };
 
 #endif

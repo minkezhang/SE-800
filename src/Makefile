@@ -5,7 +5,7 @@ CFLAGS=-Wall -Werror -O3 -std=c++11
 LIBS=-pthread -lm
 
 # all the source files that we need should be listed here
-SOURCES=classes/*cpp interfaces/*cpp *cpp
+SOURCES=classes/*cpp engines/*/*cpp *cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
 EXECUTABLE=se800
