@@ -1,5 +1,5 @@
-#ifndef _PHYSICS_H
-#define _PHYSICS_H
+#ifndef _PHYSICSENGINE_H
+#define _PHYSICSENGINE_H
 
 #include "../common/engine.h"
 #include "environment.h"

@@ -1,7 +1,8 @@
-#ifndef _GRAPHICS_H
-#define _GRAPHICS_H
+#ifndef _GRAPHICSENGINE_H
+#define _GRAPHICSENGINE_H
 
 #include <list>
+
 //  std::map used to search for object IDs in constant time.
 #include <map>
 
@@ -14,12 +15,16 @@ class GraphicsEngine : public Engine {
 		~GraphicsEngine();
 
 		/**
-		 * Consider allowing the NetworkEngine to fill the current object list -- the graphics engine would therefore only need to check
+		 * consider allowing the NetworkEngine to fill the current object list -- the graphics engine would therefore only need to check
 		 *	cur_objects is not empty and render on-demand
 		 *
 		 * challenges to consider -- sync NetworkEngine with GraphicsEngine cycle frequency (60Hz), unreliability of network, etc.
 		 */
 		void fill_cur_objects(Projectile *projectiles);
+
+		/**
+		 * Will there be no front-facing function calls?
+		 */
 
 	private:
 		int team_id;
