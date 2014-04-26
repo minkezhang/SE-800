@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../interfaces/weapon.h"
+#include "../classes/weapon.h"
 #include "../engines/physics/projectile.h"
 
 /**

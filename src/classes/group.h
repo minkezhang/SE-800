@@ -1,8 +1,8 @@
 #ifndef _GROUP_H
 #define _GROUP_H
 
-#include "../interfaces/pilot.h"
-#include "../interfaces/team.h"
+#include "../classes/pilot.h"
+#include "../classes/team.h"
 
 class Group {
 	public:

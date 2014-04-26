@@ -1,8 +1,8 @@
 #ifndef _PILOT_H
 #define _PILOT_H
 
-#include "../interfaces/group.h"
-#include "../interfaces/ship.h"
+#include "../classes/group.h"
+#include "../classes/ship.h"
 
 /**
  * AI and players directly implement this interface

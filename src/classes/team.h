@@ -1,7 +1,7 @@
 #ifndef _TEAM_H
 #define _TEAM_H
 
-#include "../interfaces/group.h"
+#include "../classes/group.h"
 
 /**
  * each team consists of some groups of ships and is uniquely identified by a team id

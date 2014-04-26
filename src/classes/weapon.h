@@ -1,7 +1,7 @@
 #ifndef _WEAPON_H
 #define _WEAPON_H
 
-#include "../interfaces/munition.h"
+#include "../classes/munition.h"
 
 /**
  * all weapons should inherit from this class
