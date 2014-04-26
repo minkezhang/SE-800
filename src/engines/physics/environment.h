@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include "grid.h"
-#include "projectile.h"
+#include "../../engines/physics/grid.h"
+#include "../../engines/physics/projectile.h"
 
 class Environment {
 	public:

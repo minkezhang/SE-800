@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "../../classes/ship.h"
-#include "../physics/projectile.h"
+#include "../../engines/physics/projectile.h"
 
 /**
  * each AI pilot runs an AIEngine

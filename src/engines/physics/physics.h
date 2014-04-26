@@ -1,8 +1,8 @@
 #ifndef _PHYSICSENGINE_H
 #define _PHYSICSENGINE_H
 
-#include "../common/engine.h"
-#include "environment.h"
+#include "../../engines/common/engine.h"
+#include "../../engines/physics/environment.h"
 
 class PhysicsEngine : public Engine {
 	public:
