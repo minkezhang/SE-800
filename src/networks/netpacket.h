@@ -18,7 +18,7 @@ class PacketUtils {
 
 		static struct NetPacket {
 			int32_t packet_len;
-			byte[] serialized_packet;
+			string serialized_packet;
 		};
 	
 		static PacketType get_packet_type(NetPacket packet);

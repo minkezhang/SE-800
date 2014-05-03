@@ -7,7 +7,6 @@
 
 class Server {
 	public:
-		static std::map<int, int> client_id_to_fd;
 		
 		/* server constructor actions: 
 		-initialize Physics Engine object
@@ -17,9 +16,11 @@ class Server {
 		*/
 		Server();
 		~Server();
-		static bool send_to_client(NetPacket packet, int client_id);
+                int get_client_fd(int id);
+		bool send_to_client(PacketUtils::NetPacket packet, int client_id);
 
 	private:
+		std::map<int, int> client_id_to_fd;
 		PhysicsEngine *physics_engine;
 	
 		/* accept_clients actions:
@@ -29,7 +30,7 @@ class Server {
 		-client socketfd
 		   serve_client actions:
 		-call physics engine function to initialize client ship 
-		   (Ship client_ship_init())and send ship
+		   (Ship :join(PILOT??))and send ship
 		-send packet to client with ship object, so client can identify itself
 		-initialize ClientInfo struct
 		-Loop to accept client packets
@@ -39,7 +40,7 @@ class Server {
 		-Unlock physics engine mutex
 		*/
 		void *serve_client(void *args);
-		static NetPacket receive_from_client(int client_fd);
+		static PacketUtils::NetPacket receive_from_client(int client_fd);
 		
 };
 

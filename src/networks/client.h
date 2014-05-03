@@ -6,8 +6,8 @@
 class ClientNetUtils {
 	public:
 		static bool connect(int port);
-		static bool send_to_server(NetPacket packet);
-		static NetPacket receive_from_server();
+		static bool send_to_server(PacketUtils::NetPacket packet);
+		static PacketUtils::NetPacket receive_from_server();
 
 	private:
 		int server_sockfd;

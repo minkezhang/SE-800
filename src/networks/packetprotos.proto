@@ -9,25 +9,21 @@ message vector {
 
 message RenderedObj {
 	required uint32 id = 1;
-	required uint32 size = 2;
-	required uint32 mass = 3;
+	required uint32 mass = 2;
 	
-	required float cur_tolerance = 4;
-	required float max_tolerance = 5;
-	required bool is_destroyed = 6;
-	required bool is_clippable = 7;
+	required float cur_tolerance = 3;
+	required float max_tolerance = 4;
+	required uint32 is_destroyed = 5;
 	
-	required vector pos = 8;
-	required vector vel = 9;
-	required vector accel = 10;
+	required vector pos = 6;
+	required vector vel = 7;
+	required vector accel = 8;
 	
-	required vector pitch = 11;
-	required vector roll = 12;
+	required vector pitch = 9;
+	required vector roll = 10;
+	required vector yaw = 11;
 	
-	required float p_dot = 13;
-	required float r_dot = 14;
-	
-	optional uint32 weapon_index = 15;
+	optional uint32 weapon_index = 12;
 }
 
 message Event {

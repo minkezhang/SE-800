@@ -30,6 +30,7 @@ class Projectile {
 		std::vector<float> get_a();		// get acceleration
 
 		std::vector<float> get_p();		// get pitch axis
+		std::vector<float> get_y();             // get yaw axis
 		std::vector<float> get_r();		// get roll axis
 
 		float get_p_dot();			// get pitch rotation speed (x < 0 => counterclockwise)
@@ -44,6 +45,7 @@ class Projectile {
 		void set_a(std::vector<float> a);	// set acceleration
 
 		void set_p(std::vector<float> p);	// set pitch axis
+		void set_y(std::vector<float> y);	// set yaw axis
 		void set_r(std::vector<float> r);	// set roll axis
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
@@ -68,6 +70,7 @@ class Projectile {
 
 		/* pitch, yaw, roll vectors */
 		std::vector<float> p;
+		std::vector<float> y;
 		std::vector<float> r;
 
 		float p_dot;
