@@ -10,7 +10,6 @@
 class Projectile {
 	public:
 		Projectile(int id, int clippable, float mass, float max_tolerance);
-		~Projectile();
 
 		/**
 		 * public-facing functions which can be freely queried
@@ -34,6 +33,7 @@ class Projectile {
 		std::vector<float> get_r();		// get roll axis
 
 		float get_p_dot();			// get pitch rotation speed (x < 0 => counterclockwise)
+		float get_y_dot();			// get yaw rotation speed
 		float get_r_dot();			// get roll rotation speed
 
 		/**
@@ -49,19 +49,21 @@ class Projectile {
 		void set_r(std::vector<float> r);	// set roll axis
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
+		void set_y_dot(float y_dot);		// set yaw rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
 
 		void damage(float tolerance);		// decrement the object tolerance by the input
 
 	private:
 		int id;					// global unique ID -- set on construction
+		int destroyed;
 		int clippable;				// clippable objects do not check for collision with other clippable objects
-
-		float cur_tolerance;			// current health -- initialized to max_tolerance
-		float max_tolerance;			// max health -- set on construction
 
 		float mass;				// mass of object -- set on construction
 		float size;				// collision radius
+
+		float cur_tolerance;			// current health -- initialized to max_tolerance
+		float max_tolerance;			// max health -- set on construction
 
 		/* positional-related vectors */
 		std::vector<float> d;
@@ -74,6 +76,7 @@ class Projectile {
 		std::vector<float> r;
 
 		float p_dot;
+		float y_dot;
 		float r_dot;
 };
 
