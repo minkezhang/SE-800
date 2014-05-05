@@ -2,30 +2,34 @@
 #define _NETPACKET_H
 
 #include <cstdint>
+#include <string>
 
+#include "../engines/physics/projectile.h"
 #include "packetprotos.pb.h"
+
+using namespace std;
+
+struct NetPacket {
+	int32_t packet_len;
+	string serialized_packet;
+};
+
+enum PacketType {
+	// Packets server can send:
+	SHIP_INIT,
+	OBJS_AND_EVENTS,
+	// Packets client can send:
+	EVENT_ACK,
+	CONTROL_INPUT
+};
 
 class PacketUtils {
 	public:
-		enum PacketType {
-			// Packets server can send:
-			SHIP_INIT,
-			OBJS_AND_EVENTS,
-			// Packets client can send:
-			EVENT_ACK,
-			CONTROL_INPUT
-		};
-
-		static struct NetPacket {
-			int32_t packet_len;
-			string serialized_packet;
-		};
-	
-		static PacketType get_packet_type(NetPacket packet);
-		template<typename PACKET_PROTO>
-		static PACKET_PROTO get_packet_payload(NetPacket packet);
-		template<typename PAYLOAD_TYPE>
-		static NetPacket make_packet(PacketType type, PAYLOAD_TYPE payload);
+		static int get_packet_type(NetPacket packet);
+		static void get_packet_payload(NetPacket packet, void* proto_packet);
+		static void make_packet(
+			NetPacket *packet, PacketType type, void* payload, void* extra_payload);
+		static void fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* obj);
 };
 
 #endif
