@@ -201,12 +201,12 @@ int fill_obj_packet_test() {
 }
 
 int main() {
-	int return_val;
-	return_val = fill_obj_packet_test();
-	return_val = get_packet_type_test();
-	return_val = get_packet_payload_test();
-	return_val = make_packet_test();
-	if (return_val == 1)
+	int return_val = 0;
+	return_val += fill_obj_packet_test();
+	return_val += get_packet_type_test();
+	return_val += get_packet_payload_test();
+	return_val += make_packet_test();
+	if (return_val == 4)
 		cout << "NET PACKET TEST FAILED!" << endl;
 	else
 		cout << "NET PACKET TEST PASSED!" << endl;
