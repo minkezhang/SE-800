@@ -3,14 +3,18 @@
 
 #include "netpacket.h"
 
+#include <netinet/in.h>
+#include <string>
+
 class ClientNetUtils {
 	public:
-		static bool connect(int port);
-		static bool send_to_server(PacketUtils::NetPacket packet);
-		static PacketUtils::NetPacket receive_from_server();
+		bool connect_to_server(int port, string ip);
+		bool send_to_server(NetPacket *packet);
+		NetPacket* receive_from_server();
 
-	private:
+  private:
 		int server_sockfd;
+    struct sockaddr_in servaddr;
 };
 
 #endif
