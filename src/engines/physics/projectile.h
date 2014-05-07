@@ -27,10 +27,11 @@ class Projectile {
 
 		std::vector<float> get_d();		// get position
 		std::vector<float> get_v();		// get velocity
-		std::vector<float> get_a();		// get acceleration
+		float get_a();				// get acceleration
 
 		std::vector<float> get_p();		// get pitch axis
 		std::vector<float> get_r();		// get roll axis
+		std::vector<float> get_y();		// get yaw axis
 
 		float get_p_dot();			// get pitch rotation speed (x < 0 => counterclockwise)
 		float get_r_dot();			// get roll rotation speed
@@ -41,10 +42,11 @@ class Projectile {
 
 		void set_d(std::vector<float> d);	// set position
 		void set_v(std::vector<float> v);	// set velocity
-		void set_a(std::vector<float> a);	// set acceleration
+		void set_a(float a);	// set acceleration
 
 		void set_p(std::vector<float> p);	// set pitch axis
 		void set_r(std::vector<float> r);	// set roll axis
+		void set_y(std::vector<float> y); 	// set yaw axis
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
@@ -53,6 +55,7 @@ class Projectile {
 
 	private:
 		int id;					// global unique ID -- set on construction
+		int destroyed;
 		int clippable;				// clippable objects do not check for collision with other clippable objects
 
 		float cur_tolerance;			// current health -- initialized to max_tolerance
@@ -64,11 +67,12 @@ class Projectile {
 		/* positional-related vectors */
 		std::vector<float> d;
 		std::vector<float> v;
-		std::vector<float> a;
+		float a;
 
 		/* pitch, yaw, roll vectors */
 		std::vector<float> p;
 		std::vector<float> r;
+		std::vector<float> y;
 
 		float p_dot;
 		float r_dot;
