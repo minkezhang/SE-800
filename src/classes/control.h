@@ -16,7 +16,7 @@ enum Action {
 
 class Control {
 	public:
-		static update_physics(protos::ControlInput control);
+		static void update_physics(protos::ControlInput control);
 };
 
 #endif
