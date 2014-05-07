@@ -17,7 +17,7 @@ message RenderedObj {
 	
 	required vector pos = 6;
 	required vector vel = 7;
-	required vector accel = 8;
+	required float accel = 8;
 	
 	required vector pitch = 9;
 	required vector roll = 10;

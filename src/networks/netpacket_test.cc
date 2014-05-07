@@ -13,8 +13,7 @@ void build_ship(Ship *ship) {
 	ship->set_d(pos);
 	vector<float> vel { 4,5,6 };
 	ship->set_v(vel);
-	vector<float> accel { 7,8,9 };
-	ship->set_a(accel);
+	ship->set_a(7.0);
 		 
 	vector<float> pitch { 10,11,12 };
 	ship->set_p(pitch);
@@ -24,7 +23,6 @@ void build_ship(Ship *ship) {
 	ship->set_r(roll);
 		 
 	ship->set_p_dot(6.6);
-	ship->set_y_dot(8.8);
 	ship->set_r_dot(7.7);
 }
 
@@ -165,11 +163,7 @@ int fill_obj_packet_test() {
 		return 1;
 
 
-	vector<float> accel_vec;
-	accel_vec.push_back(ship_packet.accel().x());
-	accel_vec.push_back(ship_packet.accel().y());
-	accel_vec.push_back(ship_packet.accel().z());
-	if (accel_vec != ship.get_a())
+	if (ship_packet.accel() != ship.get_a())
 		return 1;
 
 
@@ -195,6 +189,7 @@ int fill_obj_packet_test() {
 	roll_vec.push_back(ship_packet.roll().z());
 	if (roll_vec != ship.get_r())
 		return 1;
+
 
 	cout << "fill_obj_packet test Passed!" << endl;
 	return 0;
