@@ -118,7 +118,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
   ControlInput_descriptor_ = file->message_type(3);
   static const int ControlInput_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ControlInput, action_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ControlInput, direction_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ControlInput, tilt_),
   };
   ControlInput_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -281,16 +281,15 @@ void protobuf_AddDesc_packetprotos_2eproto() {
     "\t \002(\0132\016.protos.vector\022\034\n\004roll\030\n \002(\0132\016.pr"
     "otos.vector\022\033\n\003yaw\030\013 \002(\0132\016.protos.vector"
     "\022\024\n\014weapon_index\030\014 \001(\r\"\033\n\005Event\022\022\n\nevent"
-    "_type\030\001 \002(\r\"1\n\014ControlInput\022\016\n\006action\030\001 "
-    "\002(\r\022\021\n\tdirection\030\002 \001(\r\"E\n\rGeneralPacket\022"
-    "\022\n\npacketType\030\001 \002(\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010p"
-    "acketId\030\003 \001(\t\"3\n\016ShipInitPacket\022!\n\004ship\030"
-    "\001 \002(\0132\023.protos.RenderedObj\"U\n\023ObjsAndEve"
-    "ntsPacket\022 \n\003obj\030\001 \003(\0132\023.protos.Rendered"
-    "Obj\022\034\n\005event\030\002 \003(\0132\r.protos.Event\"\035\n\016Eve"
-    "ntAckPacket\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInput"
-    "Packet\022%\n\007control\030\001 \002(\0132\024.protos.Control"
-    "Input", 765);
+    "_type\030\001 \002(\r\",\n\014ControlInput\022\016\n\006action\030\001 "
+    "\002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n\rGeneralPacket\022\022\n\npa"
+    "cketType\030\001 \002(\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010packet"
+    "Id\030\003 \001(\t\"3\n\016ShipInitPacket\022!\n\004ship\030\001 \002(\013"
+    "2\023.protos.RenderedObj\"U\n\023ObjsAndEventsPa"
+    "cket\022 \n\003obj\030\001 \003(\0132\023.protos.RenderedObj\022\034"
+    "\n\005event\030\002 \003(\0132\r.protos.Event\"\035\n\016EventAck"
+    "Packet\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInputPacke"
+    "t\022%\n\007control\030\001 \002(\0132\024.protos.ControlInput", 760);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -1516,7 +1515,7 @@ void Event::Swap(Event* other) {
 
 #ifndef _MSC_VER
 const int ControlInput::kActionFieldNumber;
-const int ControlInput::kDirectionFieldNumber;
+const int ControlInput::kTiltFieldNumber;
 #endif  // !_MSC_VER
 
 ControlInput::ControlInput()
@@ -1536,7 +1535,7 @@ ControlInput::ControlInput(const ControlInput& from)
 void ControlInput::SharedCtor() {
   _cached_size_ = 0;
   action_ = 0u;
-  direction_ = 0u;
+  tilt_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1573,7 +1572,7 @@ ControlInput* ControlInput::New() const {
 void ControlInput::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     action_ = 0u;
-    direction_ = 0u;
+    tilt_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1596,19 +1595,19 @@ bool ControlInput::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_direction;
+        if (input->ExpectTag(21)) goto parse_tilt;
         break;
       }
 
-      // optional uint32 direction = 2;
+      // optional float tilt = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_direction:
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_tilt:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
-                 input, &direction_)));
-          set_has_direction();
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &tilt_)));
+          set_has_tilt();
         } else {
           goto handle_uninterpreted;
         }
@@ -1639,9 +1638,9 @@ void ControlInput::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->action(), output);
   }
 
-  // optional uint32 direction = 2;
-  if (has_direction()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->direction(), output);
+  // optional float tilt = 2;
+  if (has_tilt()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->tilt(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1657,9 +1656,9 @@ void ControlInput::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->action(), target);
   }
 
-  // optional uint32 direction = 2;
-  if (has_direction()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->direction(), target);
+  // optional float tilt = 2;
+  if (has_tilt()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->tilt(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1680,11 +1679,9 @@ int ControlInput::ByteSize() const {
           this->action());
     }
 
-    // optional uint32 direction = 2;
-    if (has_direction()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt32Size(
-          this->direction());
+    // optional float tilt = 2;
+    if (has_tilt()) {
+      total_size += 1 + 4;
     }
 
   }
@@ -1717,8 +1714,8 @@ void ControlInput::MergeFrom(const ControlInput& from) {
     if (from.has_action()) {
       set_action(from.action());
     }
-    if (from.has_direction()) {
-      set_direction(from.direction());
+    if (from.has_tilt()) {
+      set_tilt(from.tilt());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -1745,7 +1742,7 @@ bool ControlInput::IsInitialized() const {
 void ControlInput::Swap(ControlInput* other) {
   if (other != this) {
     std::swap(action_, other->action_);
-    std::swap(direction_, other->direction_);
+    std::swap(tilt_, other->tilt_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

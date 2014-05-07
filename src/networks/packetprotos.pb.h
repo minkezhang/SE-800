@@ -494,24 +494,24 @@ class ControlInput : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 action() const;
   inline void set_action(::google::protobuf::uint32 value);
 
-  // optional uint32 direction = 2;
-  inline bool has_direction() const;
-  inline void clear_direction();
-  static const int kDirectionFieldNumber = 2;
-  inline ::google::protobuf::uint32 direction() const;
-  inline void set_direction(::google::protobuf::uint32 value);
+  // optional float tilt = 2;
+  inline bool has_tilt() const;
+  inline void clear_tilt();
+  static const int kTiltFieldNumber = 2;
+  inline float tilt() const;
+  inline void set_tilt(float value);
 
   // @@protoc_insertion_point(class_scope:protos.ControlInput)
  private:
   inline void set_has_action();
   inline void clear_has_action();
-  inline void set_has_direction();
-  inline void clear_has_direction();
+  inline void set_has_tilt();
+  inline void clear_has_tilt();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::uint32 action_;
-  ::google::protobuf::uint32 direction_;
+  float tilt_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -1472,26 +1472,26 @@ inline void ControlInput::set_action(::google::protobuf::uint32 value) {
   action_ = value;
 }
 
-// optional uint32 direction = 2;
-inline bool ControlInput::has_direction() const {
+// optional float tilt = 2;
+inline bool ControlInput::has_tilt() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void ControlInput::set_has_direction() {
+inline void ControlInput::set_has_tilt() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void ControlInput::clear_has_direction() {
+inline void ControlInput::clear_has_tilt() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void ControlInput::clear_direction() {
-  direction_ = 0u;
-  clear_has_direction();
+inline void ControlInput::clear_tilt() {
+  tilt_ = 0;
+  clear_has_tilt();
 }
-inline ::google::protobuf::uint32 ControlInput::direction() const {
-  return direction_;
+inline float ControlInput::tilt() const {
+  return tilt_;
 }
-inline void ControlInput::set_direction(::google::protobuf::uint32 value) {
-  set_has_direction();
-  direction_ = value;
+inline void ControlInput::set_tilt(float value) {
+  set_has_tilt();
+  tilt_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -32,7 +32,7 @@ message Event {
 
 message ControlInput {
 	required uint32 action = 1;
-	optional uint32 direction = 2;  // if action == movement, specify direction
+	optional float tilt = 2;  // if action == pitch/roll tilt, specify tilt
 }
 
 
