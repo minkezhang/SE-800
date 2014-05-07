@@ -21,6 +21,7 @@ class Projectile {
 
 		float get_cur_tolerance();		// get current health
 		float get_max_tolerance();		// get max health
+
 		int is_destroyed();			// return cur_health < 0
 		int is_clippable();			// returns if the object is clippable OR if object is destroyed
 
@@ -29,12 +30,10 @@ class Projectile {
 		float get_a();				// get acceleration
 
 		std::vector<float> get_p();		// get pitch axis
-		std::vector<float> get_y();             // get yaw axis
+		std::vector<float> get_y();     // get yaw axis
 		std::vector<float> get_r();		// get roll axis
-		std::vector<float> get_y();		// get yaw axis
 
 		float get_p_dot();			// get pitch rotation speed (x < 0 => counterclockwise)
-		float get_y_dot();			// get yaw rotation speed
 		float get_r_dot();			// get roll rotation speed
 
 		/**
@@ -48,10 +47,8 @@ class Projectile {
 		void set_p(std::vector<float> p);	// set pitch axis
 		void set_y(std::vector<float> y);	// set yaw axis
 		void set_r(std::vector<float> r);	// set roll axis
-		void set_y(std::vector<float> y); 	// set yaw axis
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
-		void set_y_dot(float y_dot);		// set yaw rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
 
 		void damage(float tolerance);		// decrement the object tolerance by the input
@@ -76,10 +73,8 @@ class Projectile {
 		std::vector<float> p;
 		std::vector<float> y;
 		std::vector<float> r;
-		std::vector<float> y;
 
 		float p_dot;
-		float y_dot;
 		float r_dot;
 };
 
