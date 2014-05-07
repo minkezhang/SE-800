@@ -1,0 +1,62 @@
+package protos;
+
+// PROTOS FOR PACKAGING STRUCTS TO BE SENT
+message vector {
+	required float x = 1;
+	required float y = 2;
+	required float z = 3;
+}
+
+message RenderedObj {
+	required uint32 id = 1;
+	required uint32 mass = 2;
+	
+	required float cur_tolerance = 3;
+	required float max_tolerance = 4;
+	required uint32 is_destroyed = 5;
+	
+	required vector pos = 6;
+	required vector vel = 7;
+	required vector accel = 8;
+	
+	required vector pitch = 9;
+	required vector roll = 10;
+	required vector yaw = 11;
+	
+	optional uint32 weapon_index = 12;
+}
+
+message Event {
+	required uint32 event_type = 1;
+}
+
+message ControlInput {
+	required uint32 action = 1;
+	optional float tilt = 2;  // if action == pitch/roll tilt, specify tilt
+}
+
+
+
+//PROTOS FOR CREATING NETWORK PACKETS
+message GeneralPacket {
+	required uint32 packetType = 1;  // contains id of packet type
+	optional bytes packet = 2;  // serialized protobuf message that corresponds to packetType
+	optional string packetId = 3;  // packet id
+}
+
+message ShipInitPacket {
+	required RenderedObj ship = 1;
+}
+
+message ObjsAndEventsPacket {
+	repeated RenderedObj obj = 1;
+	repeated Event event = 2;
+}
+
+message EventAckPacket {
+	required uint32 ack = 1;
+}
+
+message ControlInputPacket {
+	required ControlInput control = 1;
+}

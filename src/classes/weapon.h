@@ -3,16 +3,20 @@
 
 #include "../classes/munition.h"
 
+#include <string>
+
+using namespace std;
+
 /**
  * all weapons should inherit from this class
  */
 
 class Weapon {
 	public:
-		Weapon(std::string name, Munition *munition);
+		Weapon(string name, Munition *munition);
 		~Weapon();
 
-		std::string get_name();
+		string get_name();
 		int get_max_ammo();			// get maximum ammo
 		int get_cur_ammo();			// get current ammo
 		float get_rate();			// get the rate of fire
@@ -29,7 +33,7 @@ class Weapon {
 		virtual void fire();			// override this
 
 	private:
-		std::string name;			// weapon name -- set in constructor
+		string name;			// weapon name -- set in constructor
 		int cur_ammo;
 		int max_ammo;
 
