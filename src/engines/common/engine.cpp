@@ -1,6 +1,6 @@
 #include "../../../lib/exception.h"
 
-#include "../engines/common/engine.h"
+#include "engine.h"
 
 /**
  * these functions should be not be implemented here
@@ -16,4 +16,8 @@ void Engine::cycle() {
 
 void Engine::shutdown() {
 	throw BaseClassUnimplementedError();
+}
+
+int Engine::get_status() {
+	return(this->status);
 }

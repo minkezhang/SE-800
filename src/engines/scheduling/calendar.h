@@ -8,6 +8,7 @@ class Calendar {
 		Calendar(float timestamp, Engine *engine);
 		~Calendar();
 
+		void run();
 	private:
 		float timestep;
 		Engine *engine;
