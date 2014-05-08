@@ -7,6 +7,12 @@
  * each team consists of some groups of ships and is uniquely identified by a team id
  */
 
+/**
+ * circular dependencies
+ *	cf. http://bit.ly/LlgKzd
+ */
+class Group;
+
 class Team {
 	public:
 		Team();

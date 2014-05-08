@@ -1,8 +1,13 @@
 #ifndef _GROUP_H
 #define _GROUP_H
 
+#include <vector>
+
 #include "../classes/pilot.h"
 #include "../classes/team.h"
+
+class Pilot;
+class Team;
 
 class Group {
 	public:
@@ -16,7 +21,7 @@ class Group {
 		 *
 		 * should never return NULL
 		 */
-		virtual Pilot *get_leader();
+		Pilot *get_leader();
 
 		/* deletes matching pilot from this->escorts (if such a pilot exists) -- may need to call select_leader to find suitable candidate */
 		void set_leader(Pilot *pilot);
@@ -30,7 +35,7 @@ class Group {
 		int id;				// set in constructor
 		Team *team;
 		Pilot *leader;			// lead pilot -- other ships pilot around
-		Pilot *escorts;
+		std::vector<Pilot *> escorts;
 
 		/**
 		 * select a pilot at random to be assigned the leadership role from group escorts

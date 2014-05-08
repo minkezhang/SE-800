@@ -1,6 +1,9 @@
 #ifndef _SCHEDULINGENGINE_H
 #define _SCHEDULINGENGINE_H
 
+#include <vector>
+#include <thread>
+
 #include "../common/engine.h"
 #include "calendar.h"
 
@@ -9,11 +12,15 @@ class SchedulingEngine : public Engine {
 		SchedulingEngine();
 		~SchedulingEngine();
 
+		void ignite() override;
+		void cycle() override;
+		void shutdown() override;
+
 		void add_calendar(Calendar *calendar);
-		void del_calendar(Calendar *calendar);
 
 	private:
-		Calendar *calendars;
+		std::vector<Calendar *> calendars;
+		std::vector<std::thread *> threads;
 };
 
 #endif

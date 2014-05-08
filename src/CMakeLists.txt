@@ -1,0 +1,48 @@
+#Specify the version being used aswell as the language
+cmake_minimum_required(VERSION 2.6)
+#Name your project here
+project(Game)
+
+include(FindProtobuf)
+find_package(Protobuf REQUIRED)
+find_package( OpenThreads )
+find_package( osg )
+find_package( osgDB )
+find_package( osgGA )
+find_package( osgUtil )
+find_package( osgViewer )
+include_directories(${PROTOBUF_INCLUDE_DIR})
+
+#Sends the -std=c++0x flag to the gcc compiler
+add_definitions(-std=c++0x)
+add_definitions(-pthread)
+add_definitions(-Wall)
+
+add_library(netpacket networks/netpacket.cc)
+add_library(packetproto networks/packetprotos.pb.cc)
+add_library(projectile engines/physics/projectile.cc)
+add_library(ship classes/ship.cc)
+add_library(control classes/control.cc)
+add_library(client networks/client.cc)
+
+macro( config_project PROJNAME LIBNAME )
+  include_directories( ${${LIBNAME}_INCLUDE_DIR} )
+  target_link_libraries( ${PROJNAME} ${${LIBNAME}_LIBRARY} )
+endmacro()
+
+add_executable(Game main.cpp)
+target_link_libraries(Game netpacket)
+target_link_libraries(Game packetproto)
+target_link_libraries(Game projectile)
+target_link_libraries(Game ship)
+target_link_libraries(Game control)
+target_link_libraries(Game client)
+config_project( Game OPENTHREADS )
+config_project( Game OSG )
+config_project( Game OSGDB )
+config_project( Game OSGGA )
+config_project( Game OSGUTIL )
+config_project( Game OSGVIEWER )
+target_link_libraries(Game ${PROTOBUF_LIBRARY})
+
+install(TARGETS Game DESTINATION bin)

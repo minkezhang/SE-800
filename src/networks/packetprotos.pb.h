@@ -254,14 +254,12 @@ class RenderedObj : public ::google::protobuf::Message {
   inline ::protos::vector* release_vel();
   inline void set_allocated_vel(::protos::vector* vel);
 
-  // required .protos.vector accel = 8;
+  // required float accel = 8;
   inline bool has_accel() const;
   inline void clear_accel();
   static const int kAccelFieldNumber = 8;
-  inline const ::protos::vector& accel() const;
-  inline ::protos::vector* mutable_accel();
-  inline ::protos::vector* release_accel();
-  inline void set_allocated_accel(::protos::vector* accel);
+  inline float accel() const;
+  inline void set_accel(float value);
 
   // required .protos.vector pitch = 9;
   inline bool has_pitch() const;
@@ -331,13 +329,13 @@ class RenderedObj : public ::google::protobuf::Message {
   float cur_tolerance_;
   float max_tolerance_;
   ::protos::vector* pos_;
-  ::protos::vector* vel_;
-  ::protos::vector* accel_;
   ::google::protobuf::uint32 is_destroyed_;
-  ::google::protobuf::uint32 weapon_index_;
+  float accel_;
+  ::protos::vector* vel_;
   ::protos::vector* pitch_;
   ::protos::vector* roll_;
   ::protos::vector* yaw_;
+  ::google::protobuf::uint32 weapon_index_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
@@ -1246,7 +1244,7 @@ inline void RenderedObj::set_allocated_vel(::protos::vector* vel) {
   }
 }
 
-// required .protos.vector accel = 8;
+// required float accel = 8;
 inline bool RenderedObj::has_accel() const {
   return (_has_bits_[0] & 0x00000080u) != 0;
 }
@@ -1257,31 +1255,15 @@ inline void RenderedObj::clear_has_accel() {
   _has_bits_[0] &= ~0x00000080u;
 }
 inline void RenderedObj::clear_accel() {
-  if (accel_ != NULL) accel_->::protos::vector::Clear();
+  accel_ = 0;
   clear_has_accel();
 }
-inline const ::protos::vector& RenderedObj::accel() const {
-  return accel_ != NULL ? *accel_ : *default_instance_->accel_;
-}
-inline ::protos::vector* RenderedObj::mutable_accel() {
-  set_has_accel();
-  if (accel_ == NULL) accel_ = new ::protos::vector;
+inline float RenderedObj::accel() const {
   return accel_;
 }
-inline ::protos::vector* RenderedObj::release_accel() {
-  clear_has_accel();
-  ::protos::vector* temp = accel_;
-  accel_ = NULL;
-  return temp;
-}
-inline void RenderedObj::set_allocated_accel(::protos::vector* accel) {
-  delete accel_;
-  accel_ = accel;
-  if (accel) {
-    set_has_accel();
-  } else {
-    clear_has_accel();
-  }
+inline void RenderedObj::set_accel(float value) {
+  set_has_accel();
+  accel_ = value;
 }
 
 // required .protos.vector pitch = 9;
