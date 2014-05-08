@@ -2,28 +2,42 @@
 #define _SERVER_H
 
 #include <map>
+#include <list>
+#include <netinet/in.h>
 
 #include "netpacket.h"
 
+
 using namespace std;
+
+
+struct serve_client_args {
+  int server_socketfd;
+  int client_socketfd;
+};
 
 class Server {
 	public:
-		
+    // Let's say client fd = client main ship id.
+    list<int> client_fd_list;
+
 		/* server constructor actions: 
 		-initialize Physics Engine object
 		-spawn worker thread to accept clients
 		-wait until at least one client has connected
 		-start world engine & scheduler
 		*/
-		Server(int port);
+
+		Server();
 		~Server();
+    
+    void start_server(int port);
 		int get_client_fd(int id);
 		bool send_to_client(NetPacket *packet, int client_id);
     static void *serve_client(void *args);
 
 	private:
-		map<int, int> client_id_to_fd;
+    map<int, struct sockaddr_in> client_id_to_sockaddr; 
 		//PhysicsEngine *physics_engine;
     int server_socketfd;
 	
