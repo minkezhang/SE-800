@@ -9,7 +9,7 @@
 
 class BaseClassUnimplementedError : public std::exception {
 	virtual const char *what() const throw() {
-		return "This method was called from a base class who did not implement the function. Please implement in the derived class."
+		return "This method was called from a base class who did not implement the function. Please implement in the derived class.";
 	}
 };
 
