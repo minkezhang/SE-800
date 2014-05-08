@@ -13,11 +13,12 @@ int main(int argc, char **argv) {
 	int port = 6667; // std::stoi(argv[3]);
 	WorldEngine w = WorldEngine();
 	// start server / client network
+	std::thread network;
 	if(!strcmp(argv[1], "server")) {
 		Server s = Server();
-		std::thread x (&Server::accept_clients, &s, (void *) &port);
-		x.join();
+		network = std::thread(&Server::accept_clients, &s, (void *) &port);
 	}
+	network.join();
 	/*
 	else if(!strcmp(argv[2], "client")) {
 		ClientNetUtils c = ClientNetUtils();

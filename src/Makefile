@@ -18,3 +18,6 @@ $(EXECUTABLE): $(OBJECTS)
 
 clean:
 	rm -f $(EXECUTABLE) *.o
+
+run: $(EXECUTABLE)
+	valgrind ./$(EXECUTABLE) server 6667
