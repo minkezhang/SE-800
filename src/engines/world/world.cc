@@ -19,12 +19,11 @@ void WorldEngine::win() { /* stop engines */ }
 
 void WorldEngine::ignite() {
 	this->status = INITIALIZED;
-	this->scheduler.ignite();
 }
 
 void WorldEngine::cycle() {
 	this->status = RUNNING;
-	this->scheduler.cycle();
+	this->scheduler.ignite();
 }
 
 void WorldEngine::shutdown() {

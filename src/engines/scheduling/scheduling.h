@@ -2,6 +2,7 @@
 #define _SCHEDULINGENGINE_H
 
 #include <vector>
+#include <thread>
 
 #include "../common/engine.h"
 #include "calendar.h"
@@ -19,6 +20,7 @@ class SchedulingEngine : public Engine {
 
 	private:
 		std::vector<Calendar *> calendars;
+		std::vector<std::thread *> threads;
 };
 
 #endif

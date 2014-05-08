@@ -9,9 +9,15 @@ class Calendar {
 		~Calendar();
 
 		void run();
+		void shutdown();
+
+		void set_signal();
 	private:
 		float timestep;
 		Engine *engine;
+
+		// run engine.cycle() until outside signal is received
+		int signal;
 };
 
 #endif
