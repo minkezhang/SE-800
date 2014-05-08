@@ -6,7 +6,7 @@ CFLAGS=-Wall -O3 -std=c++11
 LIBS=-pthread -lm -lprotobuf
 
 # all the source files that we need should be listed here
-SOURCES=engines/*/*cpp engines/physics/*cc ../lib/*cpp *cpp networks/server.cc networks/packetprotos.pb.cc networks/netpacket.cc classes/ship.cc # networks/client.cc
+SOURCES=engines/*/*cc ../lib/*cc *cc networks/server.cc networks/packetprotos.pb.cc networks/netpacket.cc classes/ship.cc
 OBJECTS=$(SOURCES:.c*=.o)
 
 EXECUTABLE=se800
