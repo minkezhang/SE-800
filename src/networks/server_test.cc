@@ -3,6 +3,7 @@
 #include <iostream>
 
 int main() {
-  Server server(6667);
+  Server server;
+  server.start_server(6667);
   return 0;
 }
