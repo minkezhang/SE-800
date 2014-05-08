@@ -19,7 +19,6 @@ class SchedulingEngine : public Engine {
 
 	private:
 		std::vector<Calendar *> calendars;
-		int signal;
 };
 
 #endif

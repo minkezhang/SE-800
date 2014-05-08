@@ -19,6 +19,10 @@ class Engine {
 		virtual int get_status();
 	protected:
 		int status;
+		/**
+		 * initialize signal to 1 -- if signal == 0 while in .cycle(), call .shutdown()
+		 */
+		int signal;
 };
 
 #endif
