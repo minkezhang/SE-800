@@ -30,10 +30,3 @@ void SchedulingEngine::shutdown() {
 	this->status = STOPPED;
 	this->signal = 0;
 }
-
-int main() {
-	SchedulingEngine s = SchedulingEngine();
-	s.cycle();
-	s.get_status();
-	return(0);
-}

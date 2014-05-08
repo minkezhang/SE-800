@@ -8,6 +8,8 @@
  * AI and players directly implement this interface
  */
 
+class Group;
+
 class Pilot {
 	public:
 		Pilot(std::string name);
