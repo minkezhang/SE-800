@@ -36,14 +36,17 @@ class Server {
 		bool send_to_client(NetPacket *packet, int client_id);
 		static void *serve_client(void *args);
 
+		/* accept_clients actions:
+		-client connections, spawning a thread for each connection */
+		void *accept_clients(void *args);
 	private:
 		map<int, struct sockaddr_in> client_id_to_sockaddr; 
 		//PhysicsEngine *physics_engine;
 		int server_socketfd;
 	
-		/* accept_clients actions:
-		-client connections, spawning a thread for each connection */
-		void *accept_clients(void *args);
+
+
+
 		/* serve_client arguments:
 		-client socketfd
 			 serve_client actions:
