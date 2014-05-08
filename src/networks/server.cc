@@ -13,6 +13,7 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <string.h>
+#include <unistd.h>
 #include <map>
 
 
@@ -46,6 +47,7 @@ void Server::start_server(int port) {
 }
 
 int Server::get_client_fd(int id) {
+	return(0);
 }
 
 bool Server::send_to_client(NetPacket *packet, int client_id) {
@@ -68,6 +70,8 @@ bool Server::send_to_client(NetPacket *packet, int client_id) {
 	sendto(client_socketfd, gen_packet.packet().c_str(), sizeof(gen_packet.packet()), 0,
 		(struct sockaddr *) &clientaddr, sizeof(clientaddr));
 
+	// TODO -- get return codes from sendto
+	return(1);
 }
 
 void *Server::accept_clients(void *args) {
@@ -173,7 +177,7 @@ void * Server::serve_client(void *args) {
 		// Parse build buf for all received protos.
 		if (packet_size == -1) {
 			// Assume this is the beginning of a packet. Try to set pack size.
-			if (buildLen >= sizeof(uint32_t)) {
+			if ((uint32_t) buildLen >= sizeof(uint32_t)) {
 				memcpy(&packet_size, buildBuf, sizeof(uint32_t));
 				packet_size = ntohl(packet_size);
 
@@ -214,7 +218,9 @@ void * Server::serve_client(void *args) {
 		}
 	}
 	pthread_exit(NULL);
+	return(NULL);
 }
 
 NetPacket Server::receive_from_client(int client_fd) {
+	return NetPacket();
 }
