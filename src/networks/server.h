@@ -12,14 +12,14 @@ using namespace std;
 
 
 struct serve_client_args {
-  int server_socketfd;
-  int client_socketfd;
+	int server_socketfd;
+	int client_socketfd;
 };
 
 class Server {
 	public:
-    // Let's say client fd = client main ship id.
-    list<int> client_fd_list;
+		// Let's say client fd = client main ship id.
+		list<int> client_fd_list;
 
 		/* server constructor actions: 
 		-initialize Physics Engine object
@@ -30,16 +30,16 @@ class Server {
 
 		Server();
 		~Server();
-    
-    void start_server(int port);
+		
+		void start_server(int port);
 		int get_client_fd(int id);
 		bool send_to_client(NetPacket *packet, int client_id);
-    static void *serve_client(void *args);
+		static void *serve_client(void *args);
 
 	private:
-    map<int, struct sockaddr_in> client_id_to_sockaddr; 
+		map<int, struct sockaddr_in> client_id_to_sockaddr; 
 		//PhysicsEngine *physics_engine;
-    int server_socketfd;
+		int server_socketfd;
 	
 		/* accept_clients actions:
 		-client connections, spawning a thread for each connection */

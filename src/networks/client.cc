@@ -8,8 +8,15 @@
 #include <iostream>
 #include <string>
 #include <errno.h>
+#include <queue>
 
 #define SOCKET_ERROR -1
+
+queue<protos::RenderedObj> *que;
+
+ClientNetUtils::ClientNetUtils (queue<protos::RenderedObj> *queue) {
+	que = queue;
+}
 
 bool ClientNetUtils::connect_to_server(int port, string ip) {
 	this->server_sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -21,7 +28,7 @@ bool ClientNetUtils::connect_to_server(int port, string ip) {
 
 	if (connect(this->server_sockfd, (struct sockaddr *) &this->servaddr,
 		sizeof(this->servaddr)) == SOCKET_ERROR) {
-    cout << "CONNECT FAILED" << errno << endl;
+		cout << "CONNECT FAILED" << errno << endl;
 		this->server_sockfd = -1;
 		return false;
 	}
@@ -50,10 +57,14 @@ bool ClientNetUtils::send_to_server(NetPacket* packet) {
 	return true;
 }
 
-bool ClientNetUtils::receive_from_server() {
-  cout << "ENTERING RECEIVE FROM SERVER" << endl;
-	if (this->server_sockfd == -1)
-		return false;
+void * ClientNetUtils::receive_from_server(void *args) {
+	// Make sure ending this thread doesn't kill the client.
+	pthread_detach(pthread_self());
+
+	int *server_sockfd = (int *) args;
+	cout << "ENTERING RECEIVE FROM SERVER" << endl;
+	if (*server_sockfd == -1)
+		return NULL;
 
 	int bufLen = 6000;
 	int nbytes;
@@ -64,16 +75,15 @@ bool ClientNetUtils::receive_from_server() {
 	memset(buildBuf, 0, bufLen);
 
 	int packet_size = -1;
-	while (nbytes = recv(this->server_sockfd, inputBuf, bufLen, 0) > 0) {
+	while ((nbytes = recv(*server_sockfd, inputBuf, bufLen, 0)) && (nbytes > 0)) {
 
-    cout << "NBYTES IS " << nbytes << endl;
-		if (nbytes + buildLen > buildLen)
+		cout << "NBYTES RECEIVED IS " << nbytes << endl;
+		if (nbytes + buildLen > bufLen)
 			nbytes = bufLen - buildLen;
 		// Move all received bytes over to build buf
 		memcpy(buildBuf + buildLen, inputBuf, nbytes);
 		buildLen += nbytes;
 
-    cout << "CHECKPOINT ONE" << endl;
 		// Clear input buf
 		memset(inputBuf, 0, bufLen);
 
@@ -87,47 +97,46 @@ bool ClientNetUtils::receive_from_server() {
 				// One complete packet is in the buffer.
 				if (buildLen >= packet_size) {
 					int packet_type;
-          cout << "CHECKPOINT ONE.FIVE" << endl;
 					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
 					packet_type = ntohl(packet_type);
 
-          cout << "CHECKPOINT TWO" << endl;
 					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
 					char payload[payload_size];
 					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
 					if (packet_type == PacketType::SHIP_INIT) {
-						protos::ShipInitPacket ship_init_packet;
-						ship_init_packet.ParseFromString(payload);
-						protos::RenderedObj ship = ship_init_packet.ship();
-						cout << "THIS IS SHIP ID AND MASS: " << ship.id() << " " << ship.mass() << endl;
+            cout << "RECEIVED SHIP PACKET!" << endl;
+						protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
+						ship_init_packet->ParseFromString(payload);
+						protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
+//						protos::RenderedObj ship = ship_init_packet->ship();
+						cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
+						fill_packet_queue(que, ship);
 					} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
 						protos::ObjsAndEventsPacket objs_and_events_packet;
 						objs_and_events_packet.ParseFromString(payload);
-						fill_packet_queue(objs_and_events_packet);
+						//fill_packet_queue(*que, objs_and_events_packet);
+						packet_size = -1;
 					} else {
 						cout << "Received Invalid Packet Type" << endl;
 					}
-          cout << "CHECKPOINT THREE" << endl;
-					packet_size = -1;
 					// There are more packets in net buffer.
 					if (buildLen > packet_size) {
 						// Copy other packets to beginning of buffer and reset build len.
-            cout << "CHECKPOINT FOUR" << endl;
 						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
-						buildLen =- packet_size;
-            cout << "CHECKPOINT FIVE" << endl;
+						buildLen -= packet_size;
 						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
 					}
+					packet_size = -1;
 				}
 			}
 		}
 	}
-
-	return true;
+	return NULL;
 }
 
-void ClientNetUtils::fill_packet_queue(protos::ObjsAndEventsPacket) {
+void ClientNetUtils::fill_packet_queue(queue<protos::RenderedObj> *obj_queue, protos::RenderedObj *packet) {
+	obj_queue->push(*packet);
 }
 
 void ClientNetUtils::close_connection() {

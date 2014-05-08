@@ -6,22 +6,22 @@
 
 #include <netinet/in.h>
 #include <string>
-#include <stack>
+#include <queue>
 
 using namespace std;
 
 class ClientNetUtils {
 	public:
+		int server_sockfd;
+		ClientNetUtils(queue<protos::RenderedObj> *que);
 		bool connect_to_server(int port, string ip);
 		bool send_to_server(NetPacket *packet);
-		bool receive_from_server();
-		void fill_packet_queue(protos::ObjsAndEventsPacket);
+		static void * receive_from_server(void *args);
+		static void fill_packet_queue(queue<protos::RenderedObj> *obj_queue, protos::RenderedObj *packet);
 		void close_connection();
 
 	private:
-		int server_sockfd;
 		struct sockaddr_in servaddr;
-		stack<protos::RenderedObj> obj_queue;
 //		stack<Event> event_queue;
 };
 
