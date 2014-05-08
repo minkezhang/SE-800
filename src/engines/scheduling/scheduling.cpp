@@ -20,7 +20,7 @@ void SchedulingEngine::cycle() {
 	this->status = RUNNING;
 	while(this->signal != 0) {
 		for(uint32_t i = 0; i < this->calendars.size(); i++) {
-			// spawn threads & execute on timestamp
+			
 		}
 	}
 	this->shutdown();

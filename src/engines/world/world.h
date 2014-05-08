@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../common/engine.h"
+#include "../scheduling/scheduling.h"
 #include "../../classes/team.h"
 
 /**
@@ -33,6 +34,7 @@ class WorldEngine : Engine {
 
 	private:
 		std::vector<Team *> teams;
+		SchedulingEngine scheduler;
 };
 
 #endif
