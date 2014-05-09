@@ -1,10 +1,9 @@
 #ifndef _ENVIRONMENT_H
 #define _ENVIRONMENT_H
 
-#include <vector>
-
 #include "../../engines/physics/grid.h"
 #include "../../engines/physics/projectile.h"
+#include <vector>
 
 class Environment {
 	public:

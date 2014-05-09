@@ -5,8 +5,7 @@
 
 using namespace std;
 
-Projectile::Projectile(int id, int clippable, float mass, float max_tolerance)
-		: id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance) {}
+Projectile::Projectile(int id, int clippable, float mass, float max_tolerance) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance) {}
 
 // GET FUNCTIONS
 
@@ -39,7 +38,7 @@ int Projectile::is_clippable() {
 }
 
 vector<float> Projectile::get_d() {
-  return this->d;
+	return this->d;
 }
 
 vector<float> Projectile::get_v() {

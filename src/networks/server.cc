@@ -47,9 +47,11 @@ void Server::start_server(int port) {
 }
 
 int Server::get_client_fd(int id) {
+	return(0);
 }
 
 bool Server::send_to_client(NetPacket *packet, int client_id) {
+	std::cout << "send_to_client called\n";
 	int client_socketfd = client_id;
 	struct sockaddr_in clientaddr = client_id_to_sockaddr[client_id];
 
@@ -69,10 +71,11 @@ bool Server::send_to_client(NetPacket *packet, int client_id) {
 	sendto(client_socketfd, gen_packet.packet().c_str(), sizeof(gen_packet.packet()), 0,
 		(struct sockaddr *) &clientaddr, sizeof(clientaddr));
 
+	// TODO -- get return codes from sendto
+	return(1);
 }
 
 void *Server::accept_clients(void *args) {
-
 	std::cout << "ABOUT TO LISTEN FOR CLIENTS" << std::endl;
 	int *port = (int *) args;
 	std::cout << "port number is " << *port << std::endl;
@@ -133,6 +136,7 @@ void *Server::accept_clients(void *args) {
 }
 
 void * Server::serve_client(void *args) {
+	std::cout << "server_client spawned\n";
 	// Make sure ending this thread doesn't kill the server.
 	pthread_detach(pthread_self());
 
@@ -174,7 +178,7 @@ void * Server::serve_client(void *args) {
 		// Parse build buf for all received protos.
 		if (packet_size == -1) {
 			// Assume this is the beginning of a packet. Try to set pack size.
-			if (buildLen >= sizeof(uint32_t)) {
+			if ((uint32_t) buildLen >= sizeof(uint32_t)) {
 				memcpy(&packet_size, buildBuf, sizeof(uint32_t));
 				packet_size = ntohl(packet_size);
 
@@ -212,10 +216,47 @@ void * Server::serve_client(void *args) {
 					packet_size = -1;
 				}
 			}
+		} else {
+
+				// One complete packet is in the buffer.
+				if (buildLen >= packet_size) {
+					int packet_type;
+					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
+					packet_type = ntohl(packet_type);
+
+					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
+					char payload[payload_size];
+					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+
+					if (packet_type == PacketType::CONTROL_INPUT) {
+						protos::ControlInput control_input_packet;
+						control_input_packet.ParseFromString(payload);
+            std::cout << "RECEIVED UI CONTROL PACKET" << std::endl;
+						if (control_input_packet.action() == Action::ACCEL) {
+							serv_utils.send_to_client(&packet, client_socketfd);
+						}
+					} else if (packet_type == PacketType::EVENT_ACK) {
+						// TODO: Handle event ack packet receipt.
+					} else {
+						std::cout << "Received Invalid Packet Type" << std::endl;
+					}
+					// There are more packets in net buffer.
+					if (buildLen > packet_size) {
+						// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
+						// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
+						// Copy other packets to beginning of buffer and reset build len.
+						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
+						buildLen -= packet_size;
+						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
+					}
+					packet_size = -1;
+				}
 		}
 	}
 	pthread_exit(NULL);
+	return(NULL);
 }
 
 NetPacket Server::receive_from_client(int client_fd) {
+	return NetPacket();
 }

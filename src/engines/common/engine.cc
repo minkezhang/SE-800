@@ -18,6 +18,6 @@ void Engine::shutdown() {
 	throw BaseClassUnimplementedError();
 }
 
-int Engine::get_status() {
-	return(this->status);
-}
+int Engine::get_status() { return(this->status); }
+
+int Engine::get_signal() { return(this->signal); }

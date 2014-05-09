@@ -1,5 +1,5 @@
+#include <stdio.h>
 #include <algorithm>
-#include <thread>
 
 #include "scheduling.h"
 
@@ -15,19 +15,25 @@ void SchedulingEngine::add_calendar(Calendar *calendar) {
 	}
 }
 
-void SchedulingEngine::ignite() { this->status = INITIALIZED; }
+void SchedulingEngine::ignite() {
+	for(uint32_t i = 0; i < this->calendars.size(); i++) {
+		std::thread t = std::thread(&Calendar::run, this->calendars.at(i));
+		this->threads.push_back(&t);
+	}
+	this->status = INITIALIZED;
+}
 
 void SchedulingEngine::cycle() {
 	this->status = RUNNING;
-	while(this->signal != 0) {
-		for(uint32_t i = 0; i < this->calendars.size(); i++) {
-			// std::thread x (this->calendars.at(i)->run);
-		}
-	}
-	this->shutdown();
 }
 
 void SchedulingEngine::shutdown() {
 	this->status = STOPPED;
 	this->signal = 0;
+	for(uint32_t i = 0; i < this->calendars.size(); i++) {
+		this->calendars.at(i)->shutdown();
+	}
+	for(uint32_t i = 0; i < this->calendars.size(); i++) {
+		this->threads.at(i)->join();
+	}
 }

@@ -13,7 +13,7 @@
 
 class WorldEngine : Engine {
 	public:
-		WorldEngine();
+		WorldEngine(SchedulingEngine *scheduler);
 		~WorldEngine();
 
 		std::vector<Team *> get_teams();
@@ -34,7 +34,7 @@ class WorldEngine : Engine {
 
 	private:
 		std::vector<Team *> teams;
-		SchedulingEngine scheduler;
+		SchedulingEngine *scheduler;
 };
 
 #endif

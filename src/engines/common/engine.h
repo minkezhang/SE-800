@@ -16,7 +16,9 @@ class Engine {
 		virtual void cycle();
 		virtual void shutdown();
 
-		virtual int get_status();
+		int get_status();
+		int get_signal();
+
 	protected:
 		int status;
 		/**

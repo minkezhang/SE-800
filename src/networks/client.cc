@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <errno.h>
+#include <unistd.h>
 #include <queue>
 #include <unistd.h>
 #include <mutex>
