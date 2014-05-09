@@ -106,11 +106,13 @@ void *Server::accept_clients(void *args) {
 		num_clients++;
 		setsockopt(clientSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 		// Retrieve client hostname
+/*
 		struct hostent *he;
 		struct in_addr ipv4addr;
 		char *IP = inet_ntoa(clientAddr.sin_addr);
 		inet_pton(AF_INET, IP, &ipv4addr);
 		he = gethostbyaddr(&ipv4addr, sizeof(ipv4addr), AF_INET);
+*/
 
 		// DO WE HAVE TO ALLOCATE CLIENTADDR STRUCT AND CLIENTSOCKET INFO???
 		this->client_fd_list.push_back(clientSocket);
@@ -143,7 +145,7 @@ void * Server::serve_client(void *args) {
 	Server serv_utils;
 	serve_client_args *sockets = (serve_client_args *) args;
 	int client_socketfd = sockets->client_socketfd;
-	int server_socketfd = sockets->server_socketfd;
+	//int server_socketfd = sockets->server_socketfd;
 
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
 	Ship ship(1, 1, 2.0, 2.0);
@@ -181,76 +183,41 @@ void * Server::serve_client(void *args) {
 			if ((uint32_t) buildLen >= sizeof(uint32_t)) {
 				memcpy(&packet_size, buildBuf, sizeof(uint32_t));
 				packet_size = ntohl(packet_size);
-
-				// One complete packet is in the buffer.
-				if (buildLen >= packet_size) {
-					int packet_type;
-					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
-					packet_type = ntohl(packet_type);
-
-					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-					char payload[payload_size];
-					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
-
-					if (packet_type == PacketType::CONTROL_INPUT) {
-						protos::ControlInput control_input_packet;
-						control_input_packet.ParseFromString(payload);
-            std::cout << "RECEIVED UI CONTROL PACKET" << std::endl;
-						if (control_input_packet.action() == Action::ACCEL) {
-							serv_utils.send_to_client(&packet, client_socketfd);
-						}
-					} else if (packet_type == PacketType::EVENT_ACK) {
-						// TODO: Handle event ack packet receipt.
-					} else {
-						std::cout << "Received Invalid Packet Type" << std::endl;
-					}
-					// There are more packets in net buffer.
-					if (buildLen > packet_size) {
-						// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
-						// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
-						// Copy other packets to beginning of buffer and reset build len.
-						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
-						buildLen -= packet_size;
-						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
-					}
-					packet_size = -1;
-				}
 			}
-		} else {
+		}
 
-				// One complete packet is in the buffer.
-				if (buildLen >= packet_size) {
-					int packet_type;
-					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
-					packet_type = ntohl(packet_type);
+		// One complete packet is in the buffer.
+		if (buildLen >= packet_size) {
+			int packet_type;
+			memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
+			packet_type = ntohl(packet_type);
 
-					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-					char payload[payload_size];
-					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+			int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
+			char payload[payload_size];
+			memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
-					if (packet_type == PacketType::CONTROL_INPUT) {
-						protos::ControlInput control_input_packet;
-						control_input_packet.ParseFromString(payload);
-            std::cout << "RECEIVED UI CONTROL PACKET" << std::endl;
-						if (control_input_packet.action() == Action::ACCEL) {
-							serv_utils.send_to_client(&packet, client_socketfd);
-						}
-					} else if (packet_type == PacketType::EVENT_ACK) {
-						// TODO: Handle event ack packet receipt.
-					} else {
-						std::cout << "Received Invalid Packet Type" << std::endl;
-					}
-					// There are more packets in net buffer.
-					if (buildLen > packet_size) {
-						// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
-						// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
-						// Copy other packets to beginning of buffer and reset build len.
-						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
-						buildLen -= packet_size;
-						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
-					}
-					packet_size = -1;
+			if (packet_type == PacketType::CONTROL_INPUT) {
+				protos::ControlInput control_input_packet;
+				control_input_packet.ParseFromString(payload);
+				std::cout << "RECEIVED UI CONTROL PACKET" << std::endl;
+				if (control_input_packet.action() == Action::ACCEL) {
+					serv_utils.send_to_client(&packet, client_socketfd);
 				}
+			} else if (packet_type == PacketType::EVENT_ACK) {
+				// TODO: Handle event ack packet receipt.
+			} else {
+				std::cout << "Received Invalid Packet Type" << std::endl;
+			}
+			// There are more packets in net buffer.
+			if (buildLen > packet_size) {
+				// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
+				// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
+				// Copy other packets to beginning of buffer and reset build len.
+				memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
+				buildLen -= packet_size;
+				// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
+			}
+			packet_size = -1;
 		}
 	}
 	pthread_exit(NULL);

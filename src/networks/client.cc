@@ -88,105 +88,58 @@ void * ClientNetUtils::receive_from_server(void *args) {
 		// Move all received bytes over to build buf
 		memcpy(buildBuf + buildLen, inputBuf, nbytes);
 		buildLen += nbytes;
-		cout << "BUILD LEN IS " << buildLen << endl;
 
 		// Clear input buf
 		memset(inputBuf, 0, bufLen);
 
-		cout << "ONE PACKET SIZE IS " << packet_size << endl;
-    cout << "ONE BUILD LEN IS " << buildLen << endl;
 		// Parse build buf for all received protos.
 		if (packet_size == -1) {
 			// Assume this is the beginning of a new packet. Try to set pack size.
-			if (buildLen >= 4) {
+			if ((uint32_t) buildLen >= sizeof(uint32_t)) {
 				memcpy(&packet_size, buildBuf, sizeof(uint32_t));
 				packet_size = ntohl(packet_size);
-        cout << "TWO THIS IS THE PACKET SIZE " << packet_size << endl;			
-        cout << "TWO THIS IS THE BUILD LEN SIZE " << buildLen << endl;			
-
-				// One complete packet is in the buffer.
-				if (buildLen >= packet_size) {
-					cout << "BUILD LEN IS GREATER OR EQUAL TO PACKET SIZE " << endl;
-					int packet_type;
-					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
-					packet_type = ntohl(packet_type);
-
-					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-					char payload[payload_size];
-					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
-
-					cout << "THIS IS PACKET TYPE " << packet_type << endl;
-					if (packet_type == PacketType::SHIP_INIT) {
-            cout << "RECEIVED SHIP PACKET!" << endl;
-						protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
-						ship_init_packet->ParseFromString(payload);
-						protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
-//						protos::RenderedObj ship = ship_init_packet->ship();
-						cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
-            q_lock->lock();
-            cout << "NETWORK CLIENT UTIL LOCKING THE QUEUE" << endl;
-						fill_packet_queue(que, ship);
-						q_lock->unlock();
-					} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
-						protos::ObjsAndEventsPacket objs_and_events_packet;
-						objs_and_events_packet.ParseFromString(payload);
-						//fill_packet_queue(*que, objs_and_events_packet);
-						packet_size = -1;
-					} else {
-						cout << "Received Invalid Packet Type" << endl;
-					}
-					// There are more packets in net buffer.
-					if (buildLen > packet_size) {
-						// Copy other packets to beginning of buffer and reset build len.
-						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
-						buildLen -= packet_size;
-						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
-					}
-					packet_size = -1;
-				}
 			}
-		} else {
-				// One complete packet is in the buffer.
-				if (buildLen >= packet_size) {
-					cout << "BUILD LEN IS GREATER OR EQUAL TO PACKET SIZE " << endl;
-					int packet_type;
-					memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
-					packet_type = ntohl(packet_type);
+		}
 
-					int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-					char payload[payload_size];
-					memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+		// One complete packet is in the buffer.
+		if (buildLen >= packet_size) {
+			int packet_type;
+			memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
+			packet_type = ntohl(packet_type);
 
-					cout << "THIS IS PACKET TYPE " << packet_type << endl;
-					if (packet_type == PacketType::SHIP_INIT) {
-            cout << "RECEIVED SHIP PACKET!" << endl;
-						protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
-						ship_init_packet->ParseFromString(payload);
-						protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
-//						protos::RenderedObj ship = ship_init_packet->ship();
-						cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
-            q_lock->lock();
-            cout << "NETWORK CLIENT UTIL LOCKING THE QUEUE" << endl;
-						fill_packet_queue(que, ship);
-						q_lock->unlock();
-					} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
-						protos::ObjsAndEventsPacket objs_and_events_packet;
-						objs_and_events_packet.ParseFromString(payload);
-						//fill_packet_queue(*que, objs_and_events_packet);
-						packet_size = -1;
-					} else {
-						cout << "Received Invalid Packet Type" << endl;
-					}
-					// There are more packets in net buffer.
-					if (buildLen > packet_size) {
-						// Copy other packets to beginning of buffer and reset build len.
-						memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
-						buildLen -= packet_size;
-						// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
-					}
-					packet_size = -1;
-				}
+			int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
+			char payload[payload_size];
+			memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+
+			cout << "THIS IS PACKET TYPE " << packet_type << endl;
+			if (packet_type == PacketType::SHIP_INIT) {
+				cout << "RECEIVED SHIP PACKET!" << endl;
+				protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
+				ship_init_packet->ParseFromString(payload);
+				protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
+				//TODO: REMEMBER TO FREE THESE OBJECTS LATER!
+		//						protos::RenderedObj ship = ship_init_packet->ship();
+				cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
+				q_lock->lock();
+				fill_packet_queue(que, ship);
+				q_lock->unlock();
+			} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
+				protos::ObjsAndEventsPacket objs_and_events_packet;
+				objs_and_events_packet.ParseFromString(payload);
+				//fill_packet_queue(*que, objs_and_events_packet);
+				packet_size = -1;
+			} else {
+				cout << "Received Invalid Packet Type" << endl;
 			}
+			// There are more packets in net buffer.
+			if (buildLen > packet_size) {
+				// Copy other packets to beginning of buffer and reset build len.
+				memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
+				buildLen -= packet_size;
+				// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
+			}
+			packet_size = -1;
+		}
 	}
 	return NULL;
 }
