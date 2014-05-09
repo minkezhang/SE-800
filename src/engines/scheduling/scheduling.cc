@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <algorithm>
 
 #include "scheduling.h"
@@ -30,12 +31,9 @@ void SchedulingEngine::shutdown() {
 	this->status = STOPPED;
 	this->signal = 0;
 	for(uint32_t i = 0; i < this->calendars.size(); i++) {
-		this->calendars.at(i)->set_signal();
+		this->calendars.at(i)->shutdown();
 	}
 	for(uint32_t i = 0; i < this->calendars.size(); i++) {
 		this->threads.at(i)->join();
-	}
-	for(uint32_t i = 0; i < this->calendars.size(); i++) {
-		this->calendars.at(i)->shutdown();
 	}
 }

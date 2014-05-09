@@ -53,7 +53,7 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 	// Write in vectors to projectile
 	p->set_r(rol);
 	p->set_p(pit);
-	p->set_y(yaw);						 						 
+	p->set_y(yaw);
 }
 
 // Arguments are timestep (for 300 Hz, set t to 1/300) and projectile to be integrated

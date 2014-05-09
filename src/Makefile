@@ -1,8 +1,8 @@
 CC=g++
 
 # beware synchronization issues with -O3 -- remember to use volatile for shared variables
-# CFLAGS=-Wall -Werror -O3 -std=c++11
-CFLAGS=-Wall -O3 -std=c++11
+# CFLAGS=-Wall -Werror -O3 -std=c++11 -g
+CFLAGS=-Wall -std=c++11 -g
 LIBS=-pthread -lm -lprotobuf
 
 # all the source files that we need should be listed here
