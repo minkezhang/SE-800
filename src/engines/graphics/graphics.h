@@ -1,18 +1,20 @@
 #ifndef _GRAPHICSENGINE_H
 #define _GRAPHICSENGINE_H
 
-#include <list>
-
 //  std::map used to search for object IDs in constant time.
 #include <map>
+#include <osg/Group>
+#include <osg/Node>
+#include <osgViewer/Viewer>
+#include <vector>
 
+#include "../physics/projectile.h"
 #include "../common/engine.h"
 #include "../../classes/ship.h"
 
 class GraphicsEngine : public Engine {
 	public:
 		GraphicsEngine();
-		~GraphicsEngine();
 
 		/**
 		 * consider allowing the NetworkEngine to fill the current object list -- the graphics engine would therefore only need to check
@@ -20,6 +22,9 @@ class GraphicsEngine : public Engine {
 		 *
 		 * challenges to consider -- sync NetworkEngine with GraphicsEngine cycle frequency (60Hz), unreliability of network, etc.
 		 */
+		void ignite();
+		void cycle();
+		void shutdown();
 		void fill_cur_objects(Projectile *projectiles);
 
 		/**
@@ -28,15 +33,19 @@ class GraphicsEngine : public Engine {
 
 	private:
 		int team_id;
+		osg::Group *root;
+		osgViewer::Viewer viewer;
 
 		std::map<int, Ship> old_ships;			// all ships, including current ship
-		std::map<int, Asteroid> old_asteroids;
+		//std::map<int, Asteroid> old_asteroids;
 
 		std::map<int, Ship> cur_ships;
-		std::map<int, Asteroid> cur_asteroids;
+		//std::map<int, Asteroid> cur_asteroids;
 
 		std::vector<float> size;			// size of world
+		osg::Node* create_world_cube();
 		void render_world();				// draw world cube from pre-loaded dimensions and assets
+		void viewer_init();
 		void render_camera();				// position the camera behind rendered ship -- interpolate camera position based on timestep delta
 
 		void render_objects();				// draw and interpolate position of each object kept in memory
