@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+#include <pthread.h>
 
 #include "engines/world/world.h"
 #include "engines/physics/physics.h"
