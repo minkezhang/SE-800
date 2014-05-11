@@ -65,14 +65,14 @@ void PacketUtils::make_packet(
 	 Ship* ship = (Ship *) payload;
 	 
 	 // Fill specific proto packet
-	 protos::ShipInitPacket ship_init_packet;
-	 protos::RenderedObj *ship_packet = ship_init_packet.mutable_ship();
+	 protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
+	 protos::RenderedObj *ship_packet = ship_init_packet->mutable_ship();
 	 fill_obj_packet(ship_packet, ship);
 	 
 	 // ship_packet.set_weapon_index(ship->get_weapon_index());
 
 	 // Serialize specific proto packet
-	 if (!ship_init_packet.SerializeToString(&serialized_packet)) {
+	 if (!ship_init_packet->SerializeToString(&serialized_packet)) {
 		cerr << "Could not serialize ship init package to string." << endl;
 	 }
 

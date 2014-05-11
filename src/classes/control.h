@@ -1,6 +1,11 @@
-#ifndef _CONTROL_H
-#define _CONTROL_H
+#ifndef _UICONTROL_H
+#define _UICONTROL_H
 
+#include <osgGA/GUIActionAdapter>
+#include <osgGA/GUIEventAdapter>
+#include <osgGA/GUIEventHandler>
+
+#include "../networks/client.h"
 #include "../networks/packetprotos.pb.h"
 
 enum Action {
@@ -14,7 +19,19 @@ enum Action {
 	SPEC_POWERUP
 };
 
-class Control {
+class ClientControl {
+	public:
+		class UIEventHandler : public osgGA::GUIEventHandler {
+			public:
+				UIEventHandler(ClientNetUtils *net_utils);
+				virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter&);
+				virtual void accept(osgGA::GUIEventHandlerVisitor& v);
+			private:
+				ClientNetUtils *net_utils;
+		};
+};
+
+class ServerControl {
 	public:
 		static void update_physics(protos::ControlInput control);
 };

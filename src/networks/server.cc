@@ -36,10 +36,12 @@ void build_ship(Ship *ship) {
 }
 
 Server::Server() {
+	this->server_socketfd = -1;
 }
 
 Server::~Server() {
-	close(this->server_socketfd);
+	if (this->server_socketfd != -1)
+		close(this->server_socketfd);
 }
 
 void Server::start_server(int port) {
@@ -53,7 +55,8 @@ int Server::get_client_fd(int id) {
 bool Server::send_to_client(NetPacket *packet, int client_id) {
 	std::cout << "send_to_client called\n";
 	int client_socketfd = client_id;
-	struct sockaddr_in clientaddr = client_id_to_sockaddr[client_id];
+	std::cout << "CLIENT ID IS " << client_id << std::endl;
+	struct sockaddr_in clientaddr = this->client_id_to_sockaddr[client_id];
 
 	protos::GeneralPacket gen_packet;
 	gen_packet.ParseFromString(packet->serialized_packet);
@@ -80,10 +83,10 @@ void *Server::accept_clients(void *args) {
 	int *port = (int *) args;
 	std::cout << "port number is " << *port << std::endl;
 	int num_clients = 0;
-	int clientSocket;
+	int *clientSocket = (int *) malloc(sizeof(int));
 	pthread_t worker_thread;
 	struct sockaddr_in serverAddr;
-	struct sockaddr_in clientAddr;
+	struct sockaddr_in *clientAddr = (struct sockaddr_in *) malloc(sizeof(struct sockaddr_in));;
 	int yes = 1;
 	socklen_t sinSize = sizeof(struct sockaddr_in);
 
@@ -101,33 +104,29 @@ void *Server::accept_clients(void *args) {
 		std::cout << "ERROR WITH LISTEN " << std::endl;
 
 	while(1) {
-		clientSocket = accept(this->server_socketfd, (struct sockaddr *) &clientAddr, &sinSize);
+		*clientSocket = accept(this->server_socketfd, (struct sockaddr *) clientAddr, &sinSize);
 		std::cout << "Found a client!" << std::endl;
 		num_clients++;
-		setsockopt(clientSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
-		// Retrieve client hostname
-/*
-		struct hostent *he;
-		struct in_addr ipv4addr;
-		char *IP = inet_ntoa(clientAddr.sin_addr);
-		inet_pton(AF_INET, IP, &ipv4addr);
-		he = gethostbyaddr(&ipv4addr, sizeof(ipv4addr), AF_INET);
-*/
+		setsockopt(*clientSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
+		std::cout << "THIS IS CLIENT SOCKETS " << *clientSocket << std::endl;
 		// DO WE HAVE TO ALLOCATE CLIENTADDR STRUCT AND CLIENTSOCKET INFO???
-		this->client_fd_list.push_back(clientSocket);
-		this->client_id_to_sockaddr.insert(std::pair<int, struct sockaddr_in>(clientSocket, clientAddr));
+		this->client_fd_list.push_back(1);
+		std::cout << "PUSHED ONE BACK" << std::endl;
+		this->client_fd_list.push_back(*clientSocket);
+		this->client_id_to_sockaddr.insert(std::pair<int, struct sockaddr_in>(*clientSocket, *clientAddr));
+		std::cout << "INSERTING CLIENT ID " << *clientSocket << std::endl;
 
 		// Pass on arguments to worker thread
 
 		// THIS NEEDS TO BE FREED LATER ON!!
 		serve_client_args *args = (serve_client_args *) malloc(sizeof(serve_client_args));
 		args->server_socketfd = this->server_socketfd;
-		args->client_socketfd = clientSocket;
+		args->client_socketfd = *clientSocket;
 		if (pthread_create(&worker_thread, NULL, serve_client, args) != 0) {
 			std::cout << "Could not create a worker thread." << std::endl;
 			num_clients--;
-			close(clientSocket);
+			close(*clientSocket);
 			pthread_exit(NULL);
 		}
 
@@ -213,7 +212,9 @@ void * Server::serve_client(void *args) {
 				// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
 				// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
 				// Copy other packets to beginning of buffer and reset build len.
-				memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
+				char tempBuf[bufLen - packet_size];
+				memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
+				memcpy(buildBuf, tempBuf, bufLen - packet_size);
 				buildLen -= packet_size;
 				// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
 			}

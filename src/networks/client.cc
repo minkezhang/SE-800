@@ -37,6 +37,7 @@ bool ClientNetUtils::connect_to_server(int port, string ip) {
 		this->server_sockfd = -1;
 		return false;
 	}
+	cout << "SERVER SOCKFD IS " << this->server_sockfd << endl;
 	return true;
 }
 
@@ -134,7 +135,9 @@ void * ClientNetUtils::receive_from_server(void *args) {
 			// There are more packets in net buffer.
 			if (buildLen > packet_size) {
 				// Copy other packets to beginning of buffer and reset build len.
-				memcpy(buildBuf, buildBuf + packet_size, bufLen - packet_size);
+				char tempBuf[bufLen - packet_size];
+				memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
+				memcpy(buildBuf, tempBuf, bufLen - packet_size);
 				buildLen -= packet_size;
 				// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
 			}

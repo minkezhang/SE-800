@@ -3,18 +3,26 @@
 
 //  std::map used to search for object IDs in constant time.
 #include <map>
+#include <mutex>
 #include <osg/Group>
 #include <osg/Node>
 #include <osgViewer/Viewer>
 #include <vector>
+#include <queue>
 
 #include "../physics/projectile.h"
 #include "../common/engine.h"
 #include "../../classes/ship.h"
+#include "../../networks/client.h"
+#include "../../networks/packetprotos.pb.h"
 
 class GraphicsEngine : public Engine {
 	public:
 		GraphicsEngine();
+
+		queue<protos::RenderedObj> packet_que;
+		std::mutex que_lock;
+		ClientNetUtils *net_utils;
 
 		/**
 		 * consider allowing the NetworkEngine to fill the current object list -- the graphics engine would therefore only need to check
@@ -34,6 +42,7 @@ class GraphicsEngine : public Engine {
 	private:
 		int team_id;
 		osg::Group *root;
+		protos::RenderedObj main_ship;
 		osgViewer::Viewer viewer;
 
 		std::map<int, Ship> old_ships;			// all ships, including current ship
@@ -45,8 +54,9 @@ class GraphicsEngine : public Engine {
 		std::vector<float> size;			// size of world
 		osg::Node* create_world_cube();
 		void render_world();				// draw world cube from pre-loaded dimensions and assets
+		void ship_init();
 		void viewer_init();
-		void render_camera();				// position the camera behind rendered ship -- interpolate camera position based on timestep delta
+		void update_camera();				// position the camera behind rendered ship -- interpolate camera position based on timestep delta
 
 		void render_objects();				// draw and interpolate position of each object kept in memory
 

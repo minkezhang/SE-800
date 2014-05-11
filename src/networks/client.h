@@ -7,13 +7,12 @@
 #include <netinet/in.h>
 #include <string>
 #include <queue>
-
-using namespace std;
+#include <mutex>
 
 class ClientNetUtils {
 	public:
 		int server_sockfd;
-		ClientNetUtils(queue<protos::RenderedObj> *que);
+		ClientNetUtils(queue<protos::RenderedObj> *que, std::mutex *que_lock);
 		bool connect_to_server(int port, string ip);
 		bool send_to_server(NetPacket *packet);
 		static void * receive_from_server(void *args);
