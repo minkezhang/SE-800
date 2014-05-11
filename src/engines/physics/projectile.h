@@ -9,7 +9,7 @@
 
 class Projectile {
 	public:
-		Projectile(int id, int clippable, float mass, float max_tolerance);
+		Projectile(int id, int clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot);
 
 		/**
 		 * public-facing functions which can be freely queried

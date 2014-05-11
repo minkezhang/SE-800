@@ -40,3 +40,12 @@ void WorldEngine::shutdown() {
 	this->status = STOPPED;
 	this->scheduler->shutdown();
 }
+
+Ship *join(Pilot *p) {
+	Ship *s = new Ship(1, 10, 10, {1, 1, 1});
+	return(s);
+}
+
+PhysicsEngine *WorldEngine::physics_engine() {
+	return NULL;
+}

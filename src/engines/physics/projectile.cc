@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Projectile::Projectile(int id, int clippable, float mass, float max_tolerance) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance) {}
+Projectile::Projectile(int id, int clippable, float mass, float max_tolerance, vector<float> d, vector<float> v, vector<float> p, vector<float> r, float p_dot, float r_dot) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance), d(d), v(v), p(p), r(r), p_dot(p_dot), r_dot(r_dot) {}
 
 // GET FUNCTIONS
 

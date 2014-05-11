@@ -12,7 +12,7 @@
 
 class Ship : public Projectile {
 	public:
-		Ship(int id, int clippable, float mass, float max_tolerance);
+		Ship(int id, float mass, float max_tolerance, std::vector<float> d);
 		virtual int get_weapon_index();			// get current weapon index
 
 		virtual void del_weapon(Weapon *weapon);	// delete weapon from the ship

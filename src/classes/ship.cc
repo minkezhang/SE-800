@@ -2,8 +2,7 @@
 #include "../classes/weapon.h"
 #include "../engines/physics/projectile.h"
 
-Ship::Ship(int id, int clippable, float mass, float max_tolerance) :
-		Projectile(id, clippable, mass, max_tolerance) {}
+Ship::Ship(int id, float mass, float max_tolerance, std::vector<float> d) : Projectile(id, 1, mass, max_tolerance, d, { 0, 0, 0 }, { 0, 0, 0 }, { 0, 0, 0 }, 0, 0) {}
 
 int Ship::get_weapon_index() {
 	return this->weapon_index;
