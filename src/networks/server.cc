@@ -198,9 +198,13 @@ void * Server::serve_client(void *args) {
 			if (packet_type == PacketType::CONTROL_INPUT) {
 				protos::ControlInput control_input_packet;
 				control_input_packet.ParseFromString(payload);
-				std::cout << "RECEIVED UI CONTROL PACKET" << std::endl;
 				if (control_input_packet.action() == Action::ACCEL) {
+					std::cout << "Received Accel packet." << std::endl;
 					serv_utils.send_to_client(&packet, client_socketfd);
+				} else if (control_input_packet.action() == Action::BRAKE) {
+					std::cout << "Received Brake packet." << std::endl;
+				} else if (control_input_packet.action() == Action::BULLET) {
+					std::cout << "Received Bullet packet." << std::endl;
 				}
 			} else if (packet_type == PacketType::EVENT_ACK) {
 				// TODO: Handle event ack packet receipt.

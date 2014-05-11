@@ -123,6 +123,14 @@ void GraphicsEngine::ship_init() {
 		osg::Vec3d(1, 0, 0))));
 	main_ship_transform->setPosition(ship_pos);
 
+	// Add main ship to rendered object list.
+	rendered_obj* obj = new rendered_obj;
+	obj->obj = ship;
+	obj->update_pos = false;
+	obj->node = ship_mesh;
+	obj->trans_matrix = main_ship_transform;
+	cur_ships.insert(std::pair<int, rendered_obj*>(ship->id(), obj));
+
 	this->root->addChild(main_ship_transform);
 }
 
@@ -175,5 +183,5 @@ void GraphicsEngine::set_light_source() {
 void GraphicsEngine::set_shader() {
 }
 
-void GraphicsEngine::fill_old_objects() {
+void GraphicsEngine::update_rendered_objects() {
 }

@@ -17,6 +17,13 @@
 #include "../../networks/packetprotos.pb.h"
 
 class GraphicsEngine : public Engine {
+	struct rendered_obj {
+		protos::RenderedObj* obj;
+		bool update_pos;
+		osg::Node* node;
+		osg::PositionAttitudeTransform* trans_matrix;
+	};
+
 	public:
 		GraphicsEngine();
 
@@ -45,11 +52,11 @@ class GraphicsEngine : public Engine {
 		protos::RenderedObj main_ship;
 		osgViewer::Viewer viewer;
 
-		std::map<int, Ship> old_ships;			// all ships, including current ship
+		std::map<int, rendered_obj*> old_ships;			// all ships, including current ship
 		//std::map<int, Asteroid> old_asteroids;
 
-		std::map<int, Ship> cur_ships;
-		//std::map<int, Asteroid> cur_asteroids;
+		std::map<int, rendered_obj*> cur_ships;
+		std::map<int, rendered_obj*> cur_asteroids;
 
 		std::vector<float> size;			// size of world
 		osg::Node* create_world_cube();
@@ -67,7 +74,7 @@ class GraphicsEngine : public Engine {
 		 * see public function for alternative strategy
 		 * void fill_cur_objects();			// gets new objects -- an incoming network packet handler
 		 */
-		void fill_old_objects();			// copies cur_objects into old_objects at the end of the cycle
+		void update_rendered_objects();			// copies cur_objects into old_objects at the end of the cycle
 };
 
 #endif

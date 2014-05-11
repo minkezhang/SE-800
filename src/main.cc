@@ -6,7 +6,9 @@
 
 #include "engines/world/world.h"
 #include "engines/physics/physics.h"
+#include "engines/graphics/graphics.h"
 #include "networks/server.h"
+#include "networks/client.h"
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
 
@@ -24,27 +26,42 @@ int main(int argc, char **argv) {
 	int port = std::stoi(argv[2]);
 	SchedulingEngine scheduler = SchedulingEngine();
 
+	std::thread network;
 	if(!strcmp(argv[1], "server")) {
-		PhysicsEngine p = PhysicsEngine();
-		Calendar cal_p = Calendar(1, &p);
-		scheduler.add_calendar(&cal_p);
-	} else if(!strcmp(argv[2], "client")) {
+		 Server *server = new Server;
+		 network = std::thread(&Server::accept_clients, server, (void *) &port);
+
+		//PhysicsEngine p = PhysicsEngine();
+		//Calendar cal_p = Calendar(1, &p);
+		//scheduler.add_calendar(&cal_p);
+	} else if(!strcmp(argv[1], "client")) {
+		pthread_t receive_packet_thread;
+		string ip(argv[3]);
+		GraphicsEngine *engine = new GraphicsEngine();
+		ClientNetUtils *c = new ClientNetUtils(&engine->packet_que, &engine->que_lock);
+
+		if (!c->connect_to_server(port, ip)) {
+			std::cout << "Could not connect to server. Exiting." << std::endl;
+			exit(1);
+		}
+		if (pthread_create(&receive_packet_thread, NULL, ClientNetUtils::receive_from_server, &c->server_sockfd) != 0) {
+			std::cout << "Could not create a worker thread. Exiting." << std::endl;
+			exit(1);
+		}
+		engine->net_utils = c;
+		engine->ignite();
+		while (1) {
+			engine->cycle();
+		}
+
+		//GraphicsEngine *g = new GraphicsEngine();
+		// g->net_utils = c;
+		//Calendar cal_g = Calendar(1, g);
+		//scheduler.add_calendar(&cal_p);
 	}
 
 	WorldEngine world = WorldEngine(&scheduler);
 	std::thread game;
-
-	std::thread network;
-	if(!strcmp(argv[1], "server")) {
-		// Server server = Server();
-		// network = std::thread(&Server::accept_clients, &server, (void *) &port);
-	} else if(!strcmp(argv[2], "client")) {
-		char *ip = argv[3];
-		/*
-		ClientNetUtils c = ClientNetUtils();
-		c.connect_to_server(port, "127.0.0.1");
-		*/
-	}
 
 	world.ignite();
 

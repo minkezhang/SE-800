@@ -20,19 +20,31 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 					case osgGA::GUIEventAdapter::KEY_Up:
 					{
 						int action = Action::ACCEL;
-						NetPacket *packet = new NetPacket;
-						PacketUtils::make_packet(packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
-						if (net_utils->send_to_server(packet))
+						NetPacket packet;
+						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+						if (net_utils->send_to_server(&packet))
 							std::cout << "Sent accel control packet." << std::endl;
 					}
 						return false;
 						break;
-					case osgGA::GUIEventAdapter::KEY_Left:
-						std::cout << "Left key pressed." << std::endl;
+					case osgGA::GUIEventAdapter::KEY_Down:
+					{
+						int action = Action::BRAKE;
+						NetPacket packet;
+						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+						if (net_utils->send_to_server(&packet))
+							std::cout << "Sent brake control packet." << std::endl;
+					}
 						return false;
 						break;
-					case osgGA::GUIEventAdapter::KEY_Right:
-						std::cout << "Right key pressed." << std::endl;
+					case osgGA::GUIEventAdapter::KEY_Space:
+					{
+						int action = Action::BULLET;
+						NetPacket packet;
+						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+						if (net_utils->send_to_server(&packet))
+							std::cout << "Sent bullet control packet." << std::endl;
+					}
 						return false;
 						break;
 					default:
