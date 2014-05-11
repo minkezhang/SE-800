@@ -13,6 +13,8 @@
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
 
+#include "global.h"
+
 void usage(char *exec) {
 	std::cout << "usage: " << exec << " ( server < port > | client < port > < ip > )\n";
 	exit(0);
@@ -25,16 +27,21 @@ int main(int argc, char **argv) {
 		usage(argv[0]);
 	}
 	int port = std::stoi(argv[2]);
-	SchedulingEngine scheduler = SchedulingEngine();
 
+	// create empty world and schedule
+	SchedulingEngine scheduler = SchedulingEngine();
+	WorldEngine world = WorldEngine(&scheduler);
+	w = &world;
+	std::thread game;
 	std::thread network;
+
 	if(!strcmp(argv[1], "server")) {
 		 Server *server = new Server;
 		 network = std::thread(&Server::accept_clients, server, (void *) &port);
 
-		//PhysicsEngine p = PhysicsEngine();
-		//Calendar cal_p = Calendar(1, &p);
-		//scheduler.add_calendar(&cal_p);
+		// PhysicsEngine p = PhysicsEngine();
+		// Calendar cal_p = Calendar(1, &p);
+		// scheduler.add_calendar(&cal_p);
 	} else if(!strcmp(argv[1], "client")) {
 		pthread_t receive_packet_thread;
 		string ip(argv[3]);
@@ -61,21 +68,16 @@ int main(int argc, char **argv) {
 		//scheduler.add_calendar(&cal_p);
 	}
 
-	WorldEngine world = WorldEngine(&scheduler);
-	std::thread game;
-
-	world.ignite();
+	w->ignite();
 
 	// execute the game
 	game = std::thread(&WorldEngine::cycle, &world);
 
 	// wait for the network to shutdown -- probably when clients == 0
-	// network.join();
+	network.join();
 
 	// end the game
 	game.join();
-
-	printf("hi\n");
 
 	world.shutdown();
 	return(0);
