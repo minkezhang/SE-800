@@ -13,8 +13,6 @@
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
 
-#include "global.h"
-
 void usage(char *exec) {
 	std::cout << "usage: " << exec << " ( server < port > | client < port > < ip > )\n";
 	exit(0);
@@ -31,12 +29,11 @@ int main(int argc, char **argv) {
 	// create empty world and schedule
 	SchedulingEngine scheduler = SchedulingEngine();
 	WorldEngine world = WorldEngine(&scheduler);
-	se_800 = &world;
 	std::thread game;
 	std::thread network;
 
 	if(!strcmp(argv[1], "server")) {
-		 Server *server = new Server;
+		 Server *server = new Server(&world);
 		 network = std::thread(&Server::accept_clients, server, (void *) &port);
 
 		// PhysicsEngine p = PhysicsEngine();
@@ -68,7 +65,7 @@ int main(int argc, char **argv) {
 		//scheduler.add_calendar(&cal_p);
 	}
 
-	se_800->ignite();
+	world.ignite();
 
 	// execute the game
 	game = std::thread(&WorldEngine::cycle, &world);
