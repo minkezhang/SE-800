@@ -35,7 +35,10 @@ int main(int argc, char **argv) {
 	// engines to start with associated calendars
 	//	declare here to preserve scoping
 	PhysicsEngine *p;
+	GraphicsEngine *g;
 	Calendar *cal_p;
+	Calendar *cal_g;
+	ClientNetUtils *c;
 
 	if(!strcmp(argv[1], "server")) {
 		Server *server = new Server(&world);
@@ -47,8 +50,8 @@ int main(int argc, char **argv) {
 	} else if(!strcmp(argv[1], "client")) {
 		pthread_t receive_packet_thread;
 		string ip(argv[3]);
-		GraphicsEngine *g = new GraphicsEngine();
-		ClientNetUtils *c = new ClientNetUtils(&g->packet_que, &g->que_lock);
+		g = new GraphicsEngine();
+		c = new ClientNetUtils(&g->packet_que, &g->que_lock);
 
 		if (!c->connect_to_server(port, ip)) {
 			std::cout << "Could not connect to server. Exiting." << std::endl;
@@ -58,15 +61,12 @@ int main(int argc, char **argv) {
 			std::cout << "Could not create a worker thread. Exiting." << std::endl;
 			exit(1);
 		}
-		g->net_utils = c;
-		g->ignite();
-/*
-		while (1) {
-			engine->cycle();
-		}
-*/
-		Calendar *cal_g = new Calendar(1, g);
+
+		cal_g = new Calendar(1, g);
 		scheduler.add_calendar(cal_g);
+
+		g->ignite();
+		g->net_utils = c;
 	}
 
 	world.ignite();
