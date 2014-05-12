@@ -17,8 +17,8 @@ void SchedulingEngine::add_calendar(Calendar *calendar) {
 
 void SchedulingEngine::ignite() {
 	for(uint32_t i = 0; i < this->calendars.size(); i++) {
-		std::thread t = std::thread(&Calendar::run, this->calendars.at(i));
-		this->threads.push_back(&t);
+		std::thread *t = new std::thread(&Calendar::run, this->calendars.at(i));
+		this->threads.push_back(t);
 	}
 	this->status = INITIALIZED;
 }

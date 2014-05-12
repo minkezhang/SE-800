@@ -32,13 +32,18 @@ int main(int argc, char **argv) {
 	std::thread game;
 	std::thread network;
 
+	// engines to start with associated calendars
+	//	declare here to preserve scoping
+	PhysicsEngine *p;
+	Calendar *cal_p;
+
 	if(!strcmp(argv[1], "server")) {
 		 Server *server = new Server(&world);
 		 network = std::thread(&Server::accept_clients, server, (void *) &port);
 
-		// PhysicsEngine p = PhysicsEngine();
-		// Calendar cal_p = Calendar(1, &p);
-		// scheduler.add_calendar(&cal_p);
+		p = new PhysicsEngine();
+		cal_p = new Calendar(100, p);
+		scheduler.add_calendar(cal_p);
 	} else if(!strcmp(argv[1], "client")) {
 		pthread_t receive_packet_thread;
 		string ip(argv[3]);

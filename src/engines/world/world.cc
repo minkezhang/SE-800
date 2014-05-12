@@ -5,10 +5,6 @@
 #include "world.h"
 #include "../../classes/ship.h"
 
-/**
- * consider implementing an Game interface to handle network events and building and destroying the world
- */
-
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
 	status = UNINITIALIZED;
 }
@@ -29,7 +25,6 @@ void WorldEngine::ignite() {
 }
 
 void WorldEngine::cycle() {
-	std::cout << "calling world cycle" << std::endl;
 	this->status = RUNNING;
 	this->scheduler->ignite();
 	while(this->scheduler->get_signal()) {
@@ -42,6 +37,13 @@ void WorldEngine::shutdown() {
 	this->scheduler->shutdown();
 }
 
+/**
+ * skeletal function -- should
+ *
+ * 1) pick an existing ship in physics environment
+ * 2) assign pilot to ship with pilot p
+ * 3) return ship object
+ */
 Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { 1, 1, 1 };
 	Ship *s = new Ship(1, 10, 10, pos);
@@ -62,6 +64,9 @@ Ship *WorldEngine::join(Pilot *p) {
 	return(s);
 }
 
+/**
+ * returns the physics engine
+ */
 PhysicsEngine *WorldEngine::physics_engine() {
 	return NULL;
 }

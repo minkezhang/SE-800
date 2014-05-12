@@ -88,3 +88,7 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	p->set_d(pos_next);
 	p->set_v(vel_next);
 }
+
+void PhysicsEngine::ignite() {}
+void PhysicsEngine::cycle() {}
+void PhysicsEngine::shutdown() {}

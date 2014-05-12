@@ -11,7 +11,7 @@ class Calendar {
 		void run();
 		void shutdown();
 
-	private:
+	public:
 		float timestep;
 		Engine *engine;
 

@@ -19,6 +19,10 @@ class PhysicsEngine : public Engine {
 		void toggle_p_dot(int id, float valp);
 		void toggle_r_dot(int id, float valr);
 
+		void ignite() override;
+		void cycle() override;
+		void shutdown() override;
+
 	private:
 		Environment *environment;
 		void apply_rotation(float angle, int flag, Projectile *p);
