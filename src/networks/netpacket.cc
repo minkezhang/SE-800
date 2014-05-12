@@ -61,43 +61,44 @@ void PacketUtils::make_packet(
 	string serialized_packet;
 
 	if (type == PacketType::SHIP_INIT) {
-	 // Read argument
-	 Ship* ship = (Ship *) payload;
+		// Read argument
+		Ship* ship = (Ship *) payload;
 	 
-	 // Fill specific proto packet
-	 protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
-	 protos::RenderedObj *ship_packet = ship_init_packet->mutable_ship();
-	 fill_obj_packet(ship_packet, ship);
-	 
-	 // ship_packet.set_weapon_index(ship->get_weapon_index());
+		// Fill specific proto packet
+		protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
+		protos::RenderedObj *ship_packet = ship_init_packet->mutable_ship();
 
-	 // Serialize specific proto packet
-	 if (!ship_init_packet->SerializeToString(&serialized_packet)) {
-		cerr << "Could not serialize ship init package to string." << endl;
-	 }
+		fill_obj_packet(ship_packet, ship);
+	 
+		// ship_packet.set_weapon_index(ship->get_weapon_index());
+
+		// Serialize specific proto packet
+		if (!ship_init_packet->SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize ship init package to string." << endl;
+		}
 
 	} else if (type == PacketType::OBJS_AND_EVENTS) {
-	 // Read arguments
-	 map<int, Projectile*> *objs = (map<int, Projectile*> *) payload;
-	 // TODO(DEFINE EVENT CLASS!!
-	 //list<Event> *events;
-	 //if (extra_payload != NULL) {
-	 // events = (list<Event> *) extra_payload;
-	 //}
-	 
-	 // Fill specific proto packet
-	 protos::ObjsAndEventsPacket objs_and_events_packet;
-	 
-	 for (map<int, Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
-		protos::RenderedObj* obj_packet = objs_and_events_packet.add_obj();
-		fill_obj_packet(obj_packet, &(*i->second));
-		string obj_type = typeid(*i->second).name();
-		// (TODO): Set weapon type!`
-		//if (obj_type.compare("4Ship") == 0) {
-		// Ship *ship = &(*i->second);
-		// obj_packet->set_weapon_index(ship->get_weapon_index());
+		// Read arguments
+		map<int, Projectile*> *objs = (map<int, Projectile*> *) payload;
+		// TODO(DEFINE EVENT CLASS!!
+		//list<Event> *events;
+		//if (extra_payload != NULL) {
+		// events = (list<Event> *) extra_payload;
 		//}
-	 }
+	 
+		// Fill specific proto packet
+		protos::ObjsAndEventsPacket objs_and_events_packet;
+	 
+		for (map<int, Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
+			protos::RenderedObj* obj_packet = objs_and_events_packet.add_obj();
+			fill_obj_packet(obj_packet, &(*i->second));
+			string obj_type = typeid(*i->second).name();
+			// (TODO): Set weapon type!`
+			//if (obj_type.compare("4Ship") == 0) {
+			// Ship *ship = &(*i->second);
+			// obj_packet->set_weapon_index(ship->get_weapon_index());
+			//}
+		}
 	 
 	 //for (list<Event>::iterator i = events->begin(); i != events->end(); ++i) {
 	 // protos::Event* event_packet = objs_and_events_packet.add_event();
@@ -105,39 +106,38 @@ void PacketUtils::make_packet(
 	 //}
 	 
 	 // Serialize specific proto packet
-	 if (!objs_and_events_packet.SerializeToString(&serialized_packet)) {
-		cerr << "Could not serialize objs and event packet to string." << endl;
-	 }
+		if (!objs_and_events_packet.SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize objs and event packet to string." << endl;
+		}
 	} else if (type == PacketType::EVENT_ACK) {
-	 // Read arguments
-	 int *ack = (int *) payload;
+		// Read arguments
+		int *ack = (int *) payload;
 	 
-	 // Fill specific proto packet
-	 protos::EventAckPacket event_ack_packet;
-	 event_ack_packet.set_ack(*ack);
+		// Fill specific proto packet
+		protos::EventAckPacket event_ack_packet;
+		event_ack_packet.set_ack(*ack);
 
-	 // Serialize specific proto packet
-	 if (!event_ack_packet.SerializeToString(&serialized_packet)) {
-		cerr << "Could not serialize event ack packet to string." << endl;
-	 }
-	 
+		// Serialize specific proto packet
+		if (!event_ack_packet.SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize event ack packet to string." << endl;
+		}
 	} else if (type == PacketType::CONTROL_INPUT) {
-	 protos::ControlInput control_input_packet;
-	 int *action = (int *) payload;
-	 float *tilt;
+		protos::ControlInput control_input_packet;
+		int *action = (int *) payload;
+		float *tilt;
 
-	 control_input_packet.set_action(*action);
-	 if (*action == Action::ROLL_TILT || *action == Action::PITCH_TILT) {
-	 tilt = (float *) extra_payload;
-		control_input_packet.set_tilt(*tilt);
-	 }
+		control_input_packet.set_action(*action);
+		if (*action == Action::ROLL_TILT || *action == Action::PITCH_TILT) {
+			tilt = (float *) extra_payload;
+			control_input_packet.set_tilt(*tilt);
+		}
 
 	 // Serialize specific proto packet
-	 if (!control_input_packet.SerializeToString(&serialized_packet)) {
-		cerr << "Could not serialize control input packet to string." << endl;
-	 }
+		if (!control_input_packet.SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize control input packet to string." << endl;
+		}
 	} else {
-	 cerr << "Incorrect type argument specified." << endl;
+		cerr << "Incorrect type argument specified." << endl;
 	}
 
 
@@ -148,7 +148,7 @@ void PacketUtils::make_packet(
 	// Serialize general proto packet
 	string serialized_gen_packet;
 	if (!gen_packet.SerializeToString(&serialized_gen_packet)) {
-	 cerr << "Could not serialize gen packet to string." << endl;
+		cerr << "Could not serialize gen packet to string." << endl;
 	}
 
 
@@ -156,7 +156,7 @@ void PacketUtils::make_packet(
 	 // Packet length is composed of packet size (int),
 	 // packet type (int), and a serialized payload packet (string)
 	int packet_size = sizeof(uint32_t) + sizeof(uint32_t) +
-		 sizeof(gen_packet.packet());
+		sizeof(gen_packet.packet());
 	packet->packet_len = packet_size;
 	packet->serialized_packet = serialized_gen_packet;
 }
@@ -179,7 +179,7 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 	vel_vector->set_y(obj->get_v().at(1));
 	vel_vector->set_z(obj->get_v().at(2));
 
- obj_packet->set_accel(obj->get_a());
+	obj_packet->set_accel(obj->get_a());
 
 	protos::vector *pitch_vector = obj_packet->mutable_pitch();
 	pitch_vector->set_x(obj->get_p().at(0));

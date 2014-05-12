@@ -43,7 +43,22 @@ void WorldEngine::shutdown() {
 }
 
 Ship *WorldEngine::join(Pilot *p) {
-	Ship *s = new Ship(1, 10, 10, {1, 1, 1});
+	std::vector<float> pos { 1, 1, 1 };
+	Ship *s = new Ship(1, 10, 10, pos);
+	std::vector<float> vel { 0, 0, 0 };
+	s->set_v(vel);
+	s->set_a(0.0);
+
+	vector<float> pitch = { 0, 0, 0 };
+	s->set_p(pitch);
+	vector<float> yaw { 0, 0, 0 };
+	s->set_y(yaw);
+	vector<float> roll { 0, 0, 0 };
+	s->set_r(roll);
+
+	s->set_p_dot(0.0);
+	s->set_r_dot(0.0);
+
 	return(s);
 }
 

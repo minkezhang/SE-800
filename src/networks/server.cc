@@ -160,7 +160,7 @@ void * Server::serve_client(void *args) {
 	PacketUtils::fill_obj_packet(&ship_packet, ship);
 	NetPacket packet;
 
-	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) &ship, NULL);
+	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
 
 	// RECEIVE UI UPDATES FROM CLIENT
