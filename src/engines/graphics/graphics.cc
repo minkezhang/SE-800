@@ -185,7 +185,7 @@ void GraphicsEngine::set_shader() {
 
 void GraphicsEngine::update_rendered_objects() {
 	// Find new objects and events packet
-/*
+	/*
 	protos::ObjsAndEventsPacket *packet;
 	this->que_lock.lock();
 	if (this->packet_que.size() > 0) {
@@ -195,7 +195,10 @@ void GraphicsEngine::update_rendered_objects() {
 		break;
 	}
 	this->que_lock.unlock();
-*/
 	// Iterate through all rendered object entries in packet
-//	for (int i = 0; i < 
+	for (int i = 0; i < packet->obj_size(); ++i) {
+		protos::RenderedObj obj = packet->obj(i);
+		if (
+	}
+	*/
 }

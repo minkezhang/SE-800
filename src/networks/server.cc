@@ -18,25 +18,6 @@
 #include <unistd.h>
 #include <map>
 
-
-/*void build_ship(Ship *ship) {
-	vector<float> pos { 1,2,3 };
-	ship->set_d(pos);
-	vector<float> vel { 4,5,6 };
-	ship->set_v(vel);
-	ship->set_a(7.0);
-		 
-	vector<float> pitch { 10,11,12 };
-	ship->set_p(pitch);
-	vector<float> yaw { 13,14,15 };
-	ship->set_y(yaw);
-	vector<float> roll { 16,17,18 };
-	ship->set_r(roll);
-		 
-	ship->set_p_dot(6.6);
-	ship->set_r_dot(7.7);
-}*/
-
 Server::Server(WorldEngine *world) {
 	this->server_socketfd = -1;
 	this->world = world;
@@ -56,9 +37,8 @@ int Server::get_client_fd(int id) {
 }
 
 bool Server::send_to_client(NetPacket *packet, int client_id) {
-	std::cout << "send_to_client called\n";
 	int client_socketfd = client_id;
-	std::cout << "CLIENT ID IS " << client_id << std::endl;
+	//std::cout << "CLIENT ID IS " << client_id << std::endl;
 	struct sockaddr_in clientaddr = this->client_id_to_sockaddr[client_id];
 
 	protos::GeneralPacket gen_packet;
@@ -183,53 +163,55 @@ void * Server::serve_client(void *args) {
 		// Clear input buf
 		memset(inputBuf, 0, bufLen);
 
-		// Parse build buf for all received protos.
-		if (packet_size == -1) {
-			// Assume this is the beginning of a packet. Try to set pack size.
-			if ((uint32_t) buildLen >= sizeof(uint32_t)) {
+		while ((uint32_t) buildLen >= sizeof(uint32_t)) {
+			// Parse build buf for all received protos.
+			if (packet_size == -1) {
+				// Assume this is the beginning of a packet. Try to set pack size.
 				memcpy(&packet_size, buildBuf, sizeof(uint32_t));
 				packet_size = ntohl(packet_size);
 			}
-		}
 
-		// One complete packet is in the buffer.
-		if (buildLen >= packet_size) {
-			int packet_type;
-			memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
-			packet_type = ntohl(packet_type);
+			// One complete packet is in the buffer.
+			if (buildLen >= packet_size) {
+				int packet_type;
+				memcpy(&packet_type, buildBuf + sizeof(uint32_t), sizeof(uint32_t));
+				packet_type = ntohl(packet_type);
 
-			int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-			char payload[payload_size];
-			memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+				int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
+				char payload[payload_size];
+				memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
-			if (packet_type == PacketType::CONTROL_INPUT) {
-				protos::ControlInput control_input_packet;
-				control_input_packet.ParseFromString(payload);
-				if (control_input_packet.action() == Action::ACCEL) {
-					std::cout << "Received Accel packet." << std::endl;
-					serv_utils.send_to_client(&packet, client_socketfd);
-				} else if (control_input_packet.action() == Action::BRAKE) {
-					std::cout << "Received Brake packet." << std::endl;
-				} else if (control_input_packet.action() == Action::BULLET) {
-					std::cout << "Received Bullet packet." << std::endl;
+				if (packet_type == PacketType::CONTROL_INPUT) {
+					protos::ControlInput control_input_packet;
+					control_input_packet.ParseFromString(payload);
+					if (control_input_packet.action() == Action::ACCEL) {
+						std::cout << "Received Accel packet." << std::endl;
+						serv_utils.send_to_client(&packet, client_socketfd);
+					} else if (control_input_packet.action() == Action::BRAKE) {
+						std::cout << "Received Brake packet." << std::endl;
+					} else if (control_input_packet.action() == Action::BULLET) {
+						std::cout << "Received Bullet packet." << std::endl;
+					}
+				} else if (packet_type == PacketType::EVENT_ACK) {
+					// TODO: Handle event ack packet receipt.
+				} else {
+					std::cout << "Received Invalid Packet Type" << std::endl;
 				}
-			} else if (packet_type == PacketType::EVENT_ACK) {
-				// TODO: Handle event ack packet receipt.
-			} else {
-				std::cout << "Received Invalid Packet Type" << std::endl;
-			}
-			// There are more packets in net buffer.
-			if (buildLen > packet_size) {
-				// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
-				// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
-				// Copy other packets to beginning of buffer and reset build len.
-				char tempBuf[bufLen - packet_size];
-				memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
-				memcpy(buildBuf, tempBuf, bufLen - packet_size);
+				// There are more packets in net buffer.
+				if (buildLen > packet_size) {
+					// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
+					// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
+					// Copy other packets to beginning of buffer and reset build len.
+					char tempBuf[bufLen - packet_size];
+					memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
+					memcpy(buildBuf, tempBuf, bufLen - packet_size);
+					// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
+				}
 				buildLen -= packet_size;
-				// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
+				packet_size = -1;
+			} else {
+				break;
 			}
-			packet_size = -1;
 		}
 	}
 	pthread_exit(NULL);
