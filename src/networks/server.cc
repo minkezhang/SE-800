@@ -3,6 +3,9 @@
 #include "server.h"
 #include "../classes/ship.h"
 #include "../classes/control.h"
+#include "../classes/pilot.h"
+#include "../engines/world/world.h"
+#include "../global.h"
 
 #include <iostream>
 #include <pthread.h>
@@ -17,7 +20,7 @@
 #include <map>
 
 
-void build_ship(Ship *ship) {
+/*void build_ship(Ship *ship) {
 	vector<float> pos { 1,2,3 };
 	ship->set_d(pos);
 	vector<float> vel { 4,5,6 };
@@ -33,7 +36,7 @@ void build_ship(Ship *ship) {
 		 
 	ship->set_p_dot(6.6);
 	ship->set_r_dot(7.7);
-}
+}*/
 
 Server::Server() {
 	this->server_socketfd = -1;
@@ -147,10 +150,12 @@ void * Server::serve_client(void *args) {
 	//int server_socketfd = sockets->server_socketfd;
 
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
-	Ship ship(1, 1, 2.0, 2.0);
-	build_ship(&ship);
+	Pilot *p = new Pilot("Name");
+	Ship *ship = se_800->join(p);
+	//Ship ship(1, 1, 2.0, 2.0);
+	//build_ship(&ship);
 	protos::RenderedObj ship_packet;
-	PacketUtils::fill_obj_packet(&ship_packet, &ship);
+	PacketUtils::fill_obj_packet(&ship_packet, ship);
 	NetPacket packet;
 
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) &ship, NULL);

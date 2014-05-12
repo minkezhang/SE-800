@@ -31,7 +31,7 @@ int main(int argc, char **argv) {
 	// create empty world and schedule
 	SchedulingEngine scheduler = SchedulingEngine();
 	WorldEngine world = WorldEngine(&scheduler);
-	w = &world;
+	se_800 = &world;
 	std::thread game;
 	std::thread network;
 
@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 		//scheduler.add_calendar(&cal_p);
 	}
 
-	w->ignite();
+	se_800->ignite();
 
 	// execute the game
 	game = std::thread(&WorldEngine::cycle, &world);

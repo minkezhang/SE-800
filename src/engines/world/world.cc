@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "world.h"
+#include "../../classes/ship.h"
 
 /**
  * consider implementing an Game interface to handle network events and building and destroying the world

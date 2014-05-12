@@ -3,6 +3,6 @@
 
 #include "engines/world/world.h"
 
-WorldEngine *w;
+WorldEngine *se_800;
 
 #endif
