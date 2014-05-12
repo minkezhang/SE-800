@@ -30,6 +30,7 @@ void GraphicsEngine::ignite() {
 }
 
 void GraphicsEngine::cycle() {
+
 	if (this->viewer.done())
 		shutdown();
 
@@ -42,7 +43,6 @@ void GraphicsEngine::cycle() {
 	// SO for each object we need a struct which encompasses the obj ID, the UpdateObjectCallback bool, the object Node, and perhaps the transform matrix?
 	update_camera();
 	render_objects();
-	std::cout << "RENDERED OBJECTS" << std::endl;
 }
 
 void GraphicsEngine::shutdown() {
@@ -101,7 +101,6 @@ void GraphicsEngine::ship_init() {
 	main_ship_transform->addChild(ship_mesh);
 
 	// Wait for ship init packet to be received.
-	std::cout << "BEFORE READING FROM QUEUE" << std::endl;
 	while (1) {
 		this->que_lock.lock();
 		if (this->packet_que.size() > 0) {
@@ -112,7 +111,6 @@ void GraphicsEngine::ship_init() {
 		}
 		this->que_lock.unlock();
 	}
-	std::cout << "AFTER READING FROM QUEUE" << std::endl;
 
 
 	this->main_ship = *ship; 
@@ -144,6 +142,7 @@ void GraphicsEngine::viewer_init() {
 
 	// Assign the scene we created to the viewer
 	this->viewer.setSceneData(this->root);
+//	this->viewer.setThreadingModel(osgViewer::ViewerBase::ThreadingModel::SingleThreaded);
 	// Create the windows and start the required threads
 	this->viewer.realize();
 }
@@ -176,7 +175,7 @@ void GraphicsEngine::render_objects() {
 		//	renderingTraversals() that synchornizes all the rendering threads
 		// (if any) and dispatch cull, draw, and swap buffers
 
-		viewer.frame();
+		this->viewer.frame();
 	}
 }
 

@@ -37,6 +37,9 @@ int main(int argc, char **argv) {
 	PhysicsEngine *p;
 	Calendar *cal_p;
 
+	GraphicsEngine *g;
+	Calendar *cal_g;
+
 	if(!strcmp(argv[1], "server")) {
 		Server *server = new Server(&world);
 		network = std::thread(&Server::accept_clients, server, (void *) &port);
@@ -44,28 +47,22 @@ int main(int argc, char **argv) {
 		p = new PhysicsEngine();
 		cal_p = new Calendar(100, p);
 		scheduler.add_calendar(cal_p);
+
 	} else if(!strcmp(argv[1], "client")) {
-		pthread_t receive_packet_thread;
 		string ip(argv[3]);
-		GraphicsEngine *g = new GraphicsEngine();
+		g = new GraphicsEngine();
 		ClientNetUtils *c = new ClientNetUtils(&g->packet_que, &g->que_lock);
 
 		if (!c->connect_to_server(port, ip)) {
 			std::cout << "Could not connect to server. Exiting." << std::endl;
 			exit(1);
 		}
-		if (pthread_create(&receive_packet_thread, NULL, ClientNetUtils::receive_from_server, &c->server_sockfd) != 0) {
-			std::cout << "Could not create a worker thread. Exiting." << std::endl;
-			exit(1);
-		}
+		network = std::thread(&ClientNetUtils::receive_from_server, c);
+
 		g->net_utils = c;
 		g->ignite();
-/*
-		while (1) {
-			engine->cycle();
-		}
-*/
-		Calendar *cal_g = new Calendar(1, g);
+
+		cal_g = new Calendar(1, g);
 		scheduler.add_calendar(cal_g);
 	}
 

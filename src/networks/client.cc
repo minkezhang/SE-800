@@ -37,7 +37,6 @@ bool ClientNetUtils::connect_to_server(int port, string ip) {
 		this->server_sockfd = -1;
 		return false;
 	}
-	cout << "SERVER SOCKFD IS " << this->server_sockfd << endl;
 	return true;
 }
 
@@ -63,13 +62,8 @@ bool ClientNetUtils::send_to_server(NetPacket* packet) {
 	return true;
 }
 
-void * ClientNetUtils::receive_from_server(void *args) {
-	// Make sure ending this thread doesn't kill the client.
-	pthread_detach(pthread_self());
-
-	int *server_sockfd = (int *) args;
-	cout << "ENTERING RECEIVE FROM SERVER" << endl;
-	if (*server_sockfd == -1)
+void * ClientNetUtils::receive_from_server() {
+	if (this->server_sockfd == -1)
 		return NULL;
 
 	int bufLen = 6000;
@@ -81,9 +75,8 @@ void * ClientNetUtils::receive_from_server(void *args) {
 	memset(buildBuf, 0, bufLen);
 
 	int packet_size = -1;
-	while ((nbytes = recv(*server_sockfd, inputBuf, bufLen, 0)) && (nbytes > 0)) {
+	while ((nbytes = recv(server_sockfd, inputBuf, bufLen, 0)) && (nbytes > 0)) {
 
-		cout << "NBYTES RECEIVED IS " << nbytes << endl;
 		if (nbytes + buildLen > bufLen)
 			nbytes = bufLen - buildLen;
 		// Move all received bytes over to build buf
@@ -122,7 +115,6 @@ void * ClientNetUtils::receive_from_server(void *args) {
 					q_lock->lock();
 					fill_packet_queue(que, ship);
 					q_lock->unlock();
-					std::cout << "DONE FILLING QUEUE" << std::endl;
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
 					protos::ObjsAndEventsPacket objs_and_events_packet;
 					objs_and_events_packet.ParseFromString(payload);
