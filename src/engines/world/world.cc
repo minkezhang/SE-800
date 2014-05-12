@@ -42,7 +42,7 @@ void WorldEngine::shutdown() {
 	this->scheduler->shutdown();
 }
 
-Ship *join(Pilot *p) {
+Ship *WorldEngine::join(Pilot *p) {
 	Ship *s = new Ship(1, 10, 10, {1, 1, 1});
 	return(s);
 }

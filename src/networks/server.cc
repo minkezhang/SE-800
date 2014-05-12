@@ -5,7 +5,6 @@
 #include "../classes/control.h"
 #include "../classes/pilot.h"
 #include "../engines/world/world.h"
-#include "../global.h"
 
 #include <iostream>
 #include <pthread.h>
@@ -38,8 +37,9 @@
 	ship->set_r_dot(7.7);
 }*/
 
-Server::Server() {
+Server::Server(WorldEngine *world) {
 	this->server_socketfd = -1;
+	this->world = world;
 }
 
 Server::~Server() {
@@ -126,6 +126,7 @@ void *Server::accept_clients(void *args) {
 		serve_client_args *args = (serve_client_args *) malloc(sizeof(serve_client_args));
 		args->server_socketfd = this->server_socketfd;
 		args->client_socketfd = *clientSocket;
+		args->world = this->world;
 		if (pthread_create(&worker_thread, NULL, serve_client, args) != 0) {
 			std::cout << "Could not create a worker thread." << std::endl;
 			num_clients--;
@@ -144,14 +145,15 @@ void * Server::serve_client(void *args) {
 	// Make sure ending this thread doesn't kill the server.
 	pthread_detach(pthread_self());
 
-	Server serv_utils;
+	Server serv_utils(NULL);
 	serve_client_args *sockets = (serve_client_args *) args;
 	int client_socketfd = sockets->client_socketfd;
+	WorldEngine *world = sockets->world;
 	//int server_socketfd = sockets->server_socketfd;
 
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
 	Pilot *p = new Pilot("Name");
-	Ship *ship = se_800->join(p);
+	Ship *ship = world->join(p);
 	//Ship ship(1, 1, 2.0, 2.0);
 	//build_ship(&ship);
 	protos::RenderedObj ship_packet;
