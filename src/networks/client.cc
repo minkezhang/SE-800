@@ -122,6 +122,7 @@ void * ClientNetUtils::receive_from_server(void *args) {
 					q_lock->lock();
 					fill_packet_queue(que, ship);
 					q_lock->unlock();
+					std::cout << "DONE FILLING QUEUE" << std::endl;
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
 					protos::ObjsAndEventsPacket objs_and_events_packet;
 					objs_and_events_packet.ParseFromString(payload);
