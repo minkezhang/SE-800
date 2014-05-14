@@ -21,19 +21,42 @@ void Environment::add_projectile(Projectile *p) { this->get_grid(p)->add_project
 void Environment::del_projectile(Projectile *p) { this->get_grid(p)->del_projectile(p); }
 
 Projectile *Environment::get_projectile(int id) {
-	WorldEngine *w = new WorldEngine(NULL);
-	return w->join(NULL);
+	Projectile *p = NULL;
+	for(std::vector<Grid *>::iterator i = this->grids.begin(); i != this->grids.end(); ++i) {
+		p = (*i)->get_projectile(id);
+		if(p != NULL) {
+			break;
+		}
+	}
+	return(p);
 }
 
-// optimization -- use the grid system to find nearby objects
-std::vector<Projectile *> Environment::get_neighbors(int id) {
+std::vector<Projectile *> Environment::get_clippable() {
 	std::vector<Projectile *> p;
 	for(std::vector<Grid *>::iterator i = this->grids.begin(); i != this->grids.end(); ++i) {
-		std::vector<Projectile *> grid_p = (*i)->get_projectiles();
+		std::vector<Projectile *> grid_p = (*i)->get_clippable();
 		p.insert(p.end(), grid_p.begin(), grid_p.end());
 	}
 	return(p);
 }
+
+std::vector<Projectile *> Environment::get_unclippable() {
+	std::vector<Projectile *> p;
+	for(std::vector<Grid *>::iterator i = this->grids.begin(); i != this->grids.end(); ++i) {
+		std::vector<Projectile *> grid_p = (*i)->get_unclippable();
+		p.insert(p.end(), grid_p.begin(), grid_p.end());
+	}
+	return(p);
+}
+
+// optimization -- use the grid system to find nearby objects
+std::vector<Projectile *> Environment::get_neighbors(Projectile *p) {
+	std::vector<Projectile *> clippable = this->get_clippable();
+	std::vector<Projectile *> unclippable = this->get_unclippable();
+	clippable.insert(clippable.end(), unclippable.begin(), unclippable.end());
+	return(clippable);
+}
+
 /**
  * returns the grid which the projectile could possibly be located in
  * returns NULL if the projectile is not found

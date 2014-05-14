@@ -21,8 +21,8 @@ class Grid {
 		void add_projectile(Projectile *projectile);				// add an object to the grid
 		void del_projectile(Projectile *projectile);				// removes an object from the grid
 
-		std::map<int, Projectile *> get_clippable();
-		std::map<int, Projectile *> get_unclippable();
+		std::vector<Projectile *> get_clippable();
+		std::vector<Projectile *> get_unclippable();
 
 		std::vector<float> get_size();
 		std::vector<float> get_corner();

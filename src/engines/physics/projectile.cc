@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Projectile::Projectile(int id, int clippable, float mass, float max_tolerance, vector<float> d, vector<float> v, vector<float> p, vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance), d(d), v(v), p(p), r(r), p_dot(p_dot), r_dot(r_dot), preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot) {
+Projectile::Projectile(int id, int is_clippable, float mass, float max_tolerance, vector<float> d, vector<float> v, vector<float> p, vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot) : id(id), is_clippable(is_clippable), mass(mass), max_tolerance(max_tolerance), d(d), v(v), p(p), r(r), p_dot(p_dot), r_dot(r_dot), preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot) {
 	y = { 0, 0, 0 };
 }
 
@@ -18,8 +18,9 @@ int Projectile::get_type() { return this->type; }
 float Projectile::get_cur_tolerance() { return this->cur_tolerance; }
 float Projectile::get_max_tolerance() { return this->max_tolerance; }
 
-int Projectile::is_destroyed() { return this->destroyed; }
-int Projectile::is_clippable() { return this->clippable; }
+int Projectile::get_is_destroyed() { return this->is_destroyed; }
+int Projectile::get_is_processed() { return this->is_processed; }
+int Projectile::get_is_clippable() { return this->is_clippable; }
 
 vector<float> Projectile::get_d() { return this->d; }
 vector<float> Projectile::get_v() { return this->v; }
@@ -47,10 +48,12 @@ void Projectile::set_r(vector<float> r) { this->r = r; }
 void Projectile::set_p_dot(float p_dot) { this->p_dot = p_dot; }
 void Projectile::set_r_dot(float r_dot) { this->r_dot = r_dot; }
 
+void Projectile::set_is_processed() { this->is_processed = 1; }
+
 void Projectile::damage(float tolerance) {
 	this->cur_tolerance -= tolerance;
 	if(this->cur_tolerance <= 0) {
 		this->cur_tolerance = 0;
-		this->destroyed = 1;
+		this->is_destroyed = 1;
 	}
 }

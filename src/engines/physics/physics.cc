@@ -14,17 +14,23 @@ void PhysicsEngine::set_environment(Environment *e) { this->environment = e; }
 
 void PhysicsEngine::toggle_a(int id, int val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_a(val * p->get_preset_a());
+	if(p != NULL) {
+		p->set_a(val * p->get_preset_a());
+	}
 }
 
 void PhysicsEngine::toggle_p_dot(int id, float val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_p_dot(val * p->get_preset_p_dot());
+	if(p != NULL) {
+		p->set_p_dot(val * p->get_preset_p_dot());
+	}
 }
 
 void PhysicsEngine::toggle_r_dot(int id, float val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_r_dot(val * p->get_preset_r_dot());
+	if(p != NULL) {
+		p->set_r_dot(val * p->get_preset_r_dot());
+	}
 }
 
 // Assumes unit vectors for roll, pitch, and yaw
@@ -109,13 +115,67 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	p->set_v(vel_next);
 }
 
+void PhysicsEngine::collision_check(Projectile *p) {
+	std::vector<Projectile *> neighbors = this->environment->get_neighbors(p);
+	for(std::vector<Projectile *>::iterator i = neighbors.begin(); i != neighbors.end(); ++i) {
+		Projectile *q = *i;
+		if(!q->get_is_destroyed()) {
+			int collide = 0; // collision check p - q > r_q + r_d?
+			if(collide) {
+				this->collide(p, q);
+			}
+		}
+	}
+}
+
+/**
+ * primitive damage modeling
+ */
+void PhysicsEngine::collide(Projectile *p, Projectile *q) {
+	if(q->get_is_clippable()) {
+		// bullets are destroyed
+		p->damage(q->get_cur_tolerance());
+		q->damage(q->get_cur_tolerance());
+	} else {
+		// clippable objects are checked twice (unfortunately) -- this prevents double counting the damage
+		p->damage(q->get_cur_tolerance() * 0.5);
+		q->damage(p->get_cur_tolerance() * 0.5);
+	}
+}
+
 void PhysicsEngine::ignite() {}
 void PhysicsEngine::cycle() {
+	std::vector<Projectile *> clippable = this->environment->get_clippable();
+	std::vector<Projectile *> unclippable = this->environment->get_unclippable();
+
+	for(std::vector<Projectile *>::iterator i = unclippable.begin(); i != unclippable.end(); ++i) {
+		Projectile *p = *i;
+		if(p->get_is_destroyed()) {
+			// delete from queue
+		} else {
+			this->verlet_step(.0033, p);
+		}
+	}
+
+	for(std::vector<Projectile *>::iterator i = clippable.begin(); i != clippable.end(); ++i) {
+		Projectile *p = *i;
+		if(p->get_is_destroyed()) {
+			if(p->get_is_processed()) {
+				// delete from queue
+			}
+		} else {
+			this->verlet_step(.0033, p);
+			this->collision_check(p);
+		}
+	}
+
+	/*
 	for(unsigned long int i = 0; i < this->environment->get_grids().size(); i++) {
 		Grid *g = this->environment->get_grids().at(i);
 		for(unsigned long int j = 0; j < g->get_projectiles().size(); j++) {
 			this->verlet_step(.0033, g->get_projectiles().at(j));
 		}
 	}
+	 */
 }
 void PhysicsEngine::shutdown() {}

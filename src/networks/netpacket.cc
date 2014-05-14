@@ -168,7 +168,7 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 	obj_packet->set_type(type);
 	obj_packet->set_cur_tolerance(obj->get_cur_tolerance());
 	obj_packet->set_max_tolerance(obj->get_max_tolerance());
-	obj_packet->set_is_destroyed(obj->is_destroyed());
+	obj_packet->set_is_destroyed(obj->get_is_destroyed());
 
 	protos::vector *pos_vector = obj_packet->mutable_pos();
 	pos_vector->set_x(obj->get_d().at(0));
