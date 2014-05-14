@@ -23,6 +23,7 @@ add_definitions(-lm)
 add_definitions(-Wall)
 add_definitions(-Werror)
 add_definitions(-rdynamic)
+add_definitions(-O3)
 # add_definitions(-Wno-unused-variable)
 
 # Self-defined library imports

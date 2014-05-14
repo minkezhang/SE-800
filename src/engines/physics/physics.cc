@@ -1,5 +1,6 @@
-#include "physics.h"
 #include <cstddef>
+
+#include "physics.h"
 
 using namespace std;
 
@@ -109,5 +110,12 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 }
 
 void PhysicsEngine::ignite() {}
-void PhysicsEngine::cycle() {}
+void PhysicsEngine::cycle() {
+	for(unsigned long int i = 0; i < this->environment->get_grids().size(); i++) {
+		Grid *g = this->environment->get_grids().at(i);
+		for(unsigned long int j = 0; j < g->get_projectiles().size(); j++) {
+			this->verlet_step(.0033, g->get_projectiles().at(j));
+		}
+	}
+}
 void PhysicsEngine::shutdown() {}

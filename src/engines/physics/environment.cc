@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <cstddef>
 #include "environment.h"
 #include "../world/world.h"
@@ -60,3 +61,5 @@ Grid *Environment::get_grid(Projectile *p) {
 	}
 	return(g);
 }
+
+std::vector<Grid *> Environment::get_grids() { return(this->grids); }

@@ -17,6 +17,7 @@ class Environment {
 
 		Projectile *get_projectile(int id);				// gets a projectile by ID
 
+		std::vector<Grid *> get_grids();
 	private:
 
 		std::vector<int> n_grids;					// the number of grids per dimension

@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
 		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
 		world.get_physics_engine()->set_environment(e);
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 100; i++) {
 			world.get_physics_engine()->get_environment()->add_projectile(world.join(NULL));
 		}
 	} else if(!strcmp(argv[1], "client")) {
