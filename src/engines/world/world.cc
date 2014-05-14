@@ -23,6 +23,7 @@ void WorldEngine::win() {
 
 void WorldEngine::ignite() {
 	this->status = INITIALIZED;
+	Environment *e = new Environment({ 30, 30, 30 }, { 10, 10, 10 });
 	this->physics_engine->set_environment(new Environment({ 30, 30, 30 }, { 10, 10, 10 }));
 	for(int i = 0; i < 10; i++) {
 		this->physics_engine->get_environment()->add_projectile(this->join(NULL));

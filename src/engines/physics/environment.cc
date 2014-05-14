@@ -7,10 +7,10 @@ Environment::Environment(std::vector<float> size, std::vector<int> n_grids) : n_
 	for(int i = 0; i < 3; i++) {
 		grid_size.push_back(size.at(i) / n_grids.at(i));
 	}
-	for(int i = 0; i < n_grids.at(1); i++) {
-		for(int j = 0; j < n_grids.at(2); j++) {
-			for(int k = 0; k < n_grids.at(3); k++) {
-				grids.push_back(new Grid(i * j * k, { i * grid_size.at(1), j * grid_size.at(2), k * grid_size.at(3) }, grid_size));
+	for(int i = 0; i < n_grids.at(0); i++) {
+		for(int j = 0; j < n_grids.at(1); j++) {
+			for(int k = 0; k < n_grids.at(2); k++) {
+				grids.push_back(new Grid(i * j * k, { i * grid_size.at(0), j * grid_size.at(1), k * grid_size.at(2) }, grid_size));
 			}
 		}
 	}

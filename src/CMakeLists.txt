@@ -22,6 +22,8 @@ add_definitions(-pthread)
 add_definitions(-lm)
 add_definitions(-Wall)
 add_definitions(-Werror)
+add_definitions(-rdynamic)
+# add_definitions(-Wno-unused-variable)
 
 # Self-defined library imports
 add_library(common_engine engines/common/engine.cc)

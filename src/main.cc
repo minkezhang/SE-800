@@ -5,6 +5,9 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#include <signal.h>
+#include <execinfo.h>
+
 #include "engines/world/world.h"
 #include "engines/physics/physics.h"
 #include "engines/graphics/graphics.h"
@@ -13,12 +16,28 @@
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
 
+void handler(int sig) {
+	void *array[100];
+	size_t size;
+
+	// get void*'s for all entries on the stack
+	size = backtrace(array, 10);
+
+	// print out all the frames to stderr
+	fprintf(stderr, "Error: signal %d:\n", sig);
+	backtrace_symbols_fd(array, size, STDERR_FILENO);
+	exit(1);
+}
+
+
 void usage(char *exec) {
 	std::cout << "usage: " << exec << " ( server < port > | client < port > < ip > )\n";
 	exit(0);
 }
 
 int main(int argc, char **argv) {
+	signal(SIGABRT, handler);
+
 	if(argc < 3) {
 		usage(argv[0]);
 	} else if((argc == 3) && !strcmp(argv[1], "client")) {
