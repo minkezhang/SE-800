@@ -46,7 +46,7 @@ void WorldEngine::shutdown() {
  */
 Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { 1, 1, 1 };
-	Ship *s = new Ship(1, 10, 10, pos);
+	Ship *s = new Ship(1, 10, 10, pos, 1, 1, 1);
 	std::vector<float> vel { 0, 0, 0 };
 	s->set_v(vel);
 	s->set_a(0.0);

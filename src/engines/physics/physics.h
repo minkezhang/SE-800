@@ -14,10 +14,11 @@ class PhysicsEngine : public Engine {
 
 		/**
 		 * public-facing functions -- given an object ID, modify the object in the world
+		 *	values are between [ -1, 1 ], where values < 0 indicate braking (toggle_a) or counter-clockwise intensity (toggle_..._dot)
 		 */
-		void toggle_a(int id, int vala);
-		void toggle_p_dot(int id, float valp);
-		void toggle_r_dot(int id, float valr);
+		void toggle_a(int id, int val);
+		void toggle_p_dot(int id, float val);
+		void toggle_r_dot(int id, float val);
 
 		void ignite() override;
 		void cycle() override;

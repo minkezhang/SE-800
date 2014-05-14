@@ -9,7 +9,7 @@
 
 class Projectile {
 	public:
-		Projectile(int id, int clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot);
+		Projectile(int id, int clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
 
 		/**
 		 * public-facing functions which can be freely queried
@@ -30,11 +30,18 @@ class Projectile {
 		float get_a();				// get acceleration
 
 		std::vector<float> get_p();		// get pitch axis
-		std::vector<float> get_y();     // get yaw axis
+		std::vector<float> get_y();		// get yaw axis
 		std::vector<float> get_r();		// get roll axis
 
 		float get_p_dot();			// get pitch rotation speed (x < 0 => counterclockwise)
 		float get_r_dot();			// get roll rotation speed
+
+		/**
+		 * get the preset values of the projectile
+		 */
+		float get_preset_a();
+		float get_preset_p_dot();
+		float get_preset_r_dot();
 
 		/**
 		 * the following should not be called outside the physics engine
@@ -42,7 +49,7 @@ class Projectile {
 
 		void set_d(std::vector<float> d);	// set position
 		void set_v(std::vector<float> v);	// set velocity
-		void set_a(float a);	// set acceleration
+		void set_a(float a);			// set acceleration
 
 		void set_p(std::vector<float> p);	// set pitch axis
 		void set_y(std::vector<float> y);	// set yaw axis
@@ -73,9 +80,12 @@ class Projectile {
 		std::vector<float> p;
 		std::vector<float> y;
 		std::vector<float> r;
-
 		float p_dot;
 		float r_dot;
+
+		float preset_a;
+		float preset_p_dot;
+		float preset_r_dot;
 };
 
 #endif

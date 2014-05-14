@@ -7,6 +7,21 @@ PhysicsEngine::PhysicsEngine() {}
 
 PhysicsEngine::~PhysicsEngine() {}
 
+void PhysicsEngine::toggle_a(int id, int val) {
+	Projectile *p = this->environment->get_projectile(id);
+	p->set_a(val * p->get_preset_a());
+}
+
+void PhysicsEngine::toggle_p_dot(int id, float val) {
+	Projectile *p = this->environment->get_projectile(id);
+	p->set_p_dot(val * p->get_preset_p_dot());
+}
+
+void PhysicsEngine::toggle_r_dot(int id, float val) {
+	Projectile *p = this->environment->get_projectile(id);
+	p->set_r_dot(val * p->get_preset_r_dot());
+}
+
 // Assumes unit vectors for roll, pitch, and yaw
 void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 	// Precompute sine and cosine
@@ -27,7 +42,7 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 	float v = rol.at(1);
 	float w = rol.at(2);
 	// If flag = 1, rotate around roll axis; else, rotate around pitch axis.
-	if (flag == 0) { 		
+	if (flag == 0) {
 		// Rotate pitch axis around roll by angle
 		float term_c1 = (u*x + v*y + w*z)*(1 - cost);
 		pit.at(0) = u*term_c1 + x*cost + (v*z - w*y)*sint;

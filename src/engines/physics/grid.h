@@ -6,6 +6,7 @@
  */
 
 #include <vector>
+#include <map>
 
 #include "../../engines/physics/projectile.h"
 
@@ -15,6 +16,7 @@ class Grid {
 		~Grid();
 
 		Projectile *get_projectiles();			// returns a list of all projectiles within the grid
+		Projectile *get_projectile(int id);		// returns NULL if the projectile is not found in the grid
 
 		void add_projectile(Projectile *projectile);	// add an object to the grid
 		void del_projectile(Projectile *projectile);	// removes an object from the grid
@@ -24,8 +26,8 @@ class Grid {
 
 		std::vector<float> size;			// dimensions of the box -- set in constructor
 		std::vector<float> corner;			// lowermost corner of the box -- set in constructor
-		Projectile *clippable_projectiles;		// list of clippable objects (objects whose is_clippable() function returns true)
-		Projectile *unclippable_projectiles;		// list of unclippable objects (do not need to check unclippable objects colliding with unclippable objects)
+		std::map<int, Projectile *> clippable		// list of clippable objects (objects whose is_clippable() function returns true)
+		std::map<int, Projectile *> unclippable		// list of unclippable objects (do not need to check unclippable objects colliding with unclippable objects)
 };
 
 #endif

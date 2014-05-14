@@ -11,12 +11,14 @@ class Environment {
 		~Environment();
 
 		void add_projectile(Projectile *projectile);			// finds the appropriate grid in which to add an object
-		void del_projectile(Projectile *projectile);			// deletes the object from the appropriate grid
+		void del_projectile(int id);					// deletes the object from the appropriate grid
 
-		Projectile *get_neighbors(int id);				// returns a list of all nearby projectiles (objects within one grid space and in direction of travel), given projectile ID
+		std::vector<Projectile *> get_neighbors(int id);		// returns a list of all nearby projectiles (objects within one grid space and in direction of travel), given projectile ID
+
+		Projectile *get_projectile(int id);				// gets a projectile by ID
 
 	private:
-		Grid *grids;
+		std::vector<Grid *> grids;
 };
 
 #endif
