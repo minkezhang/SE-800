@@ -50,8 +50,8 @@ Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { 1, 1, 1 };
 	Ship *s = new Ship(1, 10, 10, pos, 0, 0, 0);
 
-       std::vector<float> vel { 0, 0, 0 };
-       s->set_v(vel);
+//       std::vector<float> vel { 0, 0, 0 };
+//       s->set_v(vel);
        s->set_a(0.0);
        vector<float> pitch = { 0, 0, 0 };
        s->set_p(pitch);
@@ -62,7 +62,6 @@ Ship *WorldEngine::join(Pilot *p) {
 
        s->set_p_dot(0.0);
        s->set_r_dot(0.0);
-
 
 	return(s);
 
