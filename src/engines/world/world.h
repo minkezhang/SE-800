@@ -37,6 +37,8 @@ class WorldEngine : Engine {
 		/* execute upon the winning condition */
 		void win();
 
+		PhysicsEngine *get_physics_engine();
+
 	private:
 		std::vector<Team *> teams;
 		SchedulingEngine *scheduler;
