@@ -70,6 +70,11 @@ int main(int argc, char **argv) {
 
 		scheduler.add_calendar(cal_p);
 
+		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
+		world.physics_engine->set_environment(e);
+		for(int i = 0; i < 10; i++) {
+			world.physics_engine->get_environment()->add_projectile(world.join(NULL));
+		}
 	} else if(!strcmp(argv[1], "client")) {
 		string ip(argv[3]);
 		g = new GraphicsEngine();

@@ -23,10 +23,6 @@ void WorldEngine::win() {
 
 void WorldEngine::ignite() {
 	this->status = INITIALIZED;
-	this->physics_engine->set_environment(new Environment({ 30, 30, 30 }, { 10, 10, 10 }));
-	for(int i = 0; i < 10; i++) {
-		this->physics_engine->get_environment()->add_projectile(this->join(NULL));
-	}
 }
 
 void WorldEngine::cycle() {
@@ -50,9 +46,25 @@ void WorldEngine::shutdown() {
  * 3) return ship object
  */
 Ship *WorldEngine::join(Pilot *p) {
+
 	std::vector<float> pos { 1, 1, 1 };
-	Ship *s = new Ship(1, 10, 10, pos, 1, 1, 1);
+	Ship *s = new Ship(1, 10, 10, pos, 0, 0, 0);
+	std::vector<float> vel { 0, 0, 0 };
+	s->set_v(vel);
+	s->set_a(0.0);
+
+	vector<float> pitch = { 0, 0, 0 };
+	s->set_p(pitch);
+	vector<float> yaw { 0, 0, 0 };
+	s->set_y(yaw);
+	vector<float> roll { 0, 0, 0 };
+	s->set_r(roll);
+
+	s->set_p_dot(0.0);
+	s->set_r_dot(0.0);
+
 	return(s);
+
 }
 
 void WorldEngine::set_physics_engine(PhysicsEngine *p) { this->physics_engine = p; }
