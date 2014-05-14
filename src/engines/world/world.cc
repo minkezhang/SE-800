@@ -6,6 +6,7 @@
 #include "../../classes/ship.h"
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
+	physics_engine = NULL;
 	status = UNINITIALIZED;
 }
 WorldEngine::~WorldEngine() {}
@@ -50,9 +51,4 @@ Ship *WorldEngine::join(Pilot *p) {
 	return(s);
 }
 
-/**
- * returns the physics engine
- */
-PhysicsEngine *WorldEngine::physics_engine() {
-	return NULL;
-}
+void WorldEngine::set_physics_engine(PhysicsEngine *p) { this->physics_engine = p; }

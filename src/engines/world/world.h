@@ -28,6 +28,8 @@ class WorldEngine : Engine {
 		/* adds a new pilot into a <team, group> */
 		Ship *join(Pilot *pilot);
 
+		void set_physics_engine(PhysicsEngine *physics_engine);
+
 		void add_team(Team *team);
 		/* on a team meeting the losing condition, drop the team from the roster */
 		void del_team(Team *team);
@@ -38,8 +40,7 @@ class WorldEngine : Engine {
 	private:
 		std::vector<Team *> teams;
 		SchedulingEngine *scheduler;
-
-		PhysicsEngine *physics_engine();
+		PhysicsEngine *physics_engine;				// is a shortcut to the physics engine of the game running in the scheduler
 };
 
 #endif

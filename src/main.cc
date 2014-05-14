@@ -46,6 +46,9 @@ int main(int argc, char **argv) {
 
 		p = new PhysicsEngine();
 		cal_p = new Calendar(100, p);
+
+		world.set_physics_engine(p);
+
 		scheduler.add_calendar(cal_p);
 
 	} else if(!strcmp(argv[1], "client")) {
