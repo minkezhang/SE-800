@@ -19,6 +19,7 @@ class Environment {
 
 	private:
 
+		std::vector<int> n_grids;					// the number of grids per dimension
 		Grid *get_grid(Projectile *projectile);				// returns the grid in which the projectile is in (based on p->d)
 		std::vector<Grid *> grids;
 };

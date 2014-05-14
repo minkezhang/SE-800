@@ -4,7 +4,6 @@ using namespace std;
 
 // public
 PhysicsEngine::PhysicsEngine() {}
-
 PhysicsEngine::~PhysicsEngine() {}
 
 void PhysicsEngine::toggle_a(int id, int val) {
