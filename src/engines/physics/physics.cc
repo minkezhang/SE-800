@@ -3,8 +3,12 @@
 using namespace std;
 
 // public
-PhysicsEngine::PhysicsEngine() {}
-PhysicsEngine::~PhysicsEngine() {}
+PhysicsEngine::PhysicsEngine() {
+	this->environment = NULL;
+}
+
+Environment *PhysicsEngine::get_environment() { return(this->environment); }
+void PhysicsEngine::set_environment(Environment *e) { this->environment = e; }
 
 void PhysicsEngine::toggle_a(int id, int val) {
 	Projectile *p = this->environment->get_projectile(id);
@@ -43,26 +47,26 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 	// If flag = 1, rotate around roll axis; else, rotate around pitch axis.
 	if (flag == 0) {
 		// Rotate pitch axis around roll by angle
-		float term_c1 = (u*x + v*y + w*z)*(1 - cost);
-		pit.at(0) = u*term_c1 + x*cost + (v*z - w*y)*sint;
-		pit.at(1) = v*term_c1 + y*cost + (w*x - u*z)*sint;
-		pit.at(2) = w*term_c1 + z*cost + (u*y - v*x)*sint;
+		float term_c1 = (u * x + v * y + w * z) * (1 - cost);
+		pit.at(0) = u * term_c1 + x * cost + (v * z - w * y) * sint;
+		pit.at(1) = v * term_c1 + y * cost + (w * x - u * z) * sint;
+		pit.at(2) = w * term_c1 + z * cost + (u * y - v * x) * sint;
 		// Rotate yaw axis around roll by angle
-		float term_c2 = (u*a + v*b + w*c)*(1 - cost);
-		yaw.at(0) = u*term_c2 + a*cost + (v*c - w*b)*sint;
-		yaw.at(1) = v*term_c2 + b*cost + (w*a - u*c)*sint;
-		yaw.at(2) = w*term_c2 + c*cost + (u*b - v*a)*sint;
+		float term_c2 = (u * a + v * b + w * c) * (1 - cost);
+		yaw.at(0) = u * term_c2 + a * cost + (v * c - w * b) * sint;
+		yaw.at(1) = v * term_c2 + b * cost + (w * a - u * c) * sint;
+		yaw.at(2) = w * term_c2 + c * cost + (u * b - v * a) * sint;
 	} else {
 		// Rotate roll axis around pitch axis by angle
-		float term_c1 = (x*u + y*v + z*w)*(1 - cost);
-		rol.at(0) = x*term_c1 + u*cost + (y*w - z*v)*sint;
-		rol.at(1) = y*term_c1 + v*cost + (z*u - x*w)*sint;
-		rol.at(2) = z*term_c1 + w*cost + (x*v - y*u)*sint;
+		float term_c1 = (x * u + y * v + z * w) * (1 - cost);
+		rol.at(0) = x * term_c1 + u * cost + (y * w - z * v) * sint;
+		rol.at(1) = y * term_c1 + v * cost + (z * u - x * w) * sint;
+		rol.at(2) = z * term_c1 + w * cost + (x * v - y * u) * sint;
 		// Rotate yaw axis around pitch axis by angle
-		float term_c2 = (x*a + y*b + z*c)*(1 - cost);
-		yaw.at(0) = x*term_c2 + a*cost + (y*c - z*b)*sint;
-		yaw.at(1) = y*term_c2 + b*cost + (z*a - x*c)*sint;
-		yaw.at(2) = z*term_c2 + c*cost + (x*b - y*a)*sint;
+		float term_c2 = (x * a + y * b + z * c) * (1 - cost);
+		yaw.at(0) = x * term_c2 + a * cost + (y * c - z * b) * sint;
+		yaw.at(1) = y * term_c2 + b * cost + (z * a - x * c) * sint;
+		yaw.at(2) = z * term_c2 + c * cost + (x * b - y * a) * sint;
 	}
 	// Write in vectors to projectile
 	p->set_r(rol);
@@ -86,8 +90,8 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	float r_angle = p->get_r_dot();
 	float p_angle = p->get_p_dot();
 	// Apply rotations for time step to p
-	this->apply_rotation(r_angle*t, 0, p);
-	this->apply_rotation(p_angle*t, 1, p);
+	this->apply_rotation(r_angle * t, 0, p);
+	this->apply_rotation(p_angle * t, 1, p);
 	// Get orientation of incremented acceleration
 	vector<float> acc2 = p->get_r();
 	// Iterate over dimensions
@@ -95,8 +99,8 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 		acc1.at(i) = acc1.at(i) * a;
 		acc2.at(i) = acc2.at(i) * a;
 		// Perform Verlet
-		pos_next.at(i) = pos.at(i) + vel.at(i)*t + 0.5*acc1.at(i)*t*t;
-		vel_next.at(i) = vel.at(i) + 0.5*t*(acc1.at(i) + acc2.at(i));
+		pos_next.at(i) = pos.at(i) + vel.at(i) * t + 0.5 * acc1.at(i) * t * t;
+		vel_next.at(i) = vel.at(i) + 0.5 * t * (acc1.at(i) + acc2.at(i));
 	}
 	// Write in vectors to projectile
 	p->set_d(pos_next);

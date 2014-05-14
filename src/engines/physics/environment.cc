@@ -24,6 +24,15 @@ Projectile *Environment::get_projectile(int id) {
 	return w->join(NULL);
 }
 
+// optimization -- use the grid system to find nearby objects
+std::vector<Projectile *> Environment::get_neighbors(int id) {
+	std::vector<Projectile *> p;
+	for(std::vector<Grid *>::iterator i = this->grids.begin(); i != this->grids.end(); ++i) {
+		std::vector<Projectile *> grid_p = (*i)->get_projectiles();
+		p.insert(p.end(), grid_p.begin(), grid_p.end());
+	}
+	return(p);
+}
 /**
  * returns the grid which the projectile could possibly be located in
  * returns NULL if the projectile is not found

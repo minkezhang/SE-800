@@ -11,6 +11,7 @@ class PhysicsEngine : public Engine {
 		~PhysicsEngine();
 
 		void set_environment(Environment *environment);
+		Environment *get_environment();
 
 		/**
 		 * public-facing functions -- given an object ID, modify the object in the world
