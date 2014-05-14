@@ -5,7 +5,9 @@
 
 using namespace std;
 
-Projectile::Projectile(int id, int clippable, float mass, float max_tolerance, vector<float> d, vector<float> v, vector<float> p, vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance), d(d), v(v), p(p), r(r), p_dot(p_dot), r_dot(r_dot), preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot) {}
+Projectile::Projectile(int id, int clippable, float mass, float max_tolerance, vector<float> d, vector<float> v, vector<float> p, vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot) : id(id), clippable(clippable), mass(mass), max_tolerance(max_tolerance), d(d), v(v), p(p), r(r), p_dot(p_dot), r_dot(r_dot), preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot) {
+	y = { 0, 0, 0 };
+}
 
 // GET FUNCTIONS
 
