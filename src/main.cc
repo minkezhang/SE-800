@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 	} else if(!strcmp(argv[1], "client")) {
 		string ip(argv[3]);
 		g = new GraphicsEngine();
-		ClientNetUtils *c = new ClientNetUtils(&g->packet_que, &g->que_lock);
+		ClientNetUtils *c = new ClientNetUtils(&g->objs_que, &g->ship_que, &g->que_lock);
 
 		if (!c->connect_to_server(port, ip)) {
 			std::cout << "Could not connect to server. Exiting." << std::endl;
