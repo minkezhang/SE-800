@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cstddef>
 
 #include "physics.h"
@@ -120,7 +121,15 @@ void PhysicsEngine::collision_check(Projectile *p) {
 	for(std::vector<Projectile *>::iterator i = neighbors.begin(); i != neighbors.end(); ++i) {
 		Projectile *q = *i;
 		if(!q->get_is_destroyed()) {
-			int collide = 0; // collision check p - q > r_q + r_d?
+			std::vector<float> p_d = p->get_d();
+			std::vector<float> q_d = q->get_d();
+			std::vector<float> diff;
+			std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
+			float dist_sq = 0;
+			for(int i = 0; i < 3; i++) {
+				dist_sq += diff.at(i) * diff.at(i);
+			}
+			int collide = dist_sq < (p->get_size() + q->get_size()) * (p->get_size() + q->get_size());
 			if(collide) {
 				this->collide(p, q);
 			}
