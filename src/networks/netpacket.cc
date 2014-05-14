@@ -1,8 +1,8 @@
 #include <cstdint>
 #include <iostream>
-#include <map>
 #include <list>
 
+#include "../engines/physics/projectile.h"
 #include "../classes/ship.h"
 #include "../classes/control.h"
 #include "netpacket.h"
@@ -68,7 +68,7 @@ void PacketUtils::make_packet(
 		protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
 		protos::RenderedObj *ship_packet = ship_init_packet->mutable_ship();
 
-		fill_obj_packet(ship_packet, ship);
+		fill_obj_packet(ship_packet, ship, ObjType::SHIP);
 	 
 		// ship_packet.set_weapon_index(ship->get_weapon_index());
 
@@ -79,7 +79,7 @@ void PacketUtils::make_packet(
 
 	} else if (type == PacketType::OBJS_AND_EVENTS) {
 		// Read arguments
-		map<int, Projectile*> *objs = (map<int, Projectile*> *) payload;
+		std::list<Projectile*> *objs = (std::list<Projectile*> *) payload;
 		// TODO(DEFINE EVENT CLASS!!
 		//list<Event> *events;
 		//if (extra_payload != NULL) {
@@ -89,10 +89,10 @@ void PacketUtils::make_packet(
 		// Fill specific proto packet
 		protos::ObjsAndEventsPacket objs_and_events_packet;
 	 
-		for (map<int, Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
+		for (std::list<Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
 			protos::RenderedObj* obj_packet = objs_and_events_packet.add_obj();
-			fill_obj_packet(obj_packet, &(*i->second));
-			string obj_type = typeid(*i->second).name();
+			int type = (*i)->get_type();
+			fill_obj_packet(obj_packet, *i, type);
 			// (TODO): Set weapon type!`
 			//if (obj_type.compare("4Ship") == 0) {
 			// Ship *ship = &(*i->second);
@@ -161,10 +161,11 @@ void PacketUtils::make_packet(
 	packet->serialized_packet = serialized_gen_packet;
 }
 
-void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* obj) {
+void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* obj, int type) {
 
 	obj_packet->set_id(obj->get_id());
 	obj_packet->set_mass(obj->get_mass());
+	obj_packet->set_type(type);
 	obj_packet->set_cur_tolerance(obj->get_cur_tolerance());
 	obj_packet->set_max_tolerance(obj->get_max_tolerance());
 	obj_packet->set_is_destroyed(obj->is_destroyed());

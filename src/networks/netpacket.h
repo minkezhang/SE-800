@@ -29,7 +29,7 @@ class PacketUtils {
 		static void get_packet_payload(NetPacket packet, void* proto_packet);
 		static void make_packet(
 			NetPacket *packet, PacketType type, void* payload, void* extra_payload);
-		static void fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* obj);
+		static void fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* obj, int type);
 };
 
 #endif

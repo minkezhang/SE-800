@@ -15,11 +15,14 @@
 
 #define SOCKET_ERROR -1
 
-queue<protos::RenderedObj> *que;
+std::queue<protos::RenderedObj *> *ship_que;
+std::queue<protos::ObjsAndEventsPacket *> *objs_que;
 std::mutex *q_lock;
+protos::RenderedObj *init_ship;
 
-ClientNetUtils::ClientNetUtils (queue<protos::RenderedObj> *queue, std::mutex *que_lock) {
-	que = queue;
+ClientNetUtils::ClientNetUtils (std::queue<protos::ObjsAndEventsPacket *> *objs_queue, std::queue<protos::RenderedObj *> *s_queue, std::mutex *que_lock) {
+	objs_que = objs_queue;
+	ship_que = s_queue;
   q_lock = que_lock;
 }
 
@@ -113,13 +116,16 @@ void * ClientNetUtils::receive_from_server() {
 			//						protos::RenderedObj ship = ship_init_packet->ship();
 					cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
 					q_lock->lock();
-					fill_packet_queue(que, ship);
+					ship_que->push(ship);
 					q_lock->unlock();
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
-					protos::ObjsAndEventsPacket objs_and_events_packet;
-					objs_and_events_packet.ParseFromString(payload);
-					//fill_packet_queue(*que, objs_and_events_packet);
-					packet_size = -1;
+					protos::ObjsAndEventsPacket *objs_and_events_packet = new protos::ObjsAndEventsPacket;
+					objs_and_events_packet->ParseFromString(payload);
+					if (objs_and_events_packet->obj(0).type() == ObjType::SHIP) {
+					}
+					q_lock->lock();
+					objs_que->push(objs_and_events_packet);
+					q_lock->unlock();
 				} else {
 					cout << "Received Invalid Packet Type" << endl;
 				}
@@ -139,10 +145,6 @@ void * ClientNetUtils::receive_from_server() {
 		}
 	}
 	return NULL;
-}
-
-void ClientNetUtils::fill_packet_queue(queue<protos::RenderedObj> *obj_queue, protos::RenderedObj *packet) {
-	obj_queue->push(*packet);
 }
 
 void ClientNetUtils::close_connection() {

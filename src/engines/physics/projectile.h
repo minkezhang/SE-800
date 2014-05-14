@@ -7,6 +7,11 @@
 
 #include <vector>
 
+enum ObjType {
+	SHIP,
+	ASTEROID
+};
+
 class Projectile {
 	public:
 		Projectile(int id, int clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
@@ -18,6 +23,7 @@ class Projectile {
 		int get_id();				// get projectile ID
 		int get_size();				// get size
 		int get_mass();				// get mass
+		int get_type();				// get obj type
 
 		float get_cur_tolerance();		// get current health
 		float get_max_tolerance();		// get max health
@@ -59,6 +65,9 @@ class Projectile {
 		void set_r_dot(float r_dot);		// set roll rotation speed
 
 		void damage(float tolerance);		// decrement the object tolerance by the input
+
+	protected:
+		int type;				// object type (ship or asteroid)
 
 	private:
 		int id;					// global unique ID -- set on construction
