@@ -15,19 +15,22 @@ class Grid {
 		Grid(int id, std::vector<float> size, std::vector<float> corner);
 		~Grid();
 
-		Projectile *get_projectiles();			// returns a list of all projectiles within the grid
-		Projectile *get_projectile(int id);		// returns NULL if the projectile is not found in the grid
+		std::vector<Projectile *> get_projectiles();				// returns a list of all projectiles within the grid
+		Projectile *get_projectile(int id);					// returns NULL if the projectile is not found in the grid
 
-		void add_projectile(Projectile *projectile);	// add an object to the grid
-		void del_projectile(Projectile *projectile);	// removes an object from the grid
+		void add_projectile(Projectile *projectile);				// add an object to the grid
+		void del_projectile(Projectile *projectile);				// removes an object from the grid
+
+		std::map<int, Projectile *> get_clippable();
+		std::map<int, Projectile *> get_unclippable();
 
 	private:
-		int id;						// globally unique grid id -- set in constructor
+		int id;									// globally unique grid id -- set in constructor
 
-		std::vector<float> size;			// dimensions of the box -- set in constructor
-		std::vector<float> corner;			// lowermost corner of the box -- set in constructor
-		std::map<int, Projectile *> clippable		// list of clippable objects (objects whose is_clippable() function returns true)
-		std::map<int, Projectile *> unclippable		// list of unclippable objects (do not need to check unclippable objects colliding with unclippable objects)
+		std::vector<float> size;						// dimensions of the box -- set in constructor
+		std::vector<float> corner;						// lowermost corner of the box -- set in constructor
+		std::map<int, Projectile *> clippable;					// list of clippable objects (objects whose is_clippable() function returns true)
+		std::map<int, Projectile *> unclippable;				// list of unclippable objects (do not need to check unclippable objects colliding with unclippable objects)
 };
 
 #endif
