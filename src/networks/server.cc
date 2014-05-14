@@ -137,8 +137,13 @@ void * Server::serve_client(void *args) {
 	//Ship ship(1, 1, 2.0, 2.0);
 	//build_ship(&ship);
 	protos::RenderedObj ship_packet;
-	PacketUtils::fill_obj_packet(&ship_packet, ship);
+	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
+
+	NetPacket test_objs_and_events_packet;
+	std::list<Projectile *> test_objs;
+	test_objs.push_back(ship);
+	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
 
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
@@ -186,7 +191,8 @@ void * Server::serve_client(void *args) {
 					control_input_packet.ParseFromString(payload);
 					if (control_input_packet.action() == Action::ACCEL) {
 						std::cout << "Received Accel packet." << std::endl;
-						serv_utils.send_to_client(&packet, client_socketfd);
+						//serv_utils.send_to_client(&packet, client_socketfd);
+						serv_utils.send_to_client(&test_objs_and_events_packet, client_socketfd);
 					} else if (control_input_packet.action() == Action::BRAKE) {
 						std::cout << "Received Brake packet." << std::endl;
 					} else if (control_input_packet.action() == Action::BULLET) {

@@ -18,9 +18,9 @@
 #include <osg/ShapeDrawable> 
 #include <osgDB/ReadFile>
 #include <osgViewer/ViewerBase>
+#include <ctime>
 
-GraphicsEngine::GraphicsEngine() {
-}
+GraphicsEngine::GraphicsEngine() {}
 
 void GraphicsEngine::ignite() {
 	root = new osg::Group();
@@ -34,15 +34,21 @@ void GraphicsEngine::cycle() {
 	if (this->viewer.done())
 		shutdown();
 
-
+	//clock_t time1 = clock();
 	// check packet queue for updates
 	// if found object and event packet, compare each object to list of rendered objects
 	// for each object which is already rendered, set UpdateObjectCallback (simply a boolean) to true -- this boolean can be mapped to the object
 	// for each object we need to render which is not already present, call a function which creates a new object and adds it to the group, sets its updatecallback, etc
 	// for each object which was rendered but isn't anymore, remove this object from the group node and free its update callback and free the node
 	// SO for each object we need a struct which encompasses the obj ID, the UpdateObjectCallback bool, the object Node, and perhaps the transform matrix?
+	update_rendered_objects();
 	update_camera();
 	render_objects();
+
+	//clock_t time2 = clock();
+	//clock_t timediff = time2 - time1;
+	//float timediff_sec = ((float)timediff) / CLOCKS_PER_SEC;
+	//std::cout << "CYCLE LENGTH: " << timediff_sec << "SECONDS" << std::endl;
 }
 
 void GraphicsEngine::shutdown() {
@@ -93,27 +99,27 @@ void GraphicsEngine::render_world() {
 }
 
 void GraphicsEngine::ship_init() {
-	osg::Node* ship_mesh;
-	ship_mesh = osgDB::readNodeFile("ship.obj");
-	protos::RenderedObj *ship = new protos::RenderedObj;
-	osg::PositionAttitudeTransform* main_ship_transform =
-		new osg::PositionAttitudeTransform();
-	main_ship_transform->addChild(ship_mesh);
+	protos::RenderedObj *ship;
 
 	// Wait for ship init packet to be received.
 	while (1) {
 		this->que_lock.lock();
-		if (this->packet_que.size() > 0) {
-			ship = &(this->packet_que.front());
-			this->packet_que.pop();
+		if (this->ship_que.size() > 0) {
+			ship = this->ship_que.front();
+			this->ship_que.pop();
 			this->que_lock.unlock();
 			break;
 		}
 		this->que_lock.unlock();
 	}
 
+	this->main_ship = *ship;
+	osg::Node* ship_mesh;
+	ship_mesh = osgDB::readNodeFile("ship.obj");
+	osg::PositionAttitudeTransform* main_ship_transform =
+		new osg::PositionAttitudeTransform();
+	main_ship_transform->addChild(ship_mesh);
 
-	this->main_ship = *ship; 
 	// Set main ship position.
 	// TODO: Set main ship tilts.
 	protos::vector pos_vector = ship->pos();
@@ -187,20 +193,31 @@ void GraphicsEngine::set_shader() {
 
 void GraphicsEngine::update_rendered_objects() {
 	// Find new objects and events packet
-	/*
-	protos::ObjsAndEventsPacket *packet;
+	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
-	if (this->packet_que.size() > 0) {
-		packet = &(this->packet_que.front());
-		this->packet_que.pop();
+	if (this->objs_que.size() > 0) {
+		packet = this->objs_que.front();
+		this->objs_que.pop();
+	} else {
 		this->que_lock.unlock();
-		break;
+		return;
 	}
 	this->que_lock.unlock();
 	// Iterate through all rendered object entries in packet
+	std::cout << "NUMBER OF OBJECTS IS " << packet->obj_size() << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
-		if (
+		if (obj.type() == ObjType::SHIP) {
+			/*
+			if (cur_ships[obj->id()] == SOMETHING)
+				cur_ships[obj->id()]->update_pos = true;
+				// FREEING OLD OBJECT? HOW WILL THIS WORK???
+				cur_ships[obj->id()]->obj = obj;
+			}
+			*/
+		} else if (obj.type() == ObjType::ASTEROID) {
+		} else {
+			std::cout << "Received projectile of unknown type." << std::endl;
+		}
 	}
-	*/
 }

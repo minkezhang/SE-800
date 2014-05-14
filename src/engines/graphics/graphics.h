@@ -27,7 +27,8 @@ class GraphicsEngine : public Engine {
 	public:
 		GraphicsEngine();
 
-		queue<protos::RenderedObj> packet_que;
+		queue<protos::ObjsAndEventsPacket *> objs_que;
+		queue<protos::RenderedObj *> ship_que;
 		std::mutex que_lock;
 		ClientNetUtils *net_utils;
 

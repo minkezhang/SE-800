@@ -12,6 +12,7 @@ Projectile::Projectile(int id, int clippable, float mass, float max_tolerance, v
 int Projectile::get_id() { return this->id; }
 int Projectile::get_size() { return this->size; }
 int Projectile::get_mass() { return this->mass; }
+int Projectile::get_type() { return this->type; }
 float Projectile::get_cur_tolerance() { return this->cur_tolerance; }
 float Projectile::get_max_tolerance() { return this->max_tolerance; }
 
