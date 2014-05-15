@@ -20,11 +20,15 @@ class Environment {
 		std::vector<Projectile *> get_neighbors(Projectile *projectile);// returns a list of all nearby projectiles (objects within one grid space and in direction of travel), given projectile ID
 
 		std::vector<Grid *> get_grids();
-	private:
-
-		std::vector<int> n_grids;					// the number of grids per dimension
 		Grid *get_grid(Projectile *projectile);				// returns the grid in which the projectile is in (based on p->d)
-		std::vector<Grid *> grids;
+		Grid *get_grid(std::vector<int> id);				// returns the grid with the appropriate id
+
+		std::vector<float> get_size();					// gets size of the world
+	private:
+		std::vector<float> grid_size;					// size of the grids -- cached for ease-of-use
+		std::vector<float> size;					// size of environment -- cached
+		std::vector<int> n_grids;					// the number of grids per dimension
+		std::map<std::vector<int>, Grid *> grids;
 };
 
 #endif

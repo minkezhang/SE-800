@@ -1,7 +1,9 @@
 #include <cstddef>
 #include "grid.h"
 
-Grid::Grid(int id, std::vector<float> corner, std::vector<float> size) : id(id), corner(corner), size(size) {}
+Grid::Grid(std::vector<int> id, std::vector<float> corner, std::vector<float> size) : id(id), corner(corner), size(size) {}
+
+std::vector<int> Grid::get_id() { return(this->id); }
 
 /**
  * returns a list of all projectiles within a grid

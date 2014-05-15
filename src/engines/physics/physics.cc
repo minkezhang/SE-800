@@ -85,6 +85,8 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 
 // Arguments are timestep (for 300 Hz, set t to 1/300) and projectile to be integrated
 void PhysicsEngine::verlet_step(float t, Projectile *p) {
+	Grid *old_g = this->environment->get_grid(p);
+
 	// Read in vectors from projectile
 	vector<float> vel = p->get_v();
 	vector<float> pos = p->get_d();
@@ -110,10 +112,22 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 		// Perform Verlet
 		pos_next.at(i) = pos.at(i) + vel.at(i) * t + 0.5 * acc1.at(i) * t * t;
 		vel_next.at(i) = vel.at(i) + 0.5 * t * (acc1.at(i) + acc2.at(i));
+
+		// resolves bounding problems
+		if(pos_next.at(i) < 0) {
+			pos_next.at(i) += this->environment->get_size().at(i);
+		} else if(pos_next.at(i) >= this->environment->get_size().at(i)) {
+			pos_next.at(i) -= this->environment->get_size().at(i);
+		}
 	}
 	// Write in vectors to projectile
 	p->set_d(pos_next);
 	p->set_v(vel_next);
+
+	// update grids
+	Grid *new_g = this->environment->get_grid(p);
+	old_g->del_projectile(p);
+	new_g->add_projectile(p);
 }
 
 void PhysicsEngine::collision_check(Projectile *p) {
