@@ -75,6 +75,8 @@ int main(int argc, char **argv) {
 		for(int i = 0; i < 100; i++) {
 			world.get_physics_engine()->get_environment()->add_projectile(world.join(NULL));
 		}
+
+		world.ignite(argv[1], 2);
 	} else if(!strcmp(argv[1], "client")) {
 		string ip(argv[3]);
 		g = new GraphicsEngine();
@@ -91,9 +93,9 @@ int main(int argc, char **argv) {
 
 		cal_g = new Calendar(1, g);
 		scheduler.add_calendar(cal_g);
-	}
 
-	world.ignite();
+		world.ignite(argv[1]);
+	}
 
 	// execute the game
 	game = std::thread(&WorldEngine::cycle, &world);

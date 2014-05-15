@@ -2,6 +2,7 @@
 #define _WORLDENGINE_H
 
 #include <vector>
+#include <map>
 
 #include "../common/engine.h"
 #include "../scheduling/scheduling.h"
@@ -21,7 +22,8 @@ class WorldEngine : Engine {
 
 		std::vector<Team *> get_teams();
 
-		void ignite() override;
+		void ignite(char *mode);
+		void ignite(char *mode, int n_teams);
 		void cycle() override;
 		void shutdown() override;
 
@@ -40,7 +42,7 @@ class WorldEngine : Engine {
 		PhysicsEngine *get_physics_engine();
 
 	private:
-		std::vector<Team *> teams;
+		std::map<int, Team *> teams;
 		SchedulingEngine *scheduler;
 		PhysicsEngine *physics_engine;				// is a shortcut to the physics engine of the game running in the scheduler
 };

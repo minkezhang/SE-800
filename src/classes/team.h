@@ -15,7 +15,7 @@ class Group;
 
 class Team {
 	public:
-		Team();
+		Team(int id);
 		~Team();
 
 		int get_id();

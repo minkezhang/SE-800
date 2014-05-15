@@ -124,7 +124,8 @@ void PhysicsEngine::collision_check(Projectile *p) {
 			std::vector<float> p_d = p->get_d();
 			std::vector<float> q_d = q->get_d();
 			std::vector<float> diff;
-			// cf. http://bit.ly/1sPHU1c
+			// get the distance between the projectiles
+			//	cf. http://bit.ly/1sPHU1c
 			std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
 			float dist_sq = 0;
 			for(int i = 0; i < 3; i++) {
@@ -148,6 +149,10 @@ void PhysicsEngine::collide(Projectile *p, Projectile *q) {
 		q->damage(q->get_cur_tolerance());
 	} else {
 		// clippable objects are checked twice (unfortunately) -- this prevents double counting the damage
+		/**
+		 * TODO -- may want to scale up with velocity of the objects in question
+		 *	does not need to be strictly linear scale -- can just use v_squared
+		 */
 		p->damage(q->get_cur_tolerance() * 0.5);
 		q->damage(p->get_cur_tolerance() * 0.5);
 	}
@@ -158,28 +163,35 @@ void PhysicsEngine::cycle() {
 	std::vector<Projectile *> clippable = this->environment->get_clippable();
 	std::vector<Projectile *> unclippable = this->environment->get_unclippable();
 
+	/**
+	 * calling del_projectile in such a way should be okay in this instance
+	 *	the main concern would be modifying a list while iterating, which we are NOT doing (as
+	 *	clippable[] and unclippable[] here are copies)
+	 * calls to get_neighbor() later are not cached, and thus will have an updated copy of neighbors,
+	 *	with all projectiles that were deleted here cut out
+	 */
 	for(std::vector<Projectile *>::iterator i = unclippable.begin(); i != unclippable.end(); ++i) {
 		Projectile *p = *i;
 		if(p->get_is_destroyed()) {
-			// delete from queue
+			this->environment->del_projectile(p);
 		} else {
 			this->verlet_step(.0033, p);
 		}
 	}
-
 	for(std::vector<Projectile *>::iterator i = clippable.begin(); i != clippable.end(); ++i) {
 		Projectile *p = *i;
 		if(p->get_is_destroyed()) {
 			if(p->get_is_processed()) {
-				// delete from queue
+				this->environment->del_projectile(p);
 			}
 		} else {
 			this->verlet_step(.0033, p);
+			// only clippable objects need to be checked for collisions against other objects
 			this->collision_check(p);
 		}
 	}
 
-	/*
+	/**
 	for(unsigned long int i = 0; i < this->environment->get_grids().size(); i++) {
 		Grid *g = this->environment->get_grids().at(i);
 		for(unsigned long int j = 0; j < g->get_projectiles().size(); j++) {
