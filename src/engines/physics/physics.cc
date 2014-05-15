@@ -124,6 +124,7 @@ void PhysicsEngine::collision_check(Projectile *p) {
 			std::vector<float> p_d = p->get_d();
 			std::vector<float> q_d = q->get_d();
 			std::vector<float> diff;
+			// cf. http://bit.ly/1sPHU1c
 			std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
 			float dist_sq = 0;
 			for(int i = 0; i < 3; i++) {
