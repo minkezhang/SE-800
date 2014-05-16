@@ -221,7 +221,6 @@ void GraphicsEngine::update_rendered_objects() {
 	}
 	this->que_lock.unlock();
 	// Iterate through all rendered object entries in packet
-	std::cout << "NUMBER OF OBJECTS IS " << packet->obj_size() << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
 		if (cur_objs.count(obj.id())!= 0) {

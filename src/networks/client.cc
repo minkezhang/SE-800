@@ -36,7 +36,7 @@ bool ClientNetUtils::connect_to_server(int port, string ip) {
 
 	if (connect(this->server_sockfd, (struct sockaddr *) &this->servaddr,
 		sizeof(this->servaddr)) == SOCKET_ERROR) {
-		cout << "CONNECT FAILED" << errno << endl;
+		cout << "Connection failed with errorno " << errno << endl;
 		this->server_sockfd = -1;
 		return false;
 	}
@@ -106,35 +106,32 @@ void * ClientNetUtils::receive_from_server() {
 				int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
 				std::string payload(buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
+				// Push packet onto corresponding queue.
 				if (packet_type == PacketType::SHIP_INIT) {
-					cout << "RECEIVED SHIP PACKET!" << endl;
+					cout << "Received ship init packet." << endl;
 					protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
 					ship_init_packet->ParseFromString(payload);
 					protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
-					//TODO: REMEMBER TO FREE THESE OBJECTS LATER!
-			//						protos::RenderedObj ship = ship_init_packet->ship();
-					cout << "THIS IS SHIP ID AND MASS: " << ship->id() << " " << ship->mass() << endl;
+					//TODO: Use smart pointers for RenderedObj creation.
 					q_lock->lock();
 					ship_que->push(ship);
 					q_lock->unlock();
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
+					cout << "Received objs and events packet." << std::endl;
 					protos::ObjsAndEventsPacket *objs_and_events_packet = new protos::ObjsAndEventsPacket;
 					objs_and_events_packet->ParseFromString(payload);
-					if (objs_and_events_packet->obj(0).type() == ObjType::SHIP) {
-					}
 					q_lock->lock();
 					objs_que->push(objs_and_events_packet);
 					q_lock->unlock();
 				} else {
 					cout << "Received Invalid Packet Type" << endl;
 				}
-				// There are more packets in net buffer.
 				if (buildLen > packet_size) {
+					// Case if there are more packets in net buffer.
 					// Copy other packets to beginning of buffer and reset build len.
 					char tempBuf[bufLen - packet_size];
 					memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
 					memcpy(buildBuf, tempBuf, bufLen - packet_size);
-					// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
 				}
 				buildLen -= packet_size;
 				packet_size = -1;

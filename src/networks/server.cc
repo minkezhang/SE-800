@@ -38,7 +38,6 @@ int Server::get_client_fd(int id) {
 
 bool Server::send_to_client(NetPacket *packet, int client_id) {
 	int client_socketfd = client_id;
-	//std::cout << "CLIENT ID IS " << client_id << std::endl;
 	struct sockaddr_in clientaddr = this->client_id_to_sockaddr[client_id];
 
 	protos::GeneralPacket gen_packet;
@@ -80,11 +79,11 @@ void *Server::accept_clients(void *args) {
 
 	this->server_socketfd = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
 	if (setsockopt(this->server_socketfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) != 0)
-		std::cout << "ERROR WITH SETSOCKOPT" << std::endl;
+		std::cout << "SETSOCKOPT network error." << std::endl;
 	if (::bind(this->server_socketfd, (struct sockaddr *) &serverAddr, sizeof(serverAddr)) != 0)
-		std::cout << "ERROR WITH BIND" << std::endl;
+		std::cout << "BIND network error." << std::endl;
 	if (listen(this->server_socketfd, 5) != 0)
-		std::cout << "ERROR WITH LISTEN " << std::endl;
+		std::cout << "LISTEN network error." << std::endl;
 
 	while(1) {
 		*clientSocket = accept(this->server_socketfd, (struct sockaddr *) clientAddr, &sinSize);
@@ -92,13 +91,11 @@ void *Server::accept_clients(void *args) {
 		num_clients++;
 		setsockopt(*clientSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
-		std::cout << "THIS IS CLIENT SOCKETS " << *clientSocket << std::endl;
+		std::cout << "THIS IS CLIENT SOCKETFD: " << *clientSocket << std::endl;
 		// DO WE HAVE TO ALLOCATE CLIENTADDR STRUCT AND CLIENTSOCKET INFO???
 		this->client_fd_list.push_back(1);
-		std::cout << "PUSHED ONE BACK" << std::endl;
 		this->client_fd_list.push_back(*clientSocket);
 		this->client_id_to_sockaddr.insert(std::pair<int, struct sockaddr_in>(*clientSocket, *clientAddr));
-		std::cout << "INSERTING CLIENT ID " << *clientSocket << std::endl;
 
 		// Pass on arguments to worker thread
 
@@ -129,7 +126,6 @@ void * Server::serve_client(void *args) {
 	serve_client_args *sockets = (serve_client_args *) args;
 	int client_socketfd = sockets->client_socketfd;
 	WorldEngine *world = sockets->world;
-	//int server_socketfd = sockets->server_socketfd;
 
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
 	Pilot *p = new Pilot("Name");
@@ -138,12 +134,14 @@ void * Server::serve_client(void *args) {
 	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
 
+/*
 	NetPacket test_objs_and_events_packet;
 	std::list<Projectile *> test_objs;
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
+*/
 
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
@@ -190,8 +188,8 @@ void * Server::serve_client(void *args) {
 					control_input_packet.ParseFromString(payload);
 					if (control_input_packet.action() == Action::ACCEL) {
 						std::cout << "Received Accel packet." << std::endl;
-						//serv_utils.send_to_client(&packet, client_socketfd);
-						serv_utils.send_to_client(&test_objs_and_events_packet, client_socketfd);
+					} else if (control_input_packet.action() == Action::RESET_ACCEL) {
+						std::cout << "Received Reset Accel packet." << std::endl;
 					} else if (control_input_packet.action() == Action::BRAKE) {
 						std::cout << "Received Brake packet." << std::endl;
 					} else if (control_input_packet.action() == Action::BULLET) {
@@ -202,15 +200,12 @@ void * Server::serve_client(void *args) {
 				} else {
 					std::cout << "Received Invalid Packet Type" << std::endl;
 				}
-				// There are more packets in net buffer.
 				if (buildLen > packet_size) {
-					// std::cout << "OPTIONAL CHECKPOINT" << std::endl;
-					// std::cout << "BUILDLEN IS " << buildLen << " AND PACKET SIZE IS " << packet_size << std::endl;
+					// Case if there are more packets in net buffer.
 					// Copy other packets to beginning of buffer and reset build len.
 					char tempBuf[bufLen - packet_size];
 					memcpy(tempBuf, buildBuf + packet_size, bufLen - packet_size);
 					memcpy(buildBuf, tempBuf, bufLen - packet_size);
-					// TODO: CALL RECURSIVE FUNCTION TO PARSE REMAINING BUILDBUF CONTENTS.
 				}
 				buildLen -= packet_size;
 				packet_size = -1;
