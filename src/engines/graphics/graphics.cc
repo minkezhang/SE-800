@@ -23,6 +23,10 @@
 GraphicsEngine::GraphicsEngine() {}
 
 void GraphicsEngine::ignite() {
+	// Initialize meshes.
+	this->ship_mesh = osgDB::readNodeFile("ship.obj");
+	this->asteroid_mesh = osgDB::readNodeFile("asteroid.obj");
+
 	root = new osg::Group();
 	render_world();
 	ship_init();
@@ -43,7 +47,7 @@ void GraphicsEngine::cycle() {
 	// SO for each object we need a struct which encompasses the obj ID, the UpdateObjectCallback bool, the object Node, and perhaps the transform matrix?
 	update_rendered_objects();
 	update_camera();
-	render_objects();
+	render();
 
 	//clock_t time2 = clock();
 	//clock_t timediff = time2 - time1;
@@ -53,9 +57,6 @@ void GraphicsEngine::cycle() {
 
 void GraphicsEngine::shutdown() {
 	exit(1);
-}
-
-void GraphicsEngine::fill_cur_objects(Projectile *projectiles) {
 }
 
 osg::Node* GraphicsEngine::create_world_cube() {
@@ -114,31 +115,7 @@ void GraphicsEngine::ship_init() {
 	}
 
 	this->main_ship = *ship;
-	osg::Node* ship_mesh;
-	ship_mesh = osgDB::readNodeFile("ship.obj");
-	osg::PositionAttitudeTransform* main_ship_transform =
-		new osg::PositionAttitudeTransform();
-	main_ship_transform->addChild(ship_mesh);
-
-	// Set main ship position.
-	// TODO: Set main ship tilts.
-	protos::vector pos_vector = ship->pos();
-	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
-	osg::Vec3 ship_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
-	main_ship_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(25.0f),
-		osg::Vec3d(1, 0, 0))));
-	main_ship_transform->setPosition(ship_pos);
-
-	// Add main ship to rendered object list.
-	rendered_obj* obj = new rendered_obj;
-	obj->obj = ship;
-	obj->update_pos = false;
-	obj->node = ship_mesh;
-	obj->trans_matrix = main_ship_transform;
-	cur_ships.insert(std::pair<int, rendered_obj*>(ship->id(), obj));
-
-	this->root->addChild(main_ship_transform);
+	create_object(ship);
 }
 
 void GraphicsEngine::viewer_init() {
@@ -148,7 +125,6 @@ void GraphicsEngine::viewer_init() {
 
 	// Assign the scene we created to the viewer
 	this->viewer.setSceneData(this->root);
-//	this->viewer.setThreadingModel(osgViewer::ViewerBase::ThreadingModel::SingleThreaded);
 	// Create the windows and start the required threads
 	this->viewer.realize();
 }
@@ -171,7 +147,7 @@ void GraphicsEngine::update_camera() {
 		camera_matrix.inverse(camera_matrix) * osg::Matrixd::rotate(-M_PI/2.0, 1, 0, 0)));
 }
 
-void GraphicsEngine::render_objects() {
+void GraphicsEngine::render() {
 	if (!this->viewer.done()) {
 		// Dispatch the new frame, this wraps the following viewer operations:
 		// 	advance() to the new frame
@@ -189,6 +165,45 @@ void GraphicsEngine::set_light_source() {
 }
 
 void GraphicsEngine::set_shader() {
+}
+
+void GraphicsEngine::create_object(protos::RenderedObj *obj) {
+	osg::PositionAttitudeTransform* obj_transform =
+		new osg::PositionAttitudeTransform();
+	if (obj->type() == ObjType::SHIP) {
+		obj_transform->addChild(this->ship_mesh);
+	} else if (obj->type() == ObjType::ASTEROID) {
+		obj_transform->addChild(this->asteroid_mesh);
+	}
+
+	// Set position.
+	// TODO: Set tilts.
+	protos::vector pos_vector = obj->pos();
+	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
+	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
+	obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(25.0f),
+		osg::Vec3d(1, 0, 0))));
+	obj_transform->setPosition(obj_pos);
+
+	// Add object to rendered object list.
+	rendered_obj *ren_obj = new rendered_obj;
+	ren_obj->obj = obj;
+	ren_obj->update_pos = false;
+	ren_obj->trans_matrix = obj_transform;
+	cur_objs.insert(std::pair<int, rendered_obj*>(obj->id(), ren_obj));
+
+	this->root->addChild(obj_transform);
+}
+
+void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj *update_obj) {
+	ren_obj->obj = update_obj;
+	ren_obj->update_pos = true;
+
+	protos::vector pos_vector = update_obj->pos();
+	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
+	ren_obj->trans_matrix->setPosition(obj_pos);
+	// TODO: UPDATE TILT
 }
 
 void GraphicsEngine::update_rendered_objects() {
@@ -209,50 +224,13 @@ void GraphicsEngine::update_rendered_objects() {
 	std::cout << "NUMBER OF OBJECTS IS " << packet->obj_size() << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
-		if (obj.type() == ObjType::SHIP) {
+		if (cur_objs.count(obj.id())!= 0) {
 			// Case when object has already been rendered in prev cycle.
-			if (cur_ships.count(obj.id())!= 0) {
-				rendered_obj* rendered_ship = cur_ships.at(obj.id());
-				rendered_ship->update_pos = true;
-				// FREEING OLD OBJECT? HOW WILL THIS WORK???
-				rendered_ship->obj = &obj;
-
-				// TODO: MOVE ALL OF THESE UPDATES TO CALLBACK FXN
-				protos::vector pos_vector = obj.pos();
-				osg::Vec3 ship_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
-				rendered_ship->trans_matrix->setPosition(ship_pos);
-				// TODO: UPDATE TILT
-			} else {
-				// Case when object has not yet been rendered.
-				osg::Node* ship_mesh;
-				ship_mesh = osgDB::readNodeFile("ship.obj");
-				osg::PositionAttitudeTransform* ship_transform =
-					new osg::PositionAttitudeTransform();
-				ship_transform->addChild(ship_mesh);
-
-				// Set main ship position.
-				// TODO: Set main ship tilts.
-				protos::vector pos_vector = obj.pos();
-				std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
-				osg::Vec3 ship_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
-				ship_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-					osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(25.0f),
-					osg::Vec3d(1, 0, 0))));
-				ship_transform->setPosition(ship_pos);
-
-				// Add main ship to rendered object list.
-				rendered_obj *ren_obj = new rendered_obj;
-				ren_obj->obj = &obj;
-				ren_obj->update_pos = false;
-				ren_obj->node = ship_mesh;
-				ren_obj->trans_matrix = ship_transform;
-				cur_ships.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
-
-				this->root->addChild(ship_transform);
-			}
-		} else if (obj.type() == ObjType::ASTEROID) {
+			rendered_obj* ren_obj = cur_objs.at(obj.id());
+			update_object_transform(ren_obj, &obj);
 		} else {
-			std::cout << "Received projectile of unknown type." << std::endl;
+			// Case when object is being rendered for the first time.
+			create_object(&obj);
 		}
 	}
 }
