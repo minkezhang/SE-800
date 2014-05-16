@@ -27,9 +27,8 @@ void PacketUtils::get_packet_payload(
 	int type;
 	if (!gen_packet.ParseFromString(packet.serialized_packet)) {
 	 cerr << "Failed to parse general proto buffer." << endl;
-	} else {
-	 type = gen_packet.packettype();
 	}
+	type = gen_packet.packettype();
 	if (type == PacketType::SHIP_INIT) {
 	 protos::ShipInitPacket *ship_init_packet = (protos::ShipInitPacket *) proto_packet;
 	 if (!ship_init_packet->ParseFromString(gen_packet.packet())) {
@@ -45,6 +44,11 @@ void PacketUtils::get_packet_payload(
 	 if (!event_ack_packet->ParseFromString(gen_packet.packet())) {
 		cerr << "Failed to parse event ack packet." << endl;
 	 }
+	} else if (type == PacketType::OBJS_AND_EVENTS_REQ) {
+		protos::ObjsAndEventsReqPacket* objs_and_events_req_packet = (protos::ObjsAndEventsReqPacket *) proto_packet;
+		if (!objs_and_events_req_packet->ParseFromString(gen_packet.packet())) {
+			cerr << "Failed to parse objs and events req packet." << endl;
+		}
 	} else if (type == PacketType::CONTROL_INPUT) {
 	 protos::ControlInputPacket* control_input_packet = (protos::ControlInputPacket *) proto_packet;
 	 if (!control_input_packet->ParseFromString(gen_packet.packet())) {
@@ -120,6 +124,18 @@ void PacketUtils::make_packet(
 		// Serialize specific proto packet
 		if (!event_ack_packet.SerializeToString(&serialized_packet)) {
 			cerr << "Could not serialize event ack packet to string." << endl;
+		}
+	} else if (type == PacketType::OBJS_AND_EVENTS_REQ) {
+		// Read arguments
+		int *req = (int *) payload;
+
+		// Fill specific proto packet
+		protos::ObjsAndEventsReqPacket objs_and_events_req_packet;
+		objs_and_events_req_packet.set_req(*req);
+
+		// Serialize specific proto packet
+		if (!objs_and_events_req_packet.SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize objs and events req packet to string." << endl;
 		}
 	} else if (type == PacketType::CONTROL_INPUT) {
 		protos::ControlInput control_input_packet;

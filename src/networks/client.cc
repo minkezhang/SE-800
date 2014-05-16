@@ -108,7 +108,7 @@ void * ClientNetUtils::receive_from_server() {
 
 				// Push packet onto corresponding queue.
 				if (packet_type == PacketType::SHIP_INIT) {
-					cout << "Received ship init packet." << endl;
+					// cout << "Received ship init packet." << endl;
 					protos::ShipInitPacket *ship_init_packet = new protos::ShipInitPacket;
 					ship_init_packet->ParseFromString(payload);
 					protos::RenderedObj *ship = new protos::RenderedObj(ship_init_packet->ship());
@@ -117,7 +117,7 @@ void * ClientNetUtils::receive_from_server() {
 					ship_que->push(ship);
 					q_lock->unlock();
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS) {
-					cout << "Received objs and events packet." << std::endl;
+					// cout << "Received objs and events packet." << std::endl;
 					protos::ObjsAndEventsPacket *objs_and_events_packet = new protos::ObjsAndEventsPacket;
 					objs_and_events_packet->ParseFromString(payload);
 					q_lock->lock();

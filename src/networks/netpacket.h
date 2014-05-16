@@ -20,6 +20,7 @@ enum PacketType {
 	OBJS_AND_EVENTS,
 	// Packets client can send:
 	EVENT_ACK,
+	OBJS_AND_EVENTS_REQ,
 	CONTROL_INPUT
 };
 

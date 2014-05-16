@@ -49,6 +49,7 @@ class GraphicsEngine : public Engine {
 		void render_world();						// draw world cube from pre-loaded dimensions and assets
 		void ship_init();								// creates the user-controlled ship
 		void viewer_init();							// initializes callbacks, viewing window, and scene
+		void send_update_req();					// sends req for objs and events from server
 		void update_camera();						// positions the camera behind used-controlled ship
 		void update_rendered_objects();	// updates object positions and triggers graphical events
 		void render();									// renders the world graph

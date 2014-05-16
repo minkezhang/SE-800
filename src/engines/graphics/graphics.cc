@@ -45,6 +45,7 @@ void GraphicsEngine::cycle() {
 	// for each object we need to render which is not already present, call a function which creates a new object and adds it to the group, sets its updatecallback, etc
 	// for each object which was rendered but isn't anymore, remove this object from the group node and free its update callback and free the node
 	// SO for each object we need a struct which encompasses the obj ID, the UpdateObjectCallback bool, the object Node, and perhaps the transform matrix?
+	send_update_req();
 	update_rendered_objects();
 	update_camera();
 	render();
@@ -127,6 +128,15 @@ void GraphicsEngine::viewer_init() {
 	this->viewer.setSceneData(this->root);
 	// Create the windows and start the required threads
 	this->viewer.realize();
+}
+
+void GraphicsEngine::send_update_req() {
+	// Send request to server for objs and events packet.
+	int req = 1;
+	NetPacket packet;
+	PacketUtils::make_packet(&packet, PacketType::OBJS_AND_EVENTS_REQ, (void *) &req, NULL);
+	if (!this->net_utils->send_to_server(&packet))
+		std::cout << "Could not send objs and events req packet." << std::endl;
 }
 
 void GraphicsEngine::update_camera() {
@@ -212,6 +222,7 @@ void GraphicsEngine::update_rendered_objects() {
 	// Find new objects and events packet
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
+	std::cout << "THIS IS QUEUE SIZE " << this->objs_que.size() << std::endl;
 	if (this->objs_que.size() > 0) {
 		packet = this->objs_que.front();
 		this->objs_que.pop();

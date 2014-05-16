@@ -134,14 +134,12 @@ void * Server::serve_client(void *args) {
 	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
 
-/*
 	NetPacket test_objs_and_events_packet;
 	std::list<Projectile *> test_objs;
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
-*/
 
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
@@ -197,6 +195,9 @@ void * Server::serve_client(void *args) {
 					}
 				} else if (packet_type == PacketType::EVENT_ACK) {
 					// TODO: Handle event ack packet receipt.
+				} else if (packet_type == PacketType::OBJS_AND_EVENTS_REQ) {
+					// TODO: Handle objs and events req packet receipt.
+					serv_utils.send_to_client(&test_objs_and_events_packet, client_socketfd);
 				} else {
 					std::cout << "Received Invalid Packet Type" << std::endl;
 				}
