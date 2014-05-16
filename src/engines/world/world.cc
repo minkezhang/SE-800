@@ -63,7 +63,7 @@ void WorldEngine::shutdown() {
  */
 Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
-	Ship *s = new Ship(OBJ_ID, 10, 10, pos, 0, 0, 0);
+	Ship *s = new Ship(OBJ_ID, 10, 10, pos, 1000, 0, 0);
 	std::cout << "SPAWNED NEW SHIP OF ID " << OBJ_ID << std::endl;
 	OBJ_ID++;
 	return(s);

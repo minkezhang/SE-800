@@ -213,6 +213,7 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	protos::vector pos_vector = update_obj->pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(obj_pos);
+	std::cout << "new object position " << pos_vector.x() << " " << pos_vector.y() << " " << pos_vector.z() << std::endl;
 	// TODO: UPDATE TILT
 }
 

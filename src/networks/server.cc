@@ -189,10 +189,17 @@ void * Server::serve_client(void *args) {
 					control_input_packet.ParseFromString(payload);
 					if (control_input_packet.action() == Action::ACCEL) {
 						std::cout << "Received Accel packet." << std::endl;
+						std::cout << "Ship pos before: " << p->get_ship()->get_d().at(0) << " " << p->get_ship()->get_d().at(1) << " " << p->get_ship()->get_d().at(2) << std::endl;
+						std::cout << "Ship accel before " << p->get_ship()->get_a() << std::endl;
+						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), 1);
+						std::cout << "Ship pos after: " << p->get_ship()->get_d().at(0) << " " << p->get_ship()->get_d().at(1) << " " << p->get_ship()->get_d().at(2) << std::endl;
+						std::cout << "Ship accel after: " << p->get_ship()->get_a() << std::endl;
 					} else if (control_input_packet.action() == Action::RESET_ACCEL) {
 						std::cout << "Received Reset Accel packet." << std::endl;
+						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), 0);
 					} else if (control_input_packet.action() == Action::BRAKE) {
 						std::cout << "Received Brake packet." << std::endl;
+						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), -1);
 					} else if (control_input_packet.action() == Action::BULLET) {
 						std::cout << "Received Bullet packet." << std::endl;
 					}
