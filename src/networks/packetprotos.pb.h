@@ -40,6 +40,7 @@ class ControlInput;
 class GeneralPacket;
 class ShipInitPacket;
 class ObjsAndEventsPacket;
+class ObjsAndEventsReqPacket;
 class EventAckPacket;
 class ControlInputPacket;
 
@@ -824,6 +825,88 @@ class ObjsAndEventsPacket : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ObjsAndEventsPacket* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ObjsAndEventsReqPacket : public ::google::protobuf::Message {
+ public:
+  ObjsAndEventsReqPacket();
+  virtual ~ObjsAndEventsReqPacket();
+
+  ObjsAndEventsReqPacket(const ObjsAndEventsReqPacket& from);
+
+  inline ObjsAndEventsReqPacket& operator=(const ObjsAndEventsReqPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ObjsAndEventsReqPacket& default_instance();
+
+  void Swap(ObjsAndEventsReqPacket* other);
+
+  // implements Message ----------------------------------------------
+
+  ObjsAndEventsReqPacket* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ObjsAndEventsReqPacket& from);
+  void MergeFrom(const ObjsAndEventsReqPacket& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required uint32 req = 1;
+  inline bool has_req() const;
+  inline void clear_req();
+  static const int kReqFieldNumber = 1;
+  inline ::google::protobuf::uint32 req() const;
+  inline void set_req(::google::protobuf::uint32 value);
+
+  // @@protoc_insertion_point(class_scope:protos.ObjsAndEventsReqPacket)
+ private:
+  inline void set_has_req();
+  inline void clear_has_req();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::uint32 req_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_packetprotos_2eproto();
+  friend void protobuf_AssignDesc_packetprotos_2eproto();
+  friend void protobuf_ShutdownFile_packetprotos_2eproto();
+
+  void InitAsDefaultInstance();
+  static ObjsAndEventsReqPacket* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1768,6 +1851,32 @@ ObjsAndEventsPacket::event() const {
 inline ::google::protobuf::RepeatedPtrField< ::protos::Event >*
 ObjsAndEventsPacket::mutable_event() {
   return &event_;
+}
+
+// -------------------------------------------------------------------
+
+// ObjsAndEventsReqPacket
+
+// required uint32 req = 1;
+inline bool ObjsAndEventsReqPacket::has_req() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ObjsAndEventsReqPacket::set_has_req() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ObjsAndEventsReqPacket::clear_has_req() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ObjsAndEventsReqPacket::clear_req() {
+  req_ = 0u;
+  clear_has_req();
+}
+inline ::google::protobuf::uint32 ObjsAndEventsReqPacket::req() const {
+  return req_;
+}
+inline void ObjsAndEventsReqPacket::set_req(::google::protobuf::uint32 value) {
+  set_has_req();
+  req_ = value;
 }
 
 // -------------------------------------------------------------------

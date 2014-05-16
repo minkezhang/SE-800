@@ -41,6 +41,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ObjsAndEventsPacket_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ObjsAndEventsPacket_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ObjsAndEventsReqPacket_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ObjsAndEventsReqPacket_reflection_ = NULL;
 const ::google::protobuf::Descriptor* EventAckPacket_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   EventAckPacket_reflection_ = NULL;
@@ -180,7 +183,22 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjsAndEventsPacket));
-  EventAckPacket_descriptor_ = file->message_type(7);
+  ObjsAndEventsReqPacket_descriptor_ = file->message_type(7);
+  static const int ObjsAndEventsReqPacket_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsReqPacket, req_),
+  };
+  ObjsAndEventsReqPacket_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ObjsAndEventsReqPacket_descriptor_,
+      ObjsAndEventsReqPacket::default_instance_,
+      ObjsAndEventsReqPacket_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsReqPacket, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsReqPacket, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ObjsAndEventsReqPacket));
+  EventAckPacket_descriptor_ = file->message_type(8);
   static const int EventAckPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EventAckPacket, ack_),
   };
@@ -195,7 +213,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(EventAckPacket));
-  ControlInputPacket_descriptor_ = file->message_type(8);
+  ControlInputPacket_descriptor_ = file->message_type(9);
   static const int ControlInputPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ControlInputPacket, control_),
   };
@@ -237,6 +255,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ObjsAndEventsPacket_descriptor_, &ObjsAndEventsPacket::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ObjsAndEventsReqPacket_descriptor_, &ObjsAndEventsReqPacket::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     EventAckPacket_descriptor_, &EventAckPacket::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ControlInputPacket_descriptor_, &ControlInputPacket::default_instance());
@@ -259,6 +279,8 @@ void protobuf_ShutdownFile_packetprotos_2eproto() {
   delete ShipInitPacket_reflection_;
   delete ObjsAndEventsPacket::default_instance_;
   delete ObjsAndEventsPacket_reflection_;
+  delete ObjsAndEventsReqPacket::default_instance_;
+  delete ObjsAndEventsReqPacket_reflection_;
   delete EventAckPacket::default_instance_;
   delete EventAckPacket_reflection_;
   delete ControlInputPacket::default_instance_;
@@ -288,9 +310,10 @@ void protobuf_AddDesc_packetprotos_2eproto() {
     "\030\003 \001(\t\"3\n\016ShipInitPacket\022!\n\004ship\030\001 \002(\0132\023"
     ".protos.RenderedObj\"U\n\023ObjsAndEventsPack"
     "et\022 \n\003obj\030\001 \003(\0132\023.protos.RenderedObj\022\034\n\005"
-    "event\030\002 \003(\0132\r.protos.Event\"\035\n\016EventAckPa"
-    "cket\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInputPacket\022"
-    "%\n\007control\030\001 \002(\0132\024.protos.ControlInput", 758);
+    "event\030\002 \003(\0132\r.protos.Event\"%\n\026ObjsAndEve"
+    "ntsReqPacket\022\013\n\003req\030\001 \002(\r\"\035\n\016EventAckPac"
+    "ket\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInputPacket\022%"
+    "\n\007control\030\001 \002(\0132\024.protos.ControlInput", 797);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -300,6 +323,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
   GeneralPacket::default_instance_ = new GeneralPacket();
   ShipInitPacket::default_instance_ = new ShipInitPacket();
   ObjsAndEventsPacket::default_instance_ = new ObjsAndEventsPacket();
+  ObjsAndEventsReqPacket::default_instance_ = new ObjsAndEventsReqPacket();
   EventAckPacket::default_instance_ = new EventAckPacket();
   ControlInputPacket::default_instance_ = new ControlInputPacket();
   vector::default_instance_->InitAsDefaultInstance();
@@ -309,6 +333,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
   GeneralPacket::default_instance_->InitAsDefaultInstance();
   ShipInitPacket::default_instance_->InitAsDefaultInstance();
   ObjsAndEventsPacket::default_instance_->InitAsDefaultInstance();
+  ObjsAndEventsReqPacket::default_instance_->InitAsDefaultInstance();
   EventAckPacket::default_instance_->InitAsDefaultInstance();
   ControlInputPacket::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_packetprotos_2eproto);
@@ -2565,6 +2590,215 @@ void ObjsAndEventsPacket::Swap(ObjsAndEventsPacket* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = ObjsAndEventsPacket_descriptor_;
   metadata.reflection = ObjsAndEventsPacket_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int ObjsAndEventsReqPacket::kReqFieldNumber;
+#endif  // !_MSC_VER
+
+ObjsAndEventsReqPacket::ObjsAndEventsReqPacket()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void ObjsAndEventsReqPacket::InitAsDefaultInstance() {
+}
+
+ObjsAndEventsReqPacket::ObjsAndEventsReqPacket(const ObjsAndEventsReqPacket& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void ObjsAndEventsReqPacket::SharedCtor() {
+  _cached_size_ = 0;
+  req_ = 0u;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ObjsAndEventsReqPacket::~ObjsAndEventsReqPacket() {
+  SharedDtor();
+}
+
+void ObjsAndEventsReqPacket::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void ObjsAndEventsReqPacket::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ObjsAndEventsReqPacket::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ObjsAndEventsReqPacket_descriptor_;
+}
+
+const ObjsAndEventsReqPacket& ObjsAndEventsReqPacket::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_packetprotos_2eproto();
+  return *default_instance_;
+}
+
+ObjsAndEventsReqPacket* ObjsAndEventsReqPacket::default_instance_ = NULL;
+
+ObjsAndEventsReqPacket* ObjsAndEventsReqPacket::New() const {
+  return new ObjsAndEventsReqPacket;
+}
+
+void ObjsAndEventsReqPacket::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    req_ = 0u;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ObjsAndEventsReqPacket::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required uint32 req = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &req_)));
+          set_has_req();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void ObjsAndEventsReqPacket::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required uint32 req = 1;
+  if (has_req()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->req(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* ObjsAndEventsReqPacket::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required uint32 req = 1;
+  if (has_req()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->req(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int ObjsAndEventsReqPacket::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required uint32 req = 1;
+    if (has_req()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->req());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ObjsAndEventsReqPacket::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ObjsAndEventsReqPacket* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ObjsAndEventsReqPacket*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ObjsAndEventsReqPacket::MergeFrom(const ObjsAndEventsReqPacket& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_req()) {
+      set_req(from.req());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ObjsAndEventsReqPacket::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ObjsAndEventsReqPacket::CopyFrom(const ObjsAndEventsReqPacket& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ObjsAndEventsReqPacket::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void ObjsAndEventsReqPacket::Swap(ObjsAndEventsReqPacket* other) {
+  if (other != this) {
+    std::swap(req_, other->req_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ObjsAndEventsReqPacket::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ObjsAndEventsReqPacket_descriptor_;
+  metadata.reflection = ObjsAndEventsReqPacket_reflection_;
   return metadata;
 }
 

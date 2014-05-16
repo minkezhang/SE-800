@@ -54,6 +54,10 @@ message ObjsAndEventsPacket {
 	repeated Event event = 2;
 }
 
+message ObjsAndEventsReqPacket {
+	required uint32 req = 1;
+}
+
 message EventAckPacket {
 	required uint32 ack = 1;
 }
