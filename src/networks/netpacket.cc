@@ -156,7 +156,7 @@ void PacketUtils::make_packet(
 	 // Packet length is composed of packet size (int),
 	 // packet type (int), and a serialized payload packet (string)
 	int packet_size = sizeof(uint32_t) + sizeof(uint32_t) +
-		sizeof(gen_packet.packet());
+		gen_packet.packet().size();
 	packet->packet_len = packet_size;
 	packet->serialized_packet = serialized_gen_packet;
 }

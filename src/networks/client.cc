@@ -60,7 +60,7 @@ bool ClientNetUtils::send_to_server(NetPacket* packet) {
 	sendto(this->server_sockfd, &network_byte_type, sizeof(uint32_t), 0,
 		(struct sockaddr *) &this->servaddr, sizeof(this->servaddr));
 	// Send packet payload
-	sendto(this->server_sockfd, gen_packet.packet().c_str(), sizeof(gen_packet.packet()), 0,
+	sendto(this->server_sockfd, gen_packet.packet().data(), gen_packet.packet().size(), 0,
 		(struct sockaddr *) &this->servaddr, sizeof(this->servaddr));
 	return true;
 }
@@ -104,8 +104,7 @@ void * ClientNetUtils::receive_from_server() {
 				packet_type = ntohl(packet_type);
 
 				int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-				char payload[payload_size];
-				memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+				std::string payload(buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
 				if (packet_type == PacketType::SHIP_INIT) {
 					cout << "RECEIVED SHIP PACKET!" << endl;

@@ -54,7 +54,7 @@ bool Server::send_to_client(NetPacket *packet, int client_id) {
 	sendto(client_socketfd, &network_byte_type, sizeof(uint32_t), 0,
 		(struct sockaddr *) &clientaddr, sizeof(clientaddr));
 	// Send packet payload
-	sendto(client_socketfd, gen_packet.packet().c_str(), sizeof(gen_packet.packet()), 0,
+	sendto(client_socketfd, gen_packet.packet().data(), gen_packet.packet().size(), 0,
 		(struct sockaddr *) &clientaddr, sizeof(clientaddr));
 
 	// TODO -- get return codes from sendto
@@ -134,14 +134,14 @@ void * Server::serve_client(void *args) {
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
 	Pilot *p = new Pilot("Name");
 	Ship *ship = world->join(p);
-	//Ship ship(1, 1, 2.0, 2.0);
-	//build_ship(&ship);
 	protos::RenderedObj ship_packet;
 	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
 
 	NetPacket test_objs_and_events_packet;
 	std::list<Projectile *> test_objs;
+	test_objs.push_back(ship);
+	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
 
@@ -183,8 +183,7 @@ void * Server::serve_client(void *args) {
 				packet_type = ntohl(packet_type);
 
 				int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
-				char payload[payload_size];
-				memcpy(payload, buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
+				std::string payload(buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
 				if (packet_type == PacketType::CONTROL_INPUT) {
 					protos::ControlInput control_input_packet;
