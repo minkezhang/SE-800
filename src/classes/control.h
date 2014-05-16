@@ -11,6 +11,7 @@
 enum Action {
 	ACCEL,
 	BRAKE,
+	RESET_ACCEL,
 	ROLL_TILT,
 	PITCH_TILT,
 	BULLET,

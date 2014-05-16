@@ -51,6 +51,24 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 						return false;
 				}
 			}
+		case(osgGA::GUIEventAdapter::KEYUP):
+			{
+				switch(ea.getKey()) {
+					case osgGA::GUIEventAdapter::KEY_Up:
+					case osgGA::GUIEventAdapter::KEY_Down:
+					{
+						int action = Action::RESET_ACCEL;
+						NetPacket packet;
+						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+						if (net_utils->send_to_server(&packet))
+							std::cout << "Sent reset acceleration control packet." << std::endl;
+					}
+						return false;
+						break;
+					default:
+						return false;
+				}
+			}
 		case(osgGA::GUIEventAdapter::MOVE):
 			{
 				std::cout << "X IS " << ea.getXnormalized() << std::endl;
