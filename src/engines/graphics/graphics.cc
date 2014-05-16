@@ -222,7 +222,7 @@ void GraphicsEngine::update_rendered_objects() {
 	// Find new objects and events packet
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
-	std::cout << "THIS IS QUEUE SIZE " << this->objs_que.size() << std::endl;
+	//std::cout << "THIS IS QUEUE SIZE " << this->objs_que.size() << std::endl;
 	if (this->objs_que.size() > 0) {
 		packet = this->objs_que.front();
 		this->objs_que.pop();
@@ -232,9 +232,11 @@ void GraphicsEngine::update_rendered_objects() {
 	}
 	this->que_lock.unlock();
 	// Iterate through all rendered object entries in packet
+	int updated = 0;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
 		if (cur_objs.count(obj.id())!= 0) {
+			updated++;
 			// Case when object has already been rendered in prev cycle.
 			rendered_obj* ren_obj = cur_objs.at(obj.id());
 			update_object_transform(ren_obj, &obj);
@@ -243,4 +245,5 @@ void GraphicsEngine::update_rendered_objects() {
 			create_object(&obj);
 		}
 	}
+	std::cout << "RENDERING " << updated << " OBJECTS" << std::endl;
 }

@@ -69,7 +69,7 @@ void * ClientNetUtils::receive_from_server() {
 	if (this->server_sockfd == -1)
 		return NULL;
 
-	int bufLen = 6000;
+	int bufLen = 30000;
 	int nbytes;
 	char inputBuf[bufLen];
 	char buildBuf[bufLen];

@@ -1,6 +1,6 @@
 #include <cstdint>
 #include <iostream>
-#include <list>
+#include <vector>
 
 #include "../engines/physics/projectile.h"
 #include "../classes/ship.h"
@@ -83,7 +83,7 @@ void PacketUtils::make_packet(
 
 	} else if (type == PacketType::OBJS_AND_EVENTS) {
 		// Read arguments
-		std::list<Projectile*> *objs = (std::list<Projectile*> *) payload;
+		std::vector<Projectile*> *objs = (std::vector<Projectile*> *) payload;
 		// TODO(DEFINE EVENT CLASS!!
 		//list<Event> *events;
 		//if (extra_payload != NULL) {
@@ -93,7 +93,7 @@ void PacketUtils::make_packet(
 		// Fill specific proto packet
 		protos::ObjsAndEventsPacket objs_and_events_packet;
 	 
-		for (std::list<Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
+		for (std::vector<Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
 			protos::RenderedObj* obj_packet = objs_and_events_packet.add_obj();
 			int type = (*i)->get_type();
 			fill_obj_packet(obj_packet, *i, type);

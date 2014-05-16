@@ -4,6 +4,7 @@
 int PILOT_COUNT = 1;
 
 Pilot::Pilot(std::string name) {
+	this->name = name;
 	this->id = PILOT_COUNT;
 	PILOT_COUNT++;
 }
@@ -12,18 +13,19 @@ Pilot::~Pilot() {
 }
 
 int Pilot::get_id() {
-	return 1;
+	return this->id;
 }
 
 std::string Pilot::get_name() {
-	return "";
+	return name;
 }
 
 Ship * Pilot::get_ship() {
-	return NULL;
+	return this->ship;
 }
 
 void Pilot::set_ship(Ship *ship) {
+	this->ship = ship;
 }
 
 int Pilot::is_leader() {

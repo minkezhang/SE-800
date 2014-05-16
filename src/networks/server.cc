@@ -3,7 +3,7 @@
 #include "server.h"
 #include "../classes/ship.h"
 #include "../classes/control.h"
-#include "../classes/pilot.h"
+#include "../classes/player.h"
 #include "../engines/world/world.h"
 
 #include <iostream>
@@ -17,6 +17,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <map>
+#include <vector>
 
 Server::Server(WorldEngine *world) {
 	this->server_socketfd = -1;
@@ -128,19 +129,21 @@ void * Server::serve_client(void *args) {
 	WorldEngine *world = sockets->world;
 
 	// SEND A TEST SHIP INIT PACKET TO CLIENT
-	Pilot *p = new Pilot("Name");
+	Player *p = new Player("Name", client_socketfd);
 	Ship *ship = world->join(p);
+	world->get_physics_engine()->get_environment()->add_projectile(ship);
+	p->set_ship(ship);
 	protos::RenderedObj ship_packet;
 	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
-
+/*
 	NetPacket test_objs_and_events_packet;
-	std::list<Projectile *> test_objs;
+	std::vector<Projectile *> test_objs;
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	test_objs.push_back(ship);
 	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
-
+*/
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
 
@@ -196,8 +199,13 @@ void * Server::serve_client(void *args) {
 				} else if (packet_type == PacketType::EVENT_ACK) {
 					// TODO: Handle event ack packet receipt.
 				} else if (packet_type == PacketType::OBJS_AND_EVENTS_REQ) {
-					// TODO: Handle objs and events req packet receipt.
-					serv_utils.send_to_client(&test_objs_and_events_packet, client_socketfd);
+					NetPacket objs_and_events_packet;
+					std::vector<Projectile*> objs;
+					objs = world->get_physics_engine()->get_environment()->get_neighbors(p->get_ship());
+
+					// TODO: Add events to objs and events packet.
+					PacketUtils::make_packet(&objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &objs, NULL);
+					serv_utils.send_to_client(&objs_and_events_packet, client_socketfd);
 				} else {
 					std::cout << "Received Invalid Packet Type" << std::endl;
 				}

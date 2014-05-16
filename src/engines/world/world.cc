@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <iostream>
+#include <stdlib.h>
 
 #include "world.h"
 #include "../../classes/ship.h"
+
+int OBJ_ID = 1;
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
 	physics_engine = NULL;
@@ -59,8 +62,10 @@ void WorldEngine::shutdown() {
  * 3) return ship object
  */
 Ship *WorldEngine::join(Pilot *p) {
-	std::vector<float> pos { 1, 1, 1 };
-	Ship *s = new Ship(1, 10, 10, pos, 0, 0, 0);
+	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
+	Ship *s = new Ship(OBJ_ID, 10, 10, pos, 0, 0, 0);
+	std::cout << "SPAWNED NEW SHIP OF ID " << OBJ_ID << std::endl;
+	OBJ_ID++;
 	return(s);
 }
 
