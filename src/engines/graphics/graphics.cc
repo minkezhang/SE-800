@@ -24,8 +24,8 @@ GraphicsEngine::GraphicsEngine() {}
 
 void GraphicsEngine::ignite() {
 	// Initialize meshes.
-	this->ship_mesh = osgDB::readNodeFile("ship.obj");
-	this->asteroid_mesh = osgDB::readNodeFile("asteroid.obj");
+	this->ship_mesh = osgDB::readNodeFile("../Assets/ship.obj");
+	this->asteroid_mesh = osgDB::readNodeFile("../Assets/asteroid.obj");
 
 	root = new osg::Group();
 	render_world();
@@ -71,7 +71,7 @@ osg::Node* GraphicsEngine::create_world_cube() {
 	osg::Texture2D* space_face_texture = new osg::Texture2D;
 	// Protect texture from being optimized away as a static state.
 	space_face_texture->setDataVariance(osg::Object::DYNAMIC);
-	osg::Image* space_face = osgDB::readImageFile("space.jpg");
+	osg::Image* space_face = osgDB::readImageFile("../Assets/space.jpg");
 	if (!space_face) {
 		std::cout << "Couldn't find texture space.jpg" << std::endl;
 	}
