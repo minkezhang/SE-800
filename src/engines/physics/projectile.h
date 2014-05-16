@@ -14,7 +14,7 @@ enum ObjType {
 
 class Projectile {
 	public:
-		Projectile(int id, int clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
+		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
 
 		/**
 		 * public-facing functions which can be freely queried
@@ -28,8 +28,9 @@ class Projectile {
 		float get_cur_tolerance();		// get current health
 		float get_max_tolerance();		// get max health
 
-		int is_destroyed();			// return cur_health < 0
-		int is_clippable();			// returns if the object is clippable OR if object is destroyed
+		int get_is_destroyed();			// return cur_health < 0
+		int get_is_clippable();			// returns if the object is clippable OR if object is destroyed
+		int get_is_processed();			// returns true if the object has been acknowledged by the network
 
 		std::vector<float> get_d();		// get position
 		std::vector<float> get_v();		// get velocity
@@ -64,6 +65,8 @@ class Projectile {
 		void set_p_dot(float p_dot);		// set pitch rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
 
+		void set_is_processed();		// can only be set to TRUE by the network -- the network should then proceed to BROADCAST event to all clients
+
 		void damage(float tolerance);		// decrement the object tolerance by the input
 
 	protected:
@@ -71,8 +74,9 @@ class Projectile {
 
 	private:
 		int id;					// global unique ID -- set on construction
-		int destroyed;
-		int clippable;				// clippable objects do not check for collision with other clippable objects
+		int is_destroyed;
+		int is_clippable;			// clippable objects do not check for collision with other clippable objects
+		int is_processed;			// set externally to TRUE upon being acknowledged as destroyed by network
 
 		float mass;				// mass of object -- set on construction
 		float size;				// collision radius

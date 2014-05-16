@@ -1,5 +1,7 @@
-#include "physics.h"
+#include <algorithm>
 #include <cstddef>
+
+#include "physics.h"
 
 using namespace std;
 
@@ -13,17 +15,23 @@ void PhysicsEngine::set_environment(Environment *e) { this->environment = e; }
 
 void PhysicsEngine::toggle_a(int id, int val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_a(val * p->get_preset_a());
+	if(p != NULL) {
+		p->set_a(val * p->get_preset_a());
+	}
 }
 
 void PhysicsEngine::toggle_p_dot(int id, float val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_p_dot(val * p->get_preset_p_dot());
+	if(p != NULL) {
+		p->set_p_dot(val * p->get_preset_p_dot());
+	}
 }
 
 void PhysicsEngine::toggle_r_dot(int id, float val) {
 	Projectile *p = this->environment->get_projectile(id);
-	p->set_r_dot(val * p->get_preset_r_dot());
+	if(p != NULL) {
+		p->set_r_dot(val * p->get_preset_r_dot());
+	}
 }
 
 // Assumes unit vectors for roll, pitch, and yaw
@@ -77,6 +85,8 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 
 // Arguments are timestep (for 300 Hz, set t to 1/300) and projectile to be integrated
 void PhysicsEngine::verlet_step(float t, Projectile *p) {
+	Grid *old_g = this->environment->get_grid(p);
+
 	// Read in vectors from projectile
 	vector<float> vel = p->get_v();
 	vector<float> pos = p->get_d();
@@ -102,12 +112,106 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 		// Perform Verlet
 		pos_next.at(i) = pos.at(i) + vel.at(i) * t + 0.5 * acc1.at(i) * t * t;
 		vel_next.at(i) = vel.at(i) + 0.5 * t * (acc1.at(i) + acc2.at(i));
+
+		// resolves bounding problems
+		if(pos_next.at(i) < 0) {
+			pos_next.at(i) += this->environment->get_size().at(i);
+		} else if(pos_next.at(i) >= this->environment->get_size().at(i)) {
+			pos_next.at(i) -= this->environment->get_size().at(i);
+		}
 	}
 	// Write in vectors to projectile
 	p->set_d(pos_next);
 	p->set_v(vel_next);
+
+	// update grids
+	Grid *new_g = this->environment->get_grid(p);
+	old_g->del_projectile(p);
+	new_g->add_projectile(p);
+}
+
+void PhysicsEngine::collision_check(Projectile *p) {
+	std::vector<Projectile *> neighbors = this->environment->get_neighbors(p);
+	for(std::vector<Projectile *>::iterator i = neighbors.begin(); i != neighbors.end(); ++i) {
+		Projectile *q = *i;
+		if(!q->get_is_destroyed()) {
+			std::vector<float> p_d = p->get_d();
+			std::vector<float> q_d = q->get_d();
+			std::vector<float> diff;
+			// get the distance between the projectiles
+			//	cf. http://bit.ly/1sPHU1c
+			std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
+			float dist_sq = 0;
+			for(int i = 0; i < 3; i++) {
+				dist_sq += diff.at(i) * diff.at(i);
+			}
+			int collide = dist_sq < (p->get_size() + q->get_size()) * (p->get_size() + q->get_size());
+			if(collide) {
+				this->collide(p, q);
+			}
+		}
+	}
+}
+
+/**
+ * primitive damage modeling
+ */
+void PhysicsEngine::collide(Projectile *p, Projectile *q) {
+	if(q->get_is_clippable()) {
+		// bullets are destroyed
+		p->damage(q->get_cur_tolerance());
+		q->damage(q->get_cur_tolerance());
+	} else {
+		// clippable objects are checked twice (unfortunately) -- this prevents double counting the damage
+		/**
+		 * TODO -- may want to scale up with velocity of the objects in question
+		 *	does not need to be strictly linear scale -- can just use v_squared
+		 */
+		p->damage(q->get_cur_tolerance() * 0.5);
+		q->damage(p->get_cur_tolerance() * 0.5);
+	}
 }
 
 void PhysicsEngine::ignite() {}
-void PhysicsEngine::cycle() {}
+void PhysicsEngine::cycle() {
+	std::vector<Projectile *> clippable = this->environment->get_clippable();
+	std::vector<Projectile *> unclippable = this->environment->get_unclippable();
+
+	/**
+	 * calling del_projectile in such a way should be okay in this instance
+	 *	the main concern would be modifying a list while iterating, which we are NOT doing (as
+	 *	clippable[] and unclippable[] here are copies)
+	 * calls to get_neighbor() later are not cached, and thus will have an updated copy of neighbors,
+	 *	with all projectiles that were deleted here cut out
+	 */
+	for(std::vector<Projectile *>::iterator i = unclippable.begin(); i != unclippable.end(); ++i) {
+		Projectile *p = *i;
+		if(p->get_is_destroyed()) {
+			this->environment->del_projectile(p);
+		} else {
+			this->verlet_step(.0033, p);
+		}
+	}
+	for(std::vector<Projectile *>::iterator i = clippable.begin(); i != clippable.end(); ++i) {
+		Projectile *p = *i;
+		if(p->get_is_destroyed()) {
+			if(p->get_is_processed()) {
+				this->environment->del_projectile(p);
+			}
+		} else {
+			this->verlet_step(.0033, p);
+			// only clippable objects need to be checked for collisions against other objects
+			this->collision_check(p);
+		}
+	}
+
+	/**
+	for(unsigned long int i = 0; i < this->environment->get_grids().size(); i++) {
+		Grid *g = this->environment->get_grids().at(i);
+		for(unsigned long int j = 0; j < g->get_projectiles().size(); j++) {
+			this->verlet_step(.0033, g->get_projectiles().at(j));
+		}
+	}
+	 */
+}
 void PhysicsEngine::shutdown() {}

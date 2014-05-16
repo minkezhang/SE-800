@@ -29,7 +29,8 @@ class PhysicsEngine : public Engine {
 		Environment *environment;
 		void apply_rotation(float angle, int flag, Projectile *p);
 		void verlet_step(float t, Projectile *p);
-
+		void collision_check(Projectile *p);
+		void collide(Projectile *p, Projectile *q);
 };
 
 #endif

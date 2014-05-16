@@ -11,9 +11,15 @@ WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
 }
 WorldEngine::~WorldEngine() {}
 
-std::vector<Team *> WorldEngine::get_teams() { return(this->teams); }
+std::vector<Team *> WorldEngine::get_teams() {
+	std::vector<Team *> t;
+	for(std::map<int, Team *>::iterator i = this->teams.begin(); i != this->teams.end(); ++i) {
+		t.push_back((*i).second);
+	}
+	return(t);
+}
 
-void WorldEngine::add_team(Team *team) { this->teams.push_back(team); }
+void WorldEngine::add_team(Team *team) { this->teams[team->get_id()] = team; }
 void WorldEngine::del_team(Team *team) {}
 
 void WorldEngine::win() {
@@ -21,8 +27,15 @@ void WorldEngine::win() {
 	this->shutdown();
 }
 
-void WorldEngine::ignite() {
+void WorldEngine::ignite(char *mode) {
 	this->status = INITIALIZED;
+}
+
+// settings
+void WorldEngine::ignite(char *mode, int n_teams) {
+	for(int i = 0; i < n_teams; i++) {
+		this->add_team(new Team(i));
+	}
 }
 
 void WorldEngine::cycle() {
