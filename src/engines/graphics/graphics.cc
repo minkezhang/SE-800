@@ -192,6 +192,8 @@ void GraphicsEngine::set_shader() {
 }
 
 void GraphicsEngine::update_rendered_objects() {
+	// TODO: Scan for deleted obj events and update nodes.
+
 	// Find new objects and events packet
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
@@ -208,13 +210,46 @@ void GraphicsEngine::update_rendered_objects() {
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
 		if (obj.type() == ObjType::SHIP) {
-			/*
-			if (cur_ships[obj->id()] == SOMETHING)
-				cur_ships[obj->id()]->update_pos = true;
+			// Case when object has already been rendered in prev cycle.
+			if (cur_ships.count(obj.id())!= 0) {
+				rendered_obj* rendered_ship = cur_ships.at(obj.id());
+				rendered_ship->update_pos = true;
 				// FREEING OLD OBJECT? HOW WILL THIS WORK???
-				cur_ships[obj->id()]->obj = obj;
+				rendered_ship->obj = &obj;
+
+				// TODO: MOVE ALL OF THESE UPDATES TO CALLBACK FXN
+				protos::vector pos_vector = obj.pos();
+				osg::Vec3 ship_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
+				rendered_ship->trans_matrix->setPosition(ship_pos);
+				// TODO: UPDATE TILT
+			} else {
+				// Case when object has not yet been rendered.
+				osg::Node* ship_mesh;
+				ship_mesh = osgDB::readNodeFile("ship.obj");
+				osg::PositionAttitudeTransform* ship_transform =
+					new osg::PositionAttitudeTransform();
+				ship_transform->addChild(ship_mesh);
+
+				// Set main ship position.
+				// TODO: Set main ship tilts.
+				protos::vector pos_vector = obj.pos();
+				std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
+				osg::Vec3 ship_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
+				ship_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+					osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(25.0f),
+					osg::Vec3d(1, 0, 0))));
+				ship_transform->setPosition(ship_pos);
+
+				// Add main ship to rendered object list.
+				rendered_obj *ren_obj = new rendered_obj;
+				ren_obj->obj = &obj;
+				ren_obj->update_pos = false;
+				ren_obj->node = ship_mesh;
+				ren_obj->trans_matrix = ship_transform;
+				cur_ships.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
+
+				this->root->addChild(ship_transform);
 			}
-			*/
 		} else if (obj.type() == ObjType::ASTEROID) {
 		} else {
 			std::cout << "Received projectile of unknown type." << std::endl;
