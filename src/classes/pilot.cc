@@ -1,8 +1,11 @@
 #include "pilot.h"
 #include "../classes/ship.h"
 
+int PILOT_COUNT = 1;
 
 Pilot::Pilot(std::string name) {
+	this->id = PILOT_COUNT;
+	PILOT_COUNT++;
 }
 
 Pilot::~Pilot() {
