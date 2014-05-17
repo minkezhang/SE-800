@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 		g->net_utils = c;
 		g->ignite();
 
-		cal_g = new Calendar(30, g);
+		cal_g = new Calendar(60, g);
 		scheduler.add_calendar(cal_g);
 
 		world.ignite(argv[1]);
