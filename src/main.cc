@@ -68,11 +68,15 @@ int main(int argc, char **argv) {
 		network = std::thread(&Server::accept_clients, server, (void *) &port);
 
 		p = new PhysicsEngine();
+		a = new AIEngine();
 		cal_p = new Calendar(100, p);
+		cal_a = new Calendar(100, a);
 
 		world.set_physics_engine(p);
+		world.set_ai_engine(a);
 
 		scheduler.add_calendar(cal_p);
+		scheduler.add_calendar(cal_a);
 
 		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
 		world.get_physics_engine()->set_environment(e);

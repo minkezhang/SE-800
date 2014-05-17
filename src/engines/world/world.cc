@@ -68,6 +68,10 @@ Ship *WorldEngine::join(Pilot *p) {
 	Ship *s = new Ship(OBJ_ID, 10, 10, pos, 1000, 0, 0);
 	std::cout << "SPAWNED NEW SHIP OF ID " << OBJ_ID << std::endl;
 	OBJ_ID++;
+
+	p->set_ship(s);
+	this->ai_engine->add_pilot(p);
+
 	return(s);
 }
 
