@@ -5,14 +5,14 @@
 
 class Calendar {
 	public:
-		Calendar(float timestep, Engine *engine);
+		Calendar(float frequency, Engine *engine);
 		~Calendar();
 
 		void run();
 		void shutdown();
 
 	public:
-		float timestep;
+		float timestep;			// time in seconds between each step
 		Engine *engine;
 
 		// run engine.cycle() until outside signal is received

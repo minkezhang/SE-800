@@ -69,8 +69,8 @@ int main(int argc, char **argv) {
 
 		p = new PhysicsEngine();
 		a = new AIEngine();
-		cal_p = new Calendar(100, p);
-		cal_a = new Calendar(100, a);
+		cal_p = new Calendar(300, p);
+		cal_a = new Calendar(.5, a);
 
 		world.set_physics_engine(p);
 		world.set_ai_engine(a);
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 		g->net_utils = c;
 		g->ignite();
 
-		cal_g = new Calendar(1, g);
+		cal_g = new Calendar(30, g);
 		scheduler.add_calendar(cal_g);
 
 		world.ignite(argv[1]);
