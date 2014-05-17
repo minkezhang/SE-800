@@ -50,6 +50,7 @@ void WorldEngine::cycle() {
 }
 
 void WorldEngine::shutdown() {
+	this->signal = 0;
 	this->status = STOPPED;
 	this->scheduler->shutdown();
 }

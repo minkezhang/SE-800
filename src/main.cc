@@ -100,12 +100,12 @@ int main(int argc, char **argv) {
 	// execute the game
 	game = std::thread(&WorldEngine::cycle, &world);
 
-	// wait for the network to shutdown -- probably when clients == 0
+	// wait for the network to shutdown when clients == 0
 	network.join();
 
 	// end the game
+	world.shutdown();
 	game.join();
 
-	world.shutdown();
 	return(0);
 }

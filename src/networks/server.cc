@@ -18,6 +18,10 @@
 #include <unistd.h>
 #include <map>
 #include <vector>
+#include <mutex>
+
+int num_clients = 0;
+std::mutex num_clients_lock;
 
 Server::Server(WorldEngine *world) {
 	this->server_socketfd = -1;
@@ -62,10 +66,9 @@ bool Server::send_to_client(NetPacket *packet, int client_id) {
 }
 
 void *Server::accept_clients(void *args) {
-	std::cout << "ABOUT TO LISTEN FOR CLIENTS" << std::endl;
+	std::cout << "Ready to accept clients" << std::endl;
 	int *port = (int *) args;
-	std::cout << "port number is " << *port << std::endl;
-	int num_clients = 0;
+	std::cout << "Port number is " << *port << std::endl;
 	int *clientSocket = (int *) malloc(sizeof(int));
 	pthread_t worker_thread;
 	struct sockaddr_in serverAddr;
@@ -87,14 +90,18 @@ void *Server::accept_clients(void *args) {
 		std::cout << "LISTEN network error." << std::endl;
 
 	while(1) {
+		// Exit the server if the last client has disconnected.
+		num_clients_lock.unlock();
+
 		*clientSocket = accept(this->server_socketfd, (struct sockaddr *) clientAddr, &sinSize);
+		if (*clientSocket == -1)
+			break;
+
 		std::cout << "Found a client!" << std::endl;
-		num_clients++;
 		setsockopt(*clientSocket, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int));
 
 		std::cout << "THIS IS CLIENT SOCKETFD: " << *clientSocket << std::endl;
 		// DO WE HAVE TO ALLOCATE CLIENTADDR STRUCT AND CLIENTSOCKET INFO???
-		this->client_fd_list.push_back(1);
 		this->client_fd_list.push_back(*clientSocket);
 		this->client_id_to_sockaddr.insert(std::pair<int, struct sockaddr_in>(*clientSocket, *clientAddr));
 
@@ -107,15 +114,13 @@ void *Server::accept_clients(void *args) {
 		args->world = this->world;
 		if (pthread_create(&worker_thread, NULL, serve_client, args) != 0) {
 			std::cout << "Could not create a worker thread." << std::endl;
+			num_clients_lock.lock();
 			num_clients--;
+			num_clients_lock.unlock();
 			close(*clientSocket);
-			pthread_exit(NULL);
-		}
-
-		if (num_clients == 1) {
-			std::cout << "ONE PLAYER CONNECTED!" << std::endl;
 		}
 	}
+	return NULL;
 }
 
 void * Server::serve_client(void *args) {
@@ -123,12 +128,16 @@ void * Server::serve_client(void *args) {
 	// Make sure ending this thread doesn't kill the server.
 	pthread_detach(pthread_self());
 
+	num_clients_lock.lock();
+	num_clients++;
+	num_clients_lock.unlock();
+
 	Server serv_utils(NULL);
 	serve_client_args *sockets = (serve_client_args *) args;
 	int client_socketfd = sockets->client_socketfd;
 	WorldEngine *world = sockets->world;
 
-	// SEND A TEST SHIP INIT PACKET TO CLIENT
+	// Send a ship init packet to client.
 	Player *p = new Player("Name", client_socketfd);
 	Ship *ship = world->join(p);
 	world->get_physics_engine()->get_environment()->add_projectile(ship);
@@ -136,18 +145,10 @@ void * Server::serve_client(void *args) {
 	protos::RenderedObj ship_packet;
 	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
 	NetPacket packet;
-/*
-	NetPacket test_objs_and_events_packet;
-	std::vector<Projectile *> test_objs;
-	test_objs.push_back(ship);
-	test_objs.push_back(ship);
-	test_objs.push_back(ship);
-	PacketUtils::make_packet(&test_objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &test_objs, NULL);
-*/
 	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
 	serv_utils.send_to_client(&packet, client_socketfd);
 
-	// RECEIVE UI UPDATES FROM CLIENT
+	// Receive UI updates from client.
 	int bufLen = 6000;
 	int nbytes;
 	char inputBuf[bufLen];
@@ -157,7 +158,10 @@ void * Server::serve_client(void *args) {
 	memset(buildBuf, 0, bufLen);
 
 	int packet_size = -1;
-	while ((nbytes = recv(client_socketfd, inputBuf, bufLen, 0)) && (nbytes > 0)) {
+	while ((nbytes = recv(client_socketfd, inputBuf, bufLen, 0))) {
+		// Check if client has disconnected
+		if (nbytes <= 0)
+			break;
 		if (nbytes + buildLen > bufLen)
 			nbytes = bufLen - buildLen;
 		// Move all received bytes over to build buf
@@ -226,8 +230,16 @@ void * Server::serve_client(void *args) {
 			}
 		}
 	}
+
+	num_clients_lock.lock();
+	num_clients--;
+	if (num_clients == 0) {
+		// If no more clients connected, end game
+		shutdown(sockets->server_socketfd, SHUT_RDWR);
+	}
+	num_clients_lock.unlock();
 	pthread_exit(NULL);
-	return(NULL);
+	return NULL;
 }
 
 NetPacket Server::receive_from_client(int client_fd) {
