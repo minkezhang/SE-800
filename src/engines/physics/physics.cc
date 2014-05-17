@@ -17,9 +17,7 @@ void PhysicsEngine::set_environment(Environment *e) { this->environment = e; }
 void PhysicsEngine::toggle_a(int id, int val) {
 	Projectile *p = this->environment->get_projectile(id);
 	if(p != NULL) {
-		std::cout << "setting a!!" << std::endl;
 		p->set_a(val * p->get_preset_a());
-		std::cout << "THE ACCEL IS " << p->get_a();
 	}
 }
 
@@ -131,10 +129,10 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	Grid *new_g = this->environment->get_grid(p);
 	old_g->del_projectile(p);
 	new_g->add_projectile(p);
-	if (p->get_id() == 1) {
-		std::cout << "ship id is one and pos is " << p->get_d().at(0) << " " << p->get_d().at(1) << " " << p->get_d().at(2) << std::endl;
-		std::cout << "accel is " << p->get_v().at(0) << " " << p->get_v().at(1) << " " << p->get_v().at(2) << std::endl;
-	}
+//	if (p->get_id() == 1) {
+//		std::cout << "ship id is one and pos is " << p->get_d().at(0) << " " << p->get_d().at(1) << " " << p->get_d().at(2) << std::endl;
+//		std::cout << "accel is " << p->get_v().at(0) << " " << p->get_v().at(1) << " " << p->get_v().at(2) << std::endl;
+//	}
 }
 
 void PhysicsEngine::collision_check(Projectile *p) {

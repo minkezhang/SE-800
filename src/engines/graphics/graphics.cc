@@ -45,10 +45,12 @@ void GraphicsEngine::cycle() {
 	// for each object we need to render which is not already present, call a function which creates a new object and adds it to the group, sets its updatecallback, etc
 	// for each object which was rendered but isn't anymore, remove this object from the group node and free its update callback and free the node
 	// SO for each object we need a struct which encompasses the obj ID, the UpdateObjectCallback bool, the object Node, and perhaps the transform matrix?
+
 	send_update_req();
 	update_rendered_objects();
 	update_camera();
 	render();
+
 
 	//clock_t time2 = clock();
 	//clock_t timediff = time2 - time1;
@@ -115,8 +117,8 @@ void GraphicsEngine::ship_init() {
 		this->que_lock.unlock();
 	}
 
-	this->main_ship = *ship;
-	create_object(ship);
+	GraphicsEngine::rendered_obj * ren_obj = create_object(*ship);
+	this->main_ship = ren_obj;
 }
 
 void GraphicsEngine::viewer_init() {
@@ -150,7 +152,7 @@ void GraphicsEngine::update_camera() {
 		osg::DegreesToRadians(0.0), osg::Vec3(1, 0, 0),	// pitch
 		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
 
-	camera_trans.makeTranslate(this->main_ship.pos().x()-1, this->main_ship.pos().y()-27, this->main_ship.pos().z()+8);
+	camera_trans.makeTranslate(this->main_ship->obj.pos().x()-1, this->main_ship->obj.pos().y()-27, this->main_ship->obj.pos().z()+8);
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
 	this->viewer.getCamera()->setViewMatrix((
@@ -177,18 +179,18 @@ void GraphicsEngine::set_light_source() {
 void GraphicsEngine::set_shader() {
 }
 
-void GraphicsEngine::create_object(protos::RenderedObj *obj) {
+GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj obj) {
 	osg::PositionAttitudeTransform* obj_transform =
 		new osg::PositionAttitudeTransform();
-	if (obj->type() == ObjType::SHIP) {
+	if (obj.type() == ObjType::SHIP) {
 		obj_transform->addChild(this->ship_mesh);
-	} else if (obj->type() == ObjType::ASTEROID) {
+	} else if (obj.type() == ObjType::ASTEROID) {
 		obj_transform->addChild(this->asteroid_mesh);
 	}
 
 	// Set position.
 	// TODO: Set tilts.
-	protos::vector pos_vector = obj->pos();
+	protos::vector pos_vector = obj.pos();
 	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
@@ -201,19 +203,19 @@ void GraphicsEngine::create_object(protos::RenderedObj *obj) {
 	ren_obj->obj = obj;
 	ren_obj->update_pos = false;
 	ren_obj->trans_matrix = obj_transform;
-	cur_objs.insert(std::pair<int, rendered_obj*>(obj->id(), ren_obj));
+	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
 
 	this->root->addChild(obj_transform);
+	return ren_obj;
 }
 
-void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj *update_obj) {
+void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj) {
 	ren_obj->obj = update_obj;
 	ren_obj->update_pos = true;
 
-	protos::vector pos_vector = update_obj->pos();
+	protos::vector pos_vector = update_obj.pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(obj_pos);
-	std::cout << "new object position " << pos_vector.x() << " " << pos_vector.y() << " " << pos_vector.z() << std::endl;
 	// TODO: UPDATE TILT
 }
 
@@ -240,10 +242,10 @@ void GraphicsEngine::update_rendered_objects() {
 			updated++;
 			// Case when object has already been rendered in prev cycle.
 			rendered_obj* ren_obj = cur_objs.at(obj.id());
-			update_object_transform(ren_obj, &obj);
+			update_object_transform(ren_obj, obj);
 		} else {
 			// Case when object is being rendered for the first time.
-			create_object(&obj);
+			create_object(obj);
 		}
 	}
 	std::cout << "RENDERING " << updated << " OBJECTS" << std::endl;

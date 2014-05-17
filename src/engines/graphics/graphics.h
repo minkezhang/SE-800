@@ -17,7 +17,7 @@
 
 class GraphicsEngine : public Engine {
 	struct rendered_obj {
-		protos::RenderedObj* obj;
+		protos::RenderedObj obj;
 		bool update_pos;
 		osg::PositionAttitudeTransform* trans_matrix;
 	};
@@ -37,7 +37,7 @@ class GraphicsEngine : public Engine {
 	private:
 		int team_id;
 		osg::Group *root;
-		protos::RenderedObj main_ship;
+		rendered_obj *main_ship;
 		osgViewer::Viewer viewer;
 		osg::Node* ship_mesh;
 		osg::Node* asteroid_mesh;
@@ -53,8 +53,8 @@ class GraphicsEngine : public Engine {
 		void update_camera();						// positions the camera behind used-controlled ship
 		void update_rendered_objects();	// updates object positions and triggers graphical events
 		void render();									// renders the world graph
-		void create_object(protos::RenderedObj *obj);		// creates a new object to be rendered
-		void update_object_transform(rendered_obj *ren_obj, protos::RenderedObj *update_obj);		// updates pos and tilt of obj rendered in last cycle
+		rendered_obj* create_object(protos::RenderedObj obj);		// creates a new object to be rendered
+		void update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj);		// updates pos and tilt of obj rendered in last cycle
 
 		void set_light_source();
 		void set_shader();
