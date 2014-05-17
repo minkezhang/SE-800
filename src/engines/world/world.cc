@@ -9,6 +9,7 @@
 int OBJ_ID = 1;
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
+	ai_engine = NULL;
 	physics_engine = NULL;
 	status = UNINITIALIZED;
 }
@@ -71,4 +72,7 @@ Ship *WorldEngine::join(Pilot *p) {
 }
 
 void WorldEngine::set_physics_engine(PhysicsEngine *p) { this->physics_engine = p; }
+void WorldEngine::set_ai_engine(AIEngine *a) { this->ai_engine = a; }
+
 PhysicsEngine *WorldEngine::get_physics_engine() { return(this->physics_engine); }
+AIEngine *WorldEngine::get_ai_engine() { return(this->ai_engine); }

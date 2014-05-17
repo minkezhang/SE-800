@@ -1,6 +1,8 @@
 #ifndef _PILOT_H
 #define _PILOT_H
 
+#include <mutex>
+
 #include "../classes/group.h"
 #include "../classes/ship.h"
 
@@ -12,10 +14,11 @@ class Group;
 
 class Pilot {
 	public:
-		Pilot(std::string name);
+		Pilot(std::string name, int is_player);
 		~Pilot();
 
 		int get_id();
+		int get_is_player();
 		std::string get_name();
 		Group *get_group();		// get current group
 		Ship *get_ship();		// get current ship
@@ -45,6 +48,10 @@ class Pilot {
 		int id;			// unique global ID -- set in constructor
 		Group *group;		// the group of pilots
 		Ship *ship;		// the current ship which the pilot is controlling
+
+		int is_player;		// is player | robot
+
+		std::mutex ship_l;	// used to set and unset the pilot ship
 };
 
 #endif

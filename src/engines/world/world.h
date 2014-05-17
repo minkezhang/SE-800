@@ -10,6 +10,7 @@
 #include "../../classes/ship.h"
 #include "../../classes/pilot.h"
 #include "../physics/physics.h"
+#include "../ai/ai.h"
 
 /**
  * consider implementing an Game interface to handle network events and building and destroying the world
@@ -30,6 +31,7 @@ class WorldEngine : Engine {
 		/* adds a new pilot into a <team, group> */
 		Ship *join(Pilot *pilot);
 
+		void set_ai_engine(AIEngine *ai_engine);
 		void set_physics_engine(PhysicsEngine *physics_engine);
 
 		void add_team(Team *team);
@@ -40,11 +42,13 @@ class WorldEngine : Engine {
 		void win();
 
 		PhysicsEngine *get_physics_engine();
+		AIEngine *get_ai_engine();
 
 	private:
 		std::map<int, Team *> teams;
 		SchedulingEngine *scheduler;
 		PhysicsEngine *physics_engine;				// is a shortcut to the physics engine of the game running in the scheduler
+		AIEngine *ai_engine;
 };
 
 #endif

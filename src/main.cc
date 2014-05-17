@@ -10,6 +10,7 @@
 
 #include "engines/world/world.h"
 #include "engines/physics/physics.h"
+#include "engines/ai/ai.h"
 #include "engines/graphics/graphics.h"
 #include "networks/server.h"
 #include "networks/client.h"
@@ -55,6 +56,9 @@ int main(int argc, char **argv) {
 	//	declare here to preserve scoping
 	PhysicsEngine *p;
 	Calendar *cal_p;
+
+	AIEngine *a;
+	Calendar *cal_a;
 
 	GraphicsEngine *g;
 	Calendar *cal_g;

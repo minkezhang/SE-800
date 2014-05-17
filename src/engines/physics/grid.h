@@ -5,6 +5,7 @@
  * grid system in an MD simulation to facilitate collision detection
  */
 
+#include <mutex>
 #include <vector>
 #include <map>
 
@@ -35,6 +36,8 @@ class Grid {
 
 		std::map<int, Projectile *> clippable;					// list of clippable objects (objects whose is_clippable() function returns true)
 		std::map<int, Projectile *> unclippable;				// list of unclippable objects (do not need to check unclippable objects colliding with unclippable objects)
+
+		std::mutex l;								// use when adding or deleting projectile
 };
 
 #endif

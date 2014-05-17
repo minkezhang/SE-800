@@ -49,14 +49,18 @@ std::vector<float> Grid::get_size() { return(this->size); }
 std::vector<float> Grid::get_corner() { return(this->corner); }
 
 void Grid::add_projectile(Projectile *projectile) {
+	this->l.lock();
 	if(projectile->get_is_clippable()) {
 		this->clippable[projectile->get_id()] = projectile;
 	} else {
 		this->unclippable[projectile->get_id()] = projectile;
 	}
+	this->l.unlock();
 }
 
 void Grid::del_projectile(Projectile *projectile) {
+	this->l.lock();
 	this->clippable.erase(projectile->get_id());
 	this->unclippable.erase(projectile->get_id());
+	this->l.unlock();
 }
