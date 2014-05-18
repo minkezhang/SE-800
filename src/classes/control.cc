@@ -10,6 +10,8 @@
 
 ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils) {
 	this->net_utils = net_utils;
+	this->is_pressing_accel = false;
+	this->is_pressing_brake = false;
 }
 
 bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter&) {
@@ -19,21 +21,27 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 				switch(ea.getKey()) {
 					case osgGA::GUIEventAdapter::KEY_Up:
 					{
-						int action = Action::ACCEL;
-						NetPacket packet;
-						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
-						if (net_utils->send_to_server(&packet))
-							std::cout << "Sent accel control packet." << std::endl;
+						if (this->is_pressing_accel == false) {
+							this->is_pressing_accel = true;
+							int action = Action::ACCEL;
+							NetPacket packet;
+							PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+							if (net_utils->send_to_server(&packet))
+								std::cout << "Sent accel control packet." << std::endl;
+						}
 					}
 						return false;
 						break;
 					case osgGA::GUIEventAdapter::KEY_Down:
 					{
-						int action = Action::BRAKE;
-						NetPacket packet;
-						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
-						if (net_utils->send_to_server(&packet))
-							std::cout << "Sent brake control packet." << std::endl;
+						if (this->is_pressing_brake == false) {
+							this->is_pressing_brake = true;
+							int action = Action::BRAKE;
+							NetPacket packet;
+							PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+							if (net_utils->send_to_server(&packet))
+								std::cout << "Sent brake control packet." << std::endl;
+						}
 					}
 						return false;
 						break;
@@ -57,6 +65,8 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 					case osgGA::GUIEventAdapter::KEY_Up:
 					case osgGA::GUIEventAdapter::KEY_Down:
 					{
+						this->is_pressing_accel = false;
+						this->is_pressing_brake = false;
 						int action = Action::RESET_ACCEL;
 						NetPacket packet;
 						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);

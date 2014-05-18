@@ -40,8 +40,8 @@ class GraphicsEngine : public Engine {
 		osg::Group *root;
 		rendered_obj *main_ship;
 		osgViewer::Viewer viewer;
-		osg::Node* ship_mesh;
-		osg::Node* asteroid_mesh;
+		string ship_mesh;
+		string asteroid_mesh;
 
 		std::map<int, rendered_obj*> cur_objs;
 
@@ -52,9 +52,11 @@ class GraphicsEngine : public Engine {
 		void viewer_init();							// initializes callbacks, viewing window, and scene
 		void send_update_req();					// sends req for objs and events from server
 		void update_camera();						// positions the camera behind used-controlled ship
+		void reset_rendered_objects();	// sets all rendered objects for removal (these objects will be removed in next cycle if not requested to be rendered again)
 		void update_rendered_objects();	// updates object positions and triggers graphical events
 		void render();									// renders the world graph
 		rendered_obj* create_object(protos::RenderedObj obj);		// creates a new object to be rendered
+		void remove_object(rendered_obj *ren_obj);
 		void update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj);		// updates pos and tilt of obj rendered in last cycle
 
 		void set_light_source();

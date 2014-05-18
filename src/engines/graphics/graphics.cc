@@ -23,9 +23,8 @@
 GraphicsEngine::GraphicsEngine() {}
 
 void GraphicsEngine::ignite() {
-	// Initialize meshes.
-	this->ship_mesh = osgDB::readNodeFile("../Assets/ship.obj");
-	this->asteroid_mesh = osgDB::readNodeFile("../Assets/asteroid.obj");
+	this->ship_mesh = "../Assets/ship.obj";
+	this->asteroid_mesh = "../Assets/asteroid.obj";
 
 	root = new osg::Group();
 	render_world();
@@ -50,7 +49,7 @@ void GraphicsEngine::cycle() {
 	update_rendered_objects();
 	update_camera();
 	render();
-
+	reset_rendered_objects();
 
 	//clock_t time2 = clock();
 	//clock_t timediff = time2 - time1;
@@ -183,9 +182,9 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	osg::PositionAttitudeTransform* obj_transform =
 		new osg::PositionAttitudeTransform();
 	if (obj.type() == ObjType::SHIP) {
-		obj_transform->addChild(this->ship_mesh);
+		obj_transform->addChild(osgDB::readNodeFile(this->ship_mesh));
 	} else if (obj.type() == ObjType::ASTEROID) {
-		obj_transform->addChild(this->asteroid_mesh);
+		obj_transform->addChild(osgDB::readNodeFile(this->asteroid_mesh));
 	}
 
 	// Set position.
@@ -210,6 +209,11 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	return ren_obj;
 }
 
+void GraphicsEngine::remove_object(rendered_obj *ren_obj) {
+	root->removeChild(ren_obj->trans_matrix);
+	free(ren_obj);
+}
+
 void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj) {
 	ren_obj->obj = update_obj;
 	ren_obj->update_pos = true;
@@ -221,16 +225,18 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	// TODO: UPDATE TILT
 }
 
-void GraphicsEngine::update_rendered_objects() {
-	// TODO: Scan for deleted obj events and update nodes.
+void GraphicsEngine::reset_rendered_objects() {
 	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ++i) {
 		(*i).second->should_render = false;
 	}
+}
+
+void GraphicsEngine::update_rendered_objects() {
+	// TODO: Scan for graphical events and update nodes.
 
 	// Find new objects and events packet
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
-	//std::cout << "THIS IS QUEUE SIZE " << this->objs_que.size() << std::endl;
 	if (this->objs_que.size() > 0) {
 		packet = this->objs_que.front();
 		this->objs_que.pop();
@@ -254,19 +260,16 @@ void GraphicsEngine::update_rendered_objects() {
 		}
 	}
 
-
 	// Do not render any object which was not sent in update packet.
 	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
 		if ((*i).second->should_render == false) {
 			rendered_obj* not_rendered_obj = (*i).second;
-			root->removeChild(not_rendered_obj->trans_matrix);
-			//free(not_rendered_obj->trans_matrix);
 			i = cur_objs.erase(i);
-			free(not_rendered_obj);
+			remove_object(not_rendered_obj);
 		} else {
 			++i;
 		}
 	}
 
-	std::cout << "RENDERING " << updated << " OBJECTS" << std::endl;
+//	std::cout << "RENDERING " << updated << " OBJECTS" << std::endl;
 }

@@ -29,6 +29,8 @@ class ClientControl {
 				virtual void accept(osgGA::GUIEventHandlerVisitor& v);
 			private:
 				ClientNetUtils *net_utils;
+				bool is_pressing_accel;
+				bool is_pressing_brake;
 		};
 };
 
