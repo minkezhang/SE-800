@@ -224,7 +224,7 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 void GraphicsEngine::update_rendered_objects() {
 	// TODO: Scan for deleted obj events and update nodes.
 	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ++i) {
-		(*i)->should_render = false;
+		(*i).second->should_render = false;
 	}
 
 	// Find new objects and events packet
@@ -257,11 +257,11 @@ void GraphicsEngine::update_rendered_objects() {
 
 	// Do not render any object which was not sent in update packet.
 	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
-		if ((*i)->should_render == false) {
-			rendered_obj* not_rendered_obj = *i;
+		if ((*i).second->should_render == false) {
+			rendered_obj* not_rendered_obj = (*i).second;
 			root->removeChild(not_rendered_obj->trans_matrix);
-			free(not_rendered_obj->trans_matrix);
-			i = cur_objs.erase(i)
+			//free(not_rendered_obj->trans_matrix);
+			i = cur_objs.erase(i);
 			free(not_rendered_obj);
 		} else {
 			++i;
