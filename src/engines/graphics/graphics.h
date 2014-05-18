@@ -19,6 +19,7 @@ class GraphicsEngine : public Engine {
 	struct rendered_obj {
 		protos::RenderedObj obj;
 		bool update_pos;
+    bool should_render;
 		osg::PositionAttitudeTransform* trans_matrix;
 	};
 
