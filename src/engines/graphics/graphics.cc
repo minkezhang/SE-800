@@ -65,7 +65,7 @@ osg::Node* GraphicsEngine::create_world_cube() {
 	osg::Group* world_cube_root = new osg::Group();
 
 	// Define height, width, and depth values of world cube.
-	osg::Box* unit_cube = new osg::Box(osg::Vec3(0, 0, 0), 100.0f);
+	osg::Box* unit_cube = new osg::Box(osg::Vec3(0, 0, 0), 110.0f);
 	osg::ShapeDrawable* unit_cube_drawable = new osg::ShapeDrawable(unit_cube);
 	osg::Geode* basic_shapes_geode = new osg::Geode();
 
@@ -151,7 +151,8 @@ void GraphicsEngine::update_camera() {
 		osg::DegreesToRadians(0.0), osg::Vec3(1, 0, 0),	// pitch
 		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
 
-	camera_trans.makeTranslate(this->main_ship->obj.pos().x()-1, this->main_ship->obj.pos().y()-27, this->main_ship->obj.pos().z()+8);
+	// Z axis refers to Y axis, Y axis refers to Z axis
+	camera_trans.makeTranslate(this->main_ship->obj.pos().x(), this->main_ship->obj.pos().y()-39, this->main_ship->obj.pos().z()+8);
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
 	this->viewer.getCamera()->setViewMatrix((
@@ -179,13 +180,17 @@ void GraphicsEngine::set_shader() {
 }
 
 GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj obj) {
+	osg::Node *node;
 	osg::PositionAttitudeTransform* obj_transform =
 		new osg::PositionAttitudeTransform();
 	if (obj.type() == ObjType::SHIP) {
-		obj_transform->addChild(osgDB::readNodeFile(this->ship_mesh));
+		node = osgDB::readNodeFile(this->ship_mesh);
+		obj_transform->addChild(node);
 	} else if (obj.type() == ObjType::ASTEROID) {
-		obj_transform->addChild(osgDB::readNodeFile(this->asteroid_mesh));
+		node = osgDB::readNodeFile(this->asteroid_mesh);
+		obj_transform->addChild(node);
 	}
+
 
 	// Set position.
 	// TODO: Set tilts.
@@ -193,9 +198,12 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(25.0f),
+		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f),
 		osg::Vec3d(1, 0, 0))));
 	obj_transform->setPosition(obj_pos);
+	obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
+
+	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;
 
 	// Add object to rendered object list.
 	rendered_obj *ren_obj = new rendered_obj;
