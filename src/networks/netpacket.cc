@@ -181,6 +181,7 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 
 	obj_packet->set_id(obj->get_id());
 	obj_packet->set_mass(obj->get_mass());
+	obj_packet->set_size(obj->get_size());
 	obj_packet->set_type(type);
 	obj_packet->set_cur_tolerance(obj->get_cur_tolerance());
 	obj_packet->set_max_tolerance(obj->get_max_tolerance());

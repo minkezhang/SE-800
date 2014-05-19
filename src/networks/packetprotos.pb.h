@@ -223,83 +223,90 @@ class RenderedObj : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 type() const;
   inline void set_type(::google::protobuf::uint32 value);
 
-  // required float cur_tolerance = 4;
+  // required float size = 4;
+  inline bool has_size() const;
+  inline void clear_size();
+  static const int kSizeFieldNumber = 4;
+  inline float size() const;
+  inline void set_size(float value);
+
+  // required float cur_tolerance = 5;
   inline bool has_cur_tolerance() const;
   inline void clear_cur_tolerance();
-  static const int kCurToleranceFieldNumber = 4;
+  static const int kCurToleranceFieldNumber = 5;
   inline float cur_tolerance() const;
   inline void set_cur_tolerance(float value);
 
-  // required float max_tolerance = 5;
+  // required float max_tolerance = 6;
   inline bool has_max_tolerance() const;
   inline void clear_max_tolerance();
-  static const int kMaxToleranceFieldNumber = 5;
+  static const int kMaxToleranceFieldNumber = 6;
   inline float max_tolerance() const;
   inline void set_max_tolerance(float value);
 
-  // required uint32 is_destroyed = 6;
+  // required uint32 is_destroyed = 7;
   inline bool has_is_destroyed() const;
   inline void clear_is_destroyed();
-  static const int kIsDestroyedFieldNumber = 6;
+  static const int kIsDestroyedFieldNumber = 7;
   inline ::google::protobuf::uint32 is_destroyed() const;
   inline void set_is_destroyed(::google::protobuf::uint32 value);
 
-  // required .protos.vector pos = 7;
+  // required .protos.vector pos = 8;
   inline bool has_pos() const;
   inline void clear_pos();
-  static const int kPosFieldNumber = 7;
+  static const int kPosFieldNumber = 8;
   inline const ::protos::vector& pos() const;
   inline ::protos::vector* mutable_pos();
   inline ::protos::vector* release_pos();
   inline void set_allocated_pos(::protos::vector* pos);
 
-  // required .protos.vector vel = 8;
+  // required .protos.vector vel = 9;
   inline bool has_vel() const;
   inline void clear_vel();
-  static const int kVelFieldNumber = 8;
+  static const int kVelFieldNumber = 9;
   inline const ::protos::vector& vel() const;
   inline ::protos::vector* mutable_vel();
   inline ::protos::vector* release_vel();
   inline void set_allocated_vel(::protos::vector* vel);
 
-  // required float accel = 9;
+  // required float accel = 10;
   inline bool has_accel() const;
   inline void clear_accel();
-  static const int kAccelFieldNumber = 9;
+  static const int kAccelFieldNumber = 10;
   inline float accel() const;
   inline void set_accel(float value);
 
-  // required .protos.vector pitch = 10;
+  // required .protos.vector pitch = 11;
   inline bool has_pitch() const;
   inline void clear_pitch();
-  static const int kPitchFieldNumber = 10;
+  static const int kPitchFieldNumber = 11;
   inline const ::protos::vector& pitch() const;
   inline ::protos::vector* mutable_pitch();
   inline ::protos::vector* release_pitch();
   inline void set_allocated_pitch(::protos::vector* pitch);
 
-  // required .protos.vector roll = 11;
+  // required .protos.vector roll = 12;
   inline bool has_roll() const;
   inline void clear_roll();
-  static const int kRollFieldNumber = 11;
+  static const int kRollFieldNumber = 12;
   inline const ::protos::vector& roll() const;
   inline ::protos::vector* mutable_roll();
   inline ::protos::vector* release_roll();
   inline void set_allocated_roll(::protos::vector* roll);
 
-  // required .protos.vector yaw = 12;
+  // required .protos.vector yaw = 13;
   inline bool has_yaw() const;
   inline void clear_yaw();
-  static const int kYawFieldNumber = 12;
+  static const int kYawFieldNumber = 13;
   inline const ::protos::vector& yaw() const;
   inline ::protos::vector* mutable_yaw();
   inline ::protos::vector* release_yaw();
   inline void set_allocated_yaw(::protos::vector* yaw);
 
-  // optional uint32 weapon_index = 13;
+  // optional uint32 weapon_index = 14;
   inline bool has_weapon_index() const;
   inline void clear_weapon_index();
-  static const int kWeaponIndexFieldNumber = 13;
+  static const int kWeaponIndexFieldNumber = 14;
   inline ::google::protobuf::uint32 weapon_index() const;
   inline void set_weapon_index(::google::protobuf::uint32 value);
 
@@ -311,6 +318,8 @@ class RenderedObj : public ::google::protobuf::Message {
   inline void clear_has_mass();
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_size();
+  inline void clear_has_size();
   inline void set_has_cur_tolerance();
   inline void clear_has_cur_tolerance();
   inline void set_has_max_tolerance();
@@ -337,19 +346,20 @@ class RenderedObj : public ::google::protobuf::Message {
   ::google::protobuf::uint32 id_;
   ::google::protobuf::uint32 mass_;
   ::google::protobuf::uint32 type_;
+  float size_;
   float cur_tolerance_;
   float max_tolerance_;
-  ::google::protobuf::uint32 is_destroyed_;
   ::protos::vector* pos_;
+  ::google::protobuf::uint32 is_destroyed_;
+  float accel_;
   ::protos::vector* vel_;
   ::protos::vector* pitch_;
   ::protos::vector* roll_;
-  float accel_;
-  ::google::protobuf::uint32 weapon_index_;
   ::protos::vector* yaw_;
+  ::google::protobuf::uint32 weapon_index_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(13 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(14 + 31) / 32];
 
   friend void  protobuf_AddDesc_packetprotos_2eproto();
   friend void protobuf_AssignDesc_packetprotos_2eproto();
@@ -1217,15 +1227,37 @@ inline void RenderedObj::set_type(::google::protobuf::uint32 value) {
   type_ = value;
 }
 
-// required float cur_tolerance = 4;
-inline bool RenderedObj::has_cur_tolerance() const {
+// required float size = 4;
+inline bool RenderedObj::has_size() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void RenderedObj::set_has_cur_tolerance() {
+inline void RenderedObj::set_has_size() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void RenderedObj::clear_has_cur_tolerance() {
+inline void RenderedObj::clear_has_size() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void RenderedObj::clear_size() {
+  size_ = 0;
+  clear_has_size();
+}
+inline float RenderedObj::size() const {
+  return size_;
+}
+inline void RenderedObj::set_size(float value) {
+  set_has_size();
+  size_ = value;
+}
+
+// required float cur_tolerance = 5;
+inline bool RenderedObj::has_cur_tolerance() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void RenderedObj::set_has_cur_tolerance() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void RenderedObj::clear_has_cur_tolerance() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void RenderedObj::clear_cur_tolerance() {
   cur_tolerance_ = 0;
@@ -1239,15 +1271,15 @@ inline void RenderedObj::set_cur_tolerance(float value) {
   cur_tolerance_ = value;
 }
 
-// required float max_tolerance = 5;
+// required float max_tolerance = 6;
 inline bool RenderedObj::has_max_tolerance() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void RenderedObj::set_has_max_tolerance() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void RenderedObj::clear_has_max_tolerance() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void RenderedObj::clear_max_tolerance() {
   max_tolerance_ = 0;
@@ -1261,15 +1293,15 @@ inline void RenderedObj::set_max_tolerance(float value) {
   max_tolerance_ = value;
 }
 
-// required uint32 is_destroyed = 6;
+// required uint32 is_destroyed = 7;
 inline bool RenderedObj::has_is_destroyed() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void RenderedObj::set_has_is_destroyed() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void RenderedObj::clear_has_is_destroyed() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void RenderedObj::clear_is_destroyed() {
   is_destroyed_ = 0u;
@@ -1283,15 +1315,15 @@ inline void RenderedObj::set_is_destroyed(::google::protobuf::uint32 value) {
   is_destroyed_ = value;
 }
 
-// required .protos.vector pos = 7;
+// required .protos.vector pos = 8;
 inline bool RenderedObj::has_pos() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void RenderedObj::set_has_pos() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void RenderedObj::clear_has_pos() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void RenderedObj::clear_pos() {
   if (pos_ != NULL) pos_->::protos::vector::Clear();
@@ -1321,15 +1353,15 @@ inline void RenderedObj::set_allocated_pos(::protos::vector* pos) {
   }
 }
 
-// required .protos.vector vel = 8;
+// required .protos.vector vel = 9;
 inline bool RenderedObj::has_vel() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void RenderedObj::set_has_vel() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void RenderedObj::clear_has_vel() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void RenderedObj::clear_vel() {
   if (vel_ != NULL) vel_->::protos::vector::Clear();
@@ -1359,15 +1391,15 @@ inline void RenderedObj::set_allocated_vel(::protos::vector* vel) {
   }
 }
 
-// required float accel = 9;
+// required float accel = 10;
 inline bool RenderedObj::has_accel() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void RenderedObj::set_has_accel() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void RenderedObj::clear_has_accel() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void RenderedObj::clear_accel() {
   accel_ = 0;
@@ -1381,15 +1413,15 @@ inline void RenderedObj::set_accel(float value) {
   accel_ = value;
 }
 
-// required .protos.vector pitch = 10;
+// required .protos.vector pitch = 11;
 inline bool RenderedObj::has_pitch() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void RenderedObj::set_has_pitch() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void RenderedObj::clear_has_pitch() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void RenderedObj::clear_pitch() {
   if (pitch_ != NULL) pitch_->::protos::vector::Clear();
@@ -1419,15 +1451,15 @@ inline void RenderedObj::set_allocated_pitch(::protos::vector* pitch) {
   }
 }
 
-// required .protos.vector roll = 11;
+// required .protos.vector roll = 12;
 inline bool RenderedObj::has_roll() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void RenderedObj::set_has_roll() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void RenderedObj::clear_has_roll() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void RenderedObj::clear_roll() {
   if (roll_ != NULL) roll_->::protos::vector::Clear();
@@ -1457,15 +1489,15 @@ inline void RenderedObj::set_allocated_roll(::protos::vector* roll) {
   }
 }
 
-// required .protos.vector yaw = 12;
+// required .protos.vector yaw = 13;
 inline bool RenderedObj::has_yaw() const {
-  return (_has_bits_[0] & 0x00000800u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void RenderedObj::set_has_yaw() {
-  _has_bits_[0] |= 0x00000800u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void RenderedObj::clear_has_yaw() {
-  _has_bits_[0] &= ~0x00000800u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void RenderedObj::clear_yaw() {
   if (yaw_ != NULL) yaw_->::protos::vector::Clear();
@@ -1495,15 +1527,15 @@ inline void RenderedObj::set_allocated_yaw(::protos::vector* yaw) {
   }
 }
 
-// optional uint32 weapon_index = 13;
+// optional uint32 weapon_index = 14;
 inline bool RenderedObj::has_weapon_index() const {
-  return (_has_bits_[0] & 0x00001000u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void RenderedObj::set_has_weapon_index() {
-  _has_bits_[0] |= 0x00001000u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void RenderedObj::clear_has_weapon_index() {
-  _has_bits_[0] &= ~0x00001000u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void RenderedObj::clear_weapon_index() {
   weapon_index_ = 0u;

@@ -11,20 +11,21 @@ message RenderedObj {
 	required uint32 id = 1;
 	required uint32 mass = 2;
 	required uint32 type = 3;
+	required float size = 4;
 	
-	required float cur_tolerance = 4;
-	required float max_tolerance = 5;
-	required uint32 is_destroyed = 6;
+	required float cur_tolerance = 5;
+	required float max_tolerance = 6;
+	required uint32 is_destroyed = 7;
 	
-	required vector pos = 7;
-	required vector vel = 8;
-	required float accel = 9;
+	required vector pos = 8;
+	required vector vel = 9;
+	required float accel = 10;
 	
-	required vector pitch = 10;
-	required vector roll = 11;
-	required vector yaw = 12;
+	required vector pitch = 11;
+	required vector roll = 12;
+	required vector yaw = 13;
 	
-	optional uint32 weapon_index = 13;
+	optional uint32 weapon_index = 14;
 }
 
 message Event {
