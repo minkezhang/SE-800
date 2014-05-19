@@ -16,6 +16,7 @@
 #include "networks/client.h"
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
+#include "classes/asteroid.h"
 
 void handler(int sig) {
 	void *array[100];
@@ -82,6 +83,14 @@ int main(int argc, char **argv) {
 		world.get_physics_engine()->set_environment(e);
 		for(int i = 0; i < 0; i++) {
 			world.get_physics_engine()->get_environment()->add_projectile(world.join(NULL));
+		}
+
+		// Initializing asteroids (TODO): Move this to world engine ignite?
+		for (int i = 0; i < 15; i++) {
+			std::vector<float> pos { (float) ((rand() % (25)) + 1), (float) ((rand() % (25-7)) + 7), (float) ((rand() % (25-7)) + 7) };
+			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, 10, 0, 0);
+			world.obj_count++;
+			world.get_physics_engine()->get_environment()->add_projectile(a);
 		}
 
 		world.ignite(argv[1], 2);

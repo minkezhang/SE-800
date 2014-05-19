@@ -5,13 +5,13 @@
 
 #include "world.h"
 #include "../../classes/ship.h"
-
-int OBJ_ID = 1;
+#include "../../classes/asteroid.h"
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
 	ai_engine = NULL;
 	physics_engine = NULL;
 	status = UNINITIALIZED;
+	this->obj_count = 0;
 }
 WorldEngine::~WorldEngine() {}
 
@@ -65,9 +65,9 @@ void WorldEngine::shutdown() {
  */
 Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
-	Ship *s = new Ship(OBJ_ID, 10, 10, pos, 1000, 0, 0);
-	std::cout << "SPAWNED NEW SHIP OF ID " << OBJ_ID << std::endl;
-	OBJ_ID++;
+	Ship *s = new Ship(this->obj_count, 10, 10, pos, 1000, 0, 0);
+	std::cout << "SPAWNED NEW SHIP OF ID " << this->obj_count << std::endl;
+	this->obj_count++;
 
 	p->set_ship(s);
 	this->ai_engine->add_pilot(p);

@@ -197,11 +197,15 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	protos::vector pos_vector = obj.pos();
 	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
-	obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f),
-		osg::Vec3d(1, 0, 0))));
 	obj_transform->setPosition(obj_pos);
-	obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
+	if (obj.type() == ObjType::SHIP) {
+		obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f),
+			osg::Vec3d(1, 0, 0))));
+		obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
+	} else if (obj.type() == ObjType::ASTEROID) {
+		obj_transform->setScale(osg::Vec3(0.2,0.2,0.2));
+	}
 
 	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;
 

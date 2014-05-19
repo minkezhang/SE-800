@@ -22,6 +22,7 @@ class WorldEngine : Engine {
 		~WorldEngine();
 
 		std::vector<Team *> get_teams();
+		int obj_count;
 
 		void ignite(char *mode);
 		void ignite(char *mode, int n_teams);
