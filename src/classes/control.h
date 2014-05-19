@@ -7,6 +7,7 @@
 
 #include "../networks/client.h"
 #include "../networks/packetprotos.pb.h"
+#include "../engines/physics/physics.h"
 
 enum Action {
 	ACCEL,
@@ -36,7 +37,7 @@ class ClientControl {
 
 class ServerControl {
 	public:
-		static void update_physics(protos::ControlInput control);
+		static void update_physics(int obj_id, int action, void *action_arg, PhysicsEngine *p);
 };
 
 #endif

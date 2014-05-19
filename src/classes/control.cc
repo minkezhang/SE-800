@@ -7,6 +7,7 @@
 #include "../networks/client.h"
 #include "../networks/netpacket.h"
 #include "../networks/packetprotos.pb.h"
+#include "../engines/physics/physics.h"
 
 ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils) {
 	this->net_utils = net_utils;
@@ -95,5 +96,13 @@ void ClientControl::UIEventHandler::accept(osgGA::GUIEventHandlerVisitor& v) {
 	v.visit(*this);
 }
 
-void ServerControl::update_physics(protos::ControlInput control) {
+void ServerControl::update_physics(int obj_id, int action, void *action_arg, PhysicsEngine *p) {
+	if (action == Action::ACCEL) {
+		p->toggle_a(obj_id, 1);
+	} else if (action == Action::RESET_ACCEL) {
+		p->toggle_a(obj_id, 0);
+	} else if (action == Action::BRAKE) {
+		p->toggle_a(obj_id, -1);
+	}
+	//TODO: Add rotation updates
 }

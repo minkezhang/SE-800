@@ -193,13 +193,13 @@ void * Server::serve_client(void *args) {
 					control_input_packet.ParseFromString(payload);
 					if (control_input_packet.action() == Action::ACCEL) {
 						std::cout << "Received Accel packet." << std::endl;
-						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), 1);
+						ServerControl::update_physics(p->get_ship()->get_id(), Action::ACCEL, NULL, world->get_physics_engine());
 					} else if (control_input_packet.action() == Action::RESET_ACCEL) {
 						std::cout << "Received Reset Accel packet." << std::endl;
-						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), 0);
+						ServerControl::update_physics(p->get_ship()->get_id(), Action::RESET_ACCEL, NULL, world->get_physics_engine());
 					} else if (control_input_packet.action() == Action::BRAKE) {
 						std::cout << "Received Brake packet." << std::endl;
-						world->get_physics_engine()->toggle_a(p->get_ship()->get_id(), -1);
+						ServerControl::update_physics(p->get_ship()->get_id(), Action::BRAKE, NULL, world->get_physics_engine());
 					} else if (control_input_packet.action() == Action::BULLET) {
 						std::cout << "Received Bullet packet." << std::endl;
 					}
