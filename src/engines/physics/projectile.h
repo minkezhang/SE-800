@@ -58,9 +58,12 @@ class Projectile {
 		void set_v(std::vector<float> v);	// set velocity
 		void set_a(float a);			// set acceleration
 
-		void set_p(std::vector<float> p);	// set pitch axis
-		void set_y(std::vector<float> y);	// set yaw axis
-		void set_r(std::vector<float> r);	// set roll axis
+		/**
+		 * unit orientation vectors
+		 */
+		void set_p(std::vector<float> p);	// set pitch axis	(0, 1, 0)
+		void set_y(std::vector<float> y);	// set yaw axis		(0, 0, 1)
+		void set_r(std::vector<float> r);	// set roll axis	(1, 0, 0)
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
