@@ -193,18 +193,24 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 
 
 	// Set position.
-	// TODO: Set tilts.
 	protos::vector pos_vector = obj.pos();
 	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	obj_transform->setPosition(obj_pos);
+
+	float orig_mesh_radius = obj_transform->getBound().radius();
+	float desired_radius = obj.size();
+	float scale_amt = 1 / (orig_mesh_radius / desired_radius);
+	obj_transform->setScale(osg::Vec3(scale_amt, scale_amt, scale_amt));
+
 	if (obj.type() == ObjType::SHIP) {
 		obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f),
-			osg::Vec3d(1, 0, 0))));
-		obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
+//		obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
 	} else if (obj.type() == ObjType::ASTEROID) {
-		obj_transform->setScale(osg::Vec3(0.2,0.2,0.2));
+//		obj_transform->setScale(osg::Vec3(0.2,0.2,0.2));
 	}
 
 	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;
@@ -234,7 +240,11 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	protos::vector pos_vector = update_obj.pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(obj_pos);
-	// TODO: UPDATE TILT
+
+	ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
+		osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+		osg::Vec3d(0, 1, 0))));
 }
 
 void GraphicsEngine::reset_rendered_objects() {

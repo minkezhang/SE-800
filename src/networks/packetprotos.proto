@@ -21,8 +21,8 @@ message RenderedObj {
 	required vector vel = 9;
 	required float accel = 10;
 	
-	required vector pitch = 11;
-	required vector roll = 12;
+	required float pitch = 11;
+	required float roll = 12;
 	required vector yaw = 13;
 	
 	optional uint32 weapon_index = 14;

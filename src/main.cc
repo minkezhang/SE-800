@@ -86,9 +86,9 @@ int main(int argc, char **argv) {
 		}
 
 		// Initializing asteroids (TODO): Move this to world engine ignite?
-		for (int i = 0; i < 15; i++) {
-			std::vector<float> pos { (float) ((rand() % (25)) + 1), (float) ((rand() % (25-7)) + 7), (float) ((rand() % (25-7)) + 7) };
-			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, 10, 0, 0);
+		for (int i = 0; i < 20; i++) {
+			std::vector<float> pos { (float) (rand() % (15 - 4) + 4), (float) ((rand() % (20-8)) + 8), (float) ((rand() % (15-10)) + 10) };
+			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
 			world.obj_count++;
 			world.get_physics_engine()->get_environment()->add_projectile(a);
 		}

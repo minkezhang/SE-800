@@ -276,23 +276,19 @@ class RenderedObj : public ::google::protobuf::Message {
   inline float accel() const;
   inline void set_accel(float value);
 
-  // required .protos.vector pitch = 11;
+  // required float pitch = 11;
   inline bool has_pitch() const;
   inline void clear_pitch();
   static const int kPitchFieldNumber = 11;
-  inline const ::protos::vector& pitch() const;
-  inline ::protos::vector* mutable_pitch();
-  inline ::protos::vector* release_pitch();
-  inline void set_allocated_pitch(::protos::vector* pitch);
+  inline float pitch() const;
+  inline void set_pitch(float value);
 
-  // required .protos.vector roll = 12;
+  // required float roll = 12;
   inline bool has_roll() const;
   inline void clear_roll();
   static const int kRollFieldNumber = 12;
-  inline const ::protos::vector& roll() const;
-  inline ::protos::vector* mutable_roll();
-  inline ::protos::vector* release_roll();
-  inline void set_allocated_roll(::protos::vector* roll);
+  inline float roll() const;
+  inline void set_roll(float value);
 
   // required .protos.vector yaw = 13;
   inline bool has_yaw() const;
@@ -353,8 +349,8 @@ class RenderedObj : public ::google::protobuf::Message {
   ::google::protobuf::uint32 is_destroyed_;
   float accel_;
   ::protos::vector* vel_;
-  ::protos::vector* pitch_;
-  ::protos::vector* roll_;
+  float pitch_;
+  float roll_;
   ::protos::vector* yaw_;
   ::google::protobuf::uint32 weapon_index_;
 
@@ -1413,7 +1409,7 @@ inline void RenderedObj::set_accel(float value) {
   accel_ = value;
 }
 
-// required .protos.vector pitch = 11;
+// required float pitch = 11;
 inline bool RenderedObj::has_pitch() const {
   return (_has_bits_[0] & 0x00000400u) != 0;
 }
@@ -1424,34 +1420,18 @@ inline void RenderedObj::clear_has_pitch() {
   _has_bits_[0] &= ~0x00000400u;
 }
 inline void RenderedObj::clear_pitch() {
-  if (pitch_ != NULL) pitch_->::protos::vector::Clear();
+  pitch_ = 0;
   clear_has_pitch();
 }
-inline const ::protos::vector& RenderedObj::pitch() const {
-  return pitch_ != NULL ? *pitch_ : *default_instance_->pitch_;
-}
-inline ::protos::vector* RenderedObj::mutable_pitch() {
-  set_has_pitch();
-  if (pitch_ == NULL) pitch_ = new ::protos::vector;
+inline float RenderedObj::pitch() const {
   return pitch_;
 }
-inline ::protos::vector* RenderedObj::release_pitch() {
-  clear_has_pitch();
-  ::protos::vector* temp = pitch_;
-  pitch_ = NULL;
-  return temp;
-}
-inline void RenderedObj::set_allocated_pitch(::protos::vector* pitch) {
-  delete pitch_;
-  pitch_ = pitch;
-  if (pitch) {
-    set_has_pitch();
-  } else {
-    clear_has_pitch();
-  }
+inline void RenderedObj::set_pitch(float value) {
+  set_has_pitch();
+  pitch_ = value;
 }
 
-// required .protos.vector roll = 12;
+// required float roll = 12;
 inline bool RenderedObj::has_roll() const {
   return (_has_bits_[0] & 0x00000800u) != 0;
 }
@@ -1462,31 +1442,15 @@ inline void RenderedObj::clear_has_roll() {
   _has_bits_[0] &= ~0x00000800u;
 }
 inline void RenderedObj::clear_roll() {
-  if (roll_ != NULL) roll_->::protos::vector::Clear();
+  roll_ = 0;
   clear_has_roll();
 }
-inline const ::protos::vector& RenderedObj::roll() const {
-  return roll_ != NULL ? *roll_ : *default_instance_->roll_;
-}
-inline ::protos::vector* RenderedObj::mutable_roll() {
-  set_has_roll();
-  if (roll_ == NULL) roll_ = new ::protos::vector;
+inline float RenderedObj::roll() const {
   return roll_;
 }
-inline ::protos::vector* RenderedObj::release_roll() {
-  clear_has_roll();
-  ::protos::vector* temp = roll_;
-  roll_ = NULL;
-  return temp;
-}
-inline void RenderedObj::set_allocated_roll(::protos::vector* roll) {
-  delete roll_;
-  roll_ = roll;
-  if (roll) {
-    set_has_roll();
-  } else {
-    clear_has_roll();
-  }
+inline void RenderedObj::set_roll(float value) {
+  set_has_roll();
+  roll_ = value;
 }
 
 // required .protos.vector yaw = 13;

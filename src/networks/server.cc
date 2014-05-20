@@ -200,6 +200,14 @@ void * Server::serve_client(void *args) {
 					} else if (control_input_packet.action() == Action::BRAKE) {
 						std::cout << "Received Brake packet." << std::endl;
 						ServerControl::update_physics(p->get_ship()->get_id(), Action::BRAKE, NULL, world->get_physics_engine());
+					} else if (control_input_packet.action() == Action::ROLL_TILT) {
+						std::cout << "Received Roll tilt packet." << std::endl;
+						float tilt = control_input_packet.tilt();
+						ServerControl::update_physics(p->get_ship()->get_id(), Action::ROLL_TILT, (void *) &tilt, world->get_physics_engine());
+					} else if (control_input_packet.action() == Action::PITCH_TILT) {
+						std::cout << "Received Pitch tilt packet." << std::endl;
+						float tilt = control_input_packet.tilt();
+						ServerControl::update_physics(p->get_ship()->get_id(), Action::PITCH_TILT, (void *) &tilt, world->get_physics_engine());
 					} else if (control_input_packet.action() == Action::BULLET) {
 						std::cout << "Received Bullet packet." << std::endl;
 					}
