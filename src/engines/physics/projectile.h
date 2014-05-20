@@ -68,6 +68,7 @@ class Projectile {
 		void set_p_dot(float p_dot);		// set pitch rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
 
+
 		void set_is_processed();		// can only be set to TRUE by the network -- the network should then proceed to BROADCAST event to all clients
 
 		void damage(float tolerance);		// decrement the object tolerance by the input
