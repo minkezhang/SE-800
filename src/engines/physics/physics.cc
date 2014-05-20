@@ -129,30 +129,28 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	Grid *new_g = this->environment->get_grid(p);
 	old_g->del_projectile(p);
 	new_g->add_projectile(p);
-//	if (p->get_id() == 1) {
-//		std::cout << "ship id is one and pos is " << p->get_d().at(0) << " " << p->get_d().at(1) << " " << p->get_d().at(2) << std::endl;
-//		std::cout << "accel is " << p->get_v().at(0) << " " << p->get_v().at(1) << " " << p->get_v().at(2) << std::endl;
-//	}
 }
 
 void PhysicsEngine::collision_check(Projectile *p) {
 	std::vector<Projectile *> neighbors = this->environment->get_neighbors(p);
 	for(std::vector<Projectile *>::iterator i = neighbors.begin(); i != neighbors.end(); ++i) {
 		Projectile *q = *i;
-		if(!q->get_is_destroyed()) {
-			std::vector<float> p_d = p->get_d();
-			std::vector<float> q_d = q->get_d();
-			std::vector<float> diff;
-			// get the distance between the projectiles
-			//	cf. http://bit.ly/1sPHU1c
-			std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
-			float dist_sq = 0;
-			for(int i = 0; i < 3; i++) {
-				dist_sq += diff.at(i) * diff.at(i);
-			}
-			int collide = dist_sq < (p->get_size() + q->get_size()) * (p->get_size() + q->get_size());
-			if(collide) {
-				this->collide(p, q);
+		if(p->get_id() != q->get_id()) {
+			if(!q->get_is_destroyed()) {
+				std::vector<float> p_d = p->get_d();
+				std::vector<float> q_d = q->get_d();
+				std::vector<float> diff;
+				// get the distance between the projectiles
+				//	cf. http://bit.ly/1sPHU1c
+				std::transform(p_d.begin(), p_d.end(), q_d.begin(), std::back_inserter(diff), [](float a, float b) { return(a - b); });
+				float dist_sq = 0;
+				for(int i = 0; i < 3; i++) {
+					dist_sq += diff.at(i) * diff.at(i);
+				}
+				int collide = dist_sq < (p->get_size() + q->get_size()) * (p->get_size() + q->get_size());
+				if(collide) {
+					this->collide(p, q);
+				}
 			}
 		}
 	}
@@ -209,14 +207,5 @@ void PhysicsEngine::cycle() {
 			this->collision_check(p);
 		}
 	}
-
-	/**
-	for(unsigned long int i = 0; i < this->environment->get_grids().size(); i++) {
-		Grid *g = this->environment->get_grids().at(i);
-		for(unsigned long int j = 0; j < g->get_projectiles().size(); j++) {
-			this->verlet_step(.0033, g->get_projectiles().at(j));
-		}
-	}
-	 */
 }
 void PhysicsEngine::shutdown() {}

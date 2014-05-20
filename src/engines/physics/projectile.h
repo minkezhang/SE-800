@@ -21,7 +21,7 @@ class Projectile {
 		 */
 
 		int get_id();				// get projectile ID
-		float get_size();				// get size
+		float get_size();			// get size
 		int get_mass();				// get mass
 		int get_type();				// get obj type
 
