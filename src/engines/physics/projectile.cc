@@ -17,7 +17,7 @@ Projectile::Projectile(
 		size(size),
 		p(p), r(r),
 		p_dot(p_dot), r_dot(r_dot),
-		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(preset_max_vel) {
+		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500) {
 	y = { 0, 0, 1 };
 }
 
