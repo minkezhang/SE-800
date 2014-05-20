@@ -5,6 +5,7 @@
 
 #include "world.h"
 #include "../../classes/ship.h"
+#include "../../classes/ship_instance.h"
 #include "../../classes/asteroid.h"
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
@@ -65,7 +66,8 @@ void WorldEngine::shutdown() {
  */
 Ship *WorldEngine::join(Pilot *p) {
 	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
-	Ship *s = new Ship(this->obj_count, 10, 10, pos, 9.5, 1000, 0, 0);
+	Ship *s = new ShipCarrier(this->obj_count, pos);
+
 	std::cout << "SPAWNED NEW SHIP OF ID " << this->obj_count << std::endl;
 	this->obj_count++;
 

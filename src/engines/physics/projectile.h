@@ -14,7 +14,7 @@ enum ObjType {
 
 class Projectile {
 	public:
-		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
+		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, float size, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
 
 		/**
 		 * public-facing functions which can be freely queried
@@ -82,7 +82,6 @@ class Projectile {
 		int is_processed;			// set externally to TRUE upon being acknowledged as destroyed by network
 
 		float mass;				// mass of object -- set on construction
-		float size;				// collision radius
 
 		float cur_tolerance;			// current health -- initialized to max_tolerance
 		float max_tolerance;			// max health -- set on construction
@@ -90,6 +89,8 @@ class Projectile {
 		/* positional-related vectors */
 		std::vector<float> d;
 		std::vector<float> v;
+
+		float size;				// collision radius
 		float a;
 
 		/* pitch, yaw, roll vectors */
