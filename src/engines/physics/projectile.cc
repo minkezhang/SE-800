@@ -17,7 +17,7 @@ Projectile::Projectile(
 		size(size),
 		p(p), r(r),
 		p_dot(p_dot), r_dot(r_dot),
-		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot) {
+		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(preset_max_vel) {
 	y = { 0, 0, 1 };
 }
 
@@ -47,12 +47,30 @@ float Projectile::get_r_dot() { return this->r_dot; }
 float Projectile::get_preset_a() { return(this->preset_a); }
 float Projectile::get_preset_p_dot() { return(this->preset_p_dot); }
 float Projectile::get_preset_r_dot() { return(this->preset_r_dot); }
+float Projectile::get_preset_max_vel() { return(this->preset_max_vel); }
 
 // SET FUNCTIONS
 
 void Projectile::set_d(vector<float> d) { this->d = d; }
-void Projectile::set_v(vector<float> v) { this->v = v; }
 void Projectile::set_a(float a) { this->a = a; }
+void Projectile::set_v(vector<float> v) { 
+	float max_v = this->preset_max_vel;
+	float vx = v.at(0);
+	float vy = v.at(1);
+	float vz = v.at(2);
+	float curr_mag = vx * vx + vy * vy + vz * vz;
+	if (curr_mag <= (max_v*max_v)) {
+		this->v = v;
+	} else {
+		curr_mag = 1 / sqrt(curr_mag);
+		vector<float> vmod = {0,0,0}
+		vmod.at(0) = curr_mag * vx * max_v;
+		vmod.at(1) = curr_mag * vy * max_v;
+		vmod.at(2) = curr_mag * vz * max_v;
+		this->v = vmod;
+	}
+}
+
 
 void Projectile::set_p(vector<float> p) { this->p = p; }
 void Projectile::set_y(vector<float> y) { this->y = y; }
