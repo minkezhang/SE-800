@@ -14,7 +14,7 @@ enum ObjType {
 
 class Projectile {
 	public:
-		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, float size, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot);
+		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, float size, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot, float preset_max_vel);
 
 		/**
 		 * public-facing functions which can be freely queried
@@ -49,6 +49,7 @@ class Projectile {
 		float get_preset_a();
 		float get_preset_p_dot();
 		float get_preset_r_dot();
+		float get_preset_max_vel();
 
 		/**
 		 * the following should not be called outside the physics engine
@@ -67,6 +68,8 @@ class Projectile {
 
 		void set_p_dot(float p_dot);		// set pitch rotation speed
 		void set_r_dot(float r_dot);		// set roll rotation speed
+
+
 
 
 		void set_is_processed();		// can only be set to TRUE by the network -- the network should then proceed to BROADCAST event to all clients
@@ -104,6 +107,7 @@ class Projectile {
 		float preset_a;
 		float preset_p_dot;
 		float preset_r_dot;
+		float preset_max_vel;
 };
 
 #endif
