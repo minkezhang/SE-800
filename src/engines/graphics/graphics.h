@@ -5,6 +5,7 @@
 #include <mutex>
 #include <osg/Group>
 #include <osg/Node>
+#include <osg/Vec3>
 #include <osgViewer/Viewer>
 #include <vector>
 #include <queue>
@@ -42,6 +43,9 @@ class GraphicsEngine : public Engine {
 		osgViewer::Viewer viewer;
 		string ship_mesh;
 		string asteroid_mesh;
+		osg::Vec3 prev_roll;
+		osg::Vec3 prev_pitch;
+		osg::Vec3 prev_yaw;
 
 		std::map<int, rendered_obj*> cur_objs;
 

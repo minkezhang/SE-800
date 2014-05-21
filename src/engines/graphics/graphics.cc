@@ -19,10 +19,16 @@
 #include <osgDB/ReadFile>
 #include <osgViewer/ViewerBase>
 #include <ctime>
+#include <math.h>
 
 GraphicsEngine::GraphicsEngine() {}
 
 void GraphicsEngine::ignite() {
+	// TODO: MOVE CAMERA INIT SOMEWHERE ELSE
+	this->prev_roll = osg::Vec3( -99, -99, -99);
+	this->prev_pitch = osg::Vec3( -99, -99, -99);
+	this->prev_yaw = osg::Vec3( -99, -99, -99);
+
 	this->ship_mesh = "../Assets/ship.obj";
 	this->asteroid_mesh = "../Assets/asteroid.obj";
 
@@ -145,14 +151,62 @@ void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_rotation;
 	osg::Matrixd camera_trans;
 
+	protos::vector roll_vector = this->main_ship->obj.roll_vector();
+	protos::vector pitch_vector = this->main_ship->obj.pitch_vector();
+	protos::vector yaw_vector = this->main_ship->obj.yaw();
+
+	float r_angle = 0, p_angle = 0, y_angle = 0;
+
+	osg::Vec3 r_vec(roll_vector.x(), roll_vector.y(), roll_vector.z());
+	osg::Vec3 p_vec(pitch_vector.x(), pitch_vector.y(), pitch_vector.z());
+	osg::Vec3 y_vec(yaw_vector.x(), yaw_vector.y(), yaw_vector.z());
+
+	// Set prev roll, pitch, and yaw if first cycle
+	if (this->prev_roll.x() == -99) {
+		this->prev_roll = r_vec;
+	} else {
+		float r_xdot = prev_roll.x()*r_vec.x();
+		float r_ydot = prev_roll.y()*r_vec.y();
+		float r_zdot = prev_roll.z()*r_vec.z();
+		r_angle = acos(r_xdot + r_ydot + r_zdot);
+	}
+
+	if (this->prev_pitch.x() == -99) {
+		this->prev_pitch = p_vec;
+	} else {
+		float p_xdot = prev_pitch.x()*p_vec.x();		
+		float p_ydot = prev_pitch.y()*p_vec.y();
+		float p_zdot = prev_pitch.z()*p_vec.z();
+		p_angle = acos(p_xdot + p_ydot + p_zdot);
+	}
+	
+	if (this->prev_yaw.x() == -99) {
+		this->prev_yaw = y_vec;
+	} else {
+		float y_xdot = prev_yaw.x()*y_vec.x();		
+		float y_ydot = prev_yaw.y()*y_vec.y();
+		float y_zdot = prev_yaw.z()*y_vec.z();
+		y_angle = acos(y_xdot + y_ydot + y_zdot);
+	}
 	// TODO: Update camera based on ship tilts.
+
+	std::cout << "THIS IS ROLL ANGLE :" << r_angle << " THIS IS PITCH ANGLE " << p_angle << " THIS IS YAW ANGLE : " << y_angle << std::endl;
 	camera_rotation.makeRotate(
-		osg::DegreesToRadians(0.0), osg::Vec3(0, 1, 0),	// roll
-		osg::DegreesToRadians(0.0), osg::Vec3(1, 0, 0),	// pitch
-		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
+		osg::DegreesToRadians(r_angle), prev_roll,	// roll
+		osg::DegreesToRadians(p_angle), prev_pitch,	// pitch
+		osg::DegreesToRadians(y_angle), prev_yaw);	// heading
+
+	prev_roll = r_vec;
+	prev_pitch = p_vec;
+	prev_yaw = y_vec;	
 
 	// Z axis refers to Y axis, Y axis refers to Z axis
-	camera_trans.makeTranslate(this->main_ship->obj.pos().x(), this->main_ship->obj.pos().y()-39, this->main_ship->obj.pos().z()+8);
+	std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
+	std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
+
+
+	camera_trans.makeTranslate(this->main_ship->obj.pos().x() - r_vec.x(), this->main_ship->obj.pos().y() - (40*r_vec.y()), this->main_ship->obj.pos().z() + 8 - (10*r_vec.z()));
+
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
 	this->viewer.getCamera()->setViewMatrix((

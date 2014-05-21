@@ -202,6 +202,16 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 	obj_packet->set_pitch(obj->get_p_dot());
 	obj_packet->set_roll(obj->get_r_dot());
 
+	protos::vector *roll_vector = obj_packet->mutable_roll_vector();
+	roll_vector->set_x(obj->get_r().at(0));
+	roll_vector->set_y(obj->get_r().at(1));
+	roll_vector->set_z(obj->get_r().at(2));
+
+	protos::vector *pitch_vector = obj_packet->mutable_pitch_vector();
+	pitch_vector->set_x(obj->get_p().at(0));
+	pitch_vector->set_y(obj->get_p().at(1));
+	pitch_vector->set_z(obj->get_p().at(2));
+
 	protos::vector *yaw_vector = obj_packet->mutable_yaw();
 	yaw_vector->set_x(obj->get_y().at(0));
 	yaw_vector->set_y(obj->get_y().at(1));

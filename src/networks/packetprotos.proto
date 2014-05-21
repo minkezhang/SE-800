@@ -20,12 +20,14 @@ message RenderedObj {
 	required vector pos = 8;
 	required vector vel = 9;
 	required float accel = 10;
+
+	required vector roll_vector = 11;	
+	required vector pitch_vector = 12;
+	required float pitch = 13;
+	required float roll = 14;
+	required vector yaw = 15;
 	
-	required float pitch = 11;
-	required float roll = 12;
-	required vector yaw = 13;
-	
-	optional uint32 weapon_index = 14;
+	optional uint32 weapon_index = 16;
 }
 
 message Event {

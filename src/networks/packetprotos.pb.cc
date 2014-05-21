@@ -78,7 +78,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(vector));
   RenderedObj_descriptor_ = file->message_type(1);
-  static const int RenderedObj_offsets_[14] = {
+  static const int RenderedObj_offsets_[16] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, mass_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, type_),
@@ -89,6 +89,8 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, pos_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, vel_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, accel_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, roll_vector_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, pitch_vector_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, pitch_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, roll_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, yaw_),
@@ -296,25 +298,27 @@ void protobuf_AddDesc_packetprotos_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022packetprotos.proto\022\006protos\")\n\006vector\022\t"
-    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\240\002\n\013Rend"
+    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\353\002\n\013Rend"
     "eredObj\022\n\n\002id\030\001 \002(\r\022\014\n\004mass\030\002 \002(\r\022\014\n\004typ"
     "e\030\003 \002(\r\022\014\n\004size\030\004 \002(\002\022\025\n\rcur_tolerance\030\005"
     " \002(\002\022\025\n\rmax_tolerance\030\006 \002(\002\022\024\n\014is_destro"
     "yed\030\007 \002(\r\022\033\n\003pos\030\010 \002(\0132\016.protos.vector\022\033"
     "\n\003vel\030\t \002(\0132\016.protos.vector\022\r\n\005accel\030\n \002"
-    "(\002\022\r\n\005pitch\030\013 \002(\002\022\014\n\004roll\030\014 \002(\002\022\033\n\003yaw\030\r"
-    " \002(\0132\016.protos.vector\022\024\n\014weapon_index\030\016 \001"
-    "(\r\"\033\n\005Event\022\022\n\nevent_type\030\001 \002(\r\",\n\014Contr"
-    "olInput\022\016\n\006action\030\001 \002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n"
-    "\rGeneralPacket\022\022\n\npacketType\030\001 \002(\r\022\016\n\006pa"
-    "cket\030\002 \001(\014\022\020\n\010packetId\030\003 \001(\t\"3\n\016ShipInit"
-    "Packet\022!\n\004ship\030\001 \002(\0132\023.protos.RenderedOb"
-    "j\"U\n\023ObjsAndEventsPacket\022 \n\003obj\030\001 \003(\0132\023."
-    "protos.RenderedObj\022\034\n\005event\030\002 \003(\0132\r.prot"
-    "os.Event\"%\n\026ObjsAndEventsReqPacket\022\013\n\003re"
-    "q\030\001 \002(\r\"\035\n\016EventAckPacket\022\013\n\003ack\030\001 \002(\r\";"
-    "\n\022ControlInputPacket\022%\n\007control\030\001 \002(\0132\024."
-    "protos.ControlInput", 779);
+    "(\002\022#\n\013roll_vector\030\013 \002(\0132\016.protos.vector\022"
+    "$\n\014pitch_vector\030\014 \002(\0132\016.protos.vector\022\r\n"
+    "\005pitch\030\r \002(\002\022\014\n\004roll\030\016 \002(\002\022\033\n\003yaw\030\017 \002(\0132"
+    "\016.protos.vector\022\024\n\014weapon_index\030\020 \001(\r\"\033\n"
+    "\005Event\022\022\n\nevent_type\030\001 \002(\r\",\n\014ControlInp"
+    "ut\022\016\n\006action\030\001 \002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n\rGene"
+    "ralPacket\022\022\n\npacketType\030\001 \002(\r\022\016\n\006packet\030"
+    "\002 \001(\014\022\020\n\010packetId\030\003 \001(\t\"3\n\016ShipInitPacke"
+    "t\022!\n\004ship\030\001 \002(\0132\023.protos.RenderedObj\"U\n\023"
+    "ObjsAndEventsPacket\022 \n\003obj\030\001 \003(\0132\023.proto"
+    "s.RenderedObj\022\034\n\005event\030\002 \003(\0132\r.protos.Ev"
+    "ent\"%\n\026ObjsAndEventsReqPacket\022\013\n\003req\030\001 \002"
+    "(\r\"\035\n\016EventAckPacket\022\013\n\003ack\030\001 \002(\r\";\n\022Con"
+    "trolInputPacket\022%\n\007control\030\001 \002(\0132\024.proto"
+    "s.ControlInput", 854);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -643,6 +647,8 @@ const int RenderedObj::kIsDestroyedFieldNumber;
 const int RenderedObj::kPosFieldNumber;
 const int RenderedObj::kVelFieldNumber;
 const int RenderedObj::kAccelFieldNumber;
+const int RenderedObj::kRollVectorFieldNumber;
+const int RenderedObj::kPitchVectorFieldNumber;
 const int RenderedObj::kPitchFieldNumber;
 const int RenderedObj::kRollFieldNumber;
 const int RenderedObj::kYawFieldNumber;
@@ -657,6 +663,8 @@ RenderedObj::RenderedObj()
 void RenderedObj::InitAsDefaultInstance() {
   pos_ = const_cast< ::protos::vector*>(&::protos::vector::default_instance());
   vel_ = const_cast< ::protos::vector*>(&::protos::vector::default_instance());
+  roll_vector_ = const_cast< ::protos::vector*>(&::protos::vector::default_instance());
+  pitch_vector_ = const_cast< ::protos::vector*>(&::protos::vector::default_instance());
   yaw_ = const_cast< ::protos::vector*>(&::protos::vector::default_instance());
 }
 
@@ -678,6 +686,8 @@ void RenderedObj::SharedCtor() {
   pos_ = NULL;
   vel_ = NULL;
   accel_ = 0;
+  roll_vector_ = NULL;
+  pitch_vector_ = NULL;
   pitch_ = 0;
   roll_ = 0;
   yaw_ = NULL;
@@ -693,6 +703,8 @@ void RenderedObj::SharedDtor() {
   if (this != default_instance_) {
     delete pos_;
     delete vel_;
+    delete roll_vector_;
+    delete pitch_vector_;
     delete yaw_;
   }
 }
@@ -736,6 +748,12 @@ void RenderedObj::Clear() {
       if (vel_ != NULL) vel_->::protos::vector::Clear();
     }
     accel_ = 0;
+    if (has_roll_vector()) {
+      if (roll_vector_ != NULL) roll_vector_->::protos::vector::Clear();
+    }
+    if (has_pitch_vector()) {
+      if (pitch_vector_ != NULL) pitch_vector_->::protos::vector::Clear();
+    }
     pitch_ = 0;
     roll_ = 0;
     if (has_yaw()) {
@@ -904,12 +922,40 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(93)) goto parse_pitch;
+        if (input->ExpectTag(90)) goto parse_roll_vector;
         break;
       }
 
-      // required float pitch = 11;
+      // required .protos.vector roll_vector = 11;
       case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_roll_vector:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_roll_vector()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(98)) goto parse_pitch_vector;
+        break;
+      }
+
+      // required .protos.vector pitch_vector = 12;
+      case 12: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_pitch_vector:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_pitch_vector()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(109)) goto parse_pitch;
+        break;
+      }
+
+      // required float pitch = 13;
+      case 13: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_pitch:
@@ -920,12 +966,12 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(101)) goto parse_roll;
+        if (input->ExpectTag(117)) goto parse_roll;
         break;
       }
 
-      // required float roll = 12;
-      case 12: {
+      // required float roll = 14;
+      case 14: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
          parse_roll:
@@ -936,12 +982,12 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(106)) goto parse_yaw;
+        if (input->ExpectTag(122)) goto parse_yaw;
         break;
       }
 
-      // required .protos.vector yaw = 13;
-      case 13: {
+      // required .protos.vector yaw = 15;
+      case 15: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_yaw:
@@ -950,12 +996,12 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(112)) goto parse_weapon_index;
+        if (input->ExpectTag(128)) goto parse_weapon_index;
         break;
       }
 
-      // optional uint32 weapon_index = 14;
-      case 14: {
+      // optional uint32 weapon_index = 16;
+      case 16: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_weapon_index:
@@ -1040,25 +1086,37 @@ void RenderedObj::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(10, this->accel(), output);
   }
 
-  // required float pitch = 11;
+  // required .protos.vector roll_vector = 11;
+  if (has_roll_vector()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      11, this->roll_vector(), output);
+  }
+
+  // required .protos.vector pitch_vector = 12;
+  if (has_pitch_vector()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      12, this->pitch_vector(), output);
+  }
+
+  // required float pitch = 13;
   if (has_pitch()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(11, this->pitch(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(13, this->pitch(), output);
   }
 
-  // required float roll = 12;
+  // required float roll = 14;
   if (has_roll()) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(12, this->roll(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(14, this->roll(), output);
   }
 
-  // required .protos.vector yaw = 13;
+  // required .protos.vector yaw = 15;
   if (has_yaw()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      13, this->yaw(), output);
+      15, this->yaw(), output);
   }
 
-  // optional uint32 weapon_index = 14;
+  // optional uint32 weapon_index = 16;
   if (has_weapon_index()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(14, this->weapon_index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(16, this->weapon_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1123,26 +1181,40 @@ void RenderedObj::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(10, this->accel(), target);
   }
 
-  // required float pitch = 11;
+  // required .protos.vector roll_vector = 11;
+  if (has_roll_vector()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        11, this->roll_vector(), target);
+  }
+
+  // required .protos.vector pitch_vector = 12;
+  if (has_pitch_vector()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        12, this->pitch_vector(), target);
+  }
+
+  // required float pitch = 13;
   if (has_pitch()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(11, this->pitch(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(13, this->pitch(), target);
   }
 
-  // required float roll = 12;
+  // required float roll = 14;
   if (has_roll()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(12, this->roll(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(14, this->roll(), target);
   }
 
-  // required .protos.vector yaw = 13;
+  // required .protos.vector yaw = 15;
   if (has_yaw()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        13, this->yaw(), target);
+        15, this->yaw(), target);
   }
 
-  // optional uint32 weapon_index = 14;
+  // optional uint32 weapon_index = 16;
   if (has_weapon_index()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(14, this->weapon_index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(16, this->weapon_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1220,26 +1292,40 @@ int RenderedObj::ByteSize() const {
       total_size += 1 + 4;
     }
 
-    // required float pitch = 11;
+    // required .protos.vector roll_vector = 11;
+    if (has_roll_vector()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->roll_vector());
+    }
+
+    // required .protos.vector pitch_vector = 12;
+    if (has_pitch_vector()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->pitch_vector());
+    }
+
+    // required float pitch = 13;
     if (has_pitch()) {
       total_size += 1 + 4;
     }
 
-    // required float roll = 12;
+    // required float roll = 14;
     if (has_roll()) {
       total_size += 1 + 4;
     }
 
-    // required .protos.vector yaw = 13;
+    // required .protos.vector yaw = 15;
     if (has_yaw()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->yaw());
     }
 
-    // optional uint32 weapon_index = 14;
+    // optional uint32 weapon_index = 16;
     if (has_weapon_index()) {
-      total_size += 1 +
+      total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
           this->weapon_index());
     }
@@ -1303,6 +1389,12 @@ void RenderedObj::MergeFrom(const RenderedObj& from) {
     if (from.has_accel()) {
       set_accel(from.accel());
     }
+    if (from.has_roll_vector()) {
+      mutable_roll_vector()->::protos::vector::MergeFrom(from.roll_vector());
+    }
+    if (from.has_pitch_vector()) {
+      mutable_pitch_vector()->::protos::vector::MergeFrom(from.pitch_vector());
+    }
     if (from.has_pitch()) {
       set_pitch(from.pitch());
     }
@@ -1332,13 +1424,19 @@ void RenderedObj::CopyFrom(const RenderedObj& from) {
 }
 
 bool RenderedObj::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00001fff) != 0x00001fff) return false;
+  if ((_has_bits_[0] & 0x00007fff) != 0x00007fff) return false;
 
   if (has_pos()) {
     if (!this->pos().IsInitialized()) return false;
   }
   if (has_vel()) {
     if (!this->vel().IsInitialized()) return false;
+  }
+  if (has_roll_vector()) {
+    if (!this->roll_vector().IsInitialized()) return false;
+  }
+  if (has_pitch_vector()) {
+    if (!this->pitch_vector().IsInitialized()) return false;
   }
   if (has_yaw()) {
     if (!this->yaw().IsInitialized()) return false;
@@ -1358,6 +1456,8 @@ void RenderedObj::Swap(RenderedObj* other) {
     std::swap(pos_, other->pos_);
     std::swap(vel_, other->vel_);
     std::swap(accel_, other->accel_);
+    std::swap(roll_vector_, other->roll_vector_);
+    std::swap(pitch_vector_, other->pitch_vector_);
     std::swap(pitch_, other->pitch_);
     std::swap(roll_, other->roll_);
     std::swap(yaw_, other->yaw_);
