@@ -92,7 +92,7 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	vector<float> vel = p->get_v();
 	vector<float> pos = p->get_d();
 	// Get orientiation of source acceleration
-	vector<float> acc1 = {0,1,0}; //p->get_r();
+	vector<float> acc1 = p->get_r();
 	// Initialize output vectors
 	vector<float> pos_next = {0,0,0};
 	vector<float> vel_next = {0,0,0};
