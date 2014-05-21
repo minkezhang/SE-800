@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 using namespace std;
 
@@ -63,7 +64,7 @@ void Projectile::set_v(vector<float> v) {
 		this->v = v;
 	} else {
 		curr_mag = 1 / sqrt(curr_mag);
-		vector<float> vmod = {0,0,0}
+		vector<float> vmod = {0,0,0};
 		vmod.at(0) = curr_mag * vx * max_v;
 		vmod.at(1) = curr_mag * vy * max_v;
 		vmod.at(2) = curr_mag * vz * max_v;
