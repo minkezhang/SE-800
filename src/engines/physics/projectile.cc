@@ -12,13 +12,13 @@ Projectile::Projectile(
 	float size,
 	vector<float> p, vector<float> r,
 	float p_dot, float r_dot,
-	float preset_a, float preset_p_dot, float preset_r_dot
+	float preset_a, float preset_p_dot, float preset_r_dot, int lifetime
 	) : id(id), is_clippable(is_clippable), mass(mass), max_tolerance(max_tolerance),
 		d(d), v(v),
 		size(size),
 		p(p), r(r),
 		p_dot(p_dot), r_dot(r_dot),
-		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500) {
+		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500), lifetime(lifetime) {
 	y = { 0, 0, 1 };
 }
 
@@ -49,6 +49,7 @@ float Projectile::get_preset_a() { return(this->preset_a); }
 float Projectile::get_preset_p_dot() { return(this->preset_p_dot); }
 float Projectile::get_preset_r_dot() { return(this->preset_r_dot); }
 float Projectile::get_preset_max_vel() { return(this->preset_max_vel); }
+int Projectile::get_lifetime() { return(this->lifetime); }
 
 // SET FUNCTIONS
 
@@ -80,6 +81,15 @@ void Projectile::set_p_dot(float p_dot) { this->p_dot = p_dot; }
 void Projectile::set_r_dot(float r_dot) { this->r_dot = r_dot; }
 
 void Projectile::set_is_processed() { this->is_processed = 1; }
+
+void Projectile::set_lifetime() {
+	if(this->lifetime > 0) {
+		this->lifetime--;
+	}
+	if(this->lifetime == 0) {
+		this->is_destroyed = 1;
+	}
+}
 
 void Projectile::damage(float tolerance) {
 	this->cur_tolerance -= tolerance;

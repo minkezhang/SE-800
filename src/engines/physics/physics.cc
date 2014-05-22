@@ -193,6 +193,7 @@ void PhysicsEngine::cycle() {
 			this->environment->del_projectile(p);
 		} else {
 			this->verlet_step(.0033, p);
+			p->set_lifetime();
 		}
 	}
 	for(std::vector<Projectile *>::iterator i = clippable.begin(); i != clippable.end(); ++i) {
@@ -205,6 +206,7 @@ void PhysicsEngine::cycle() {
 			this->verlet_step(.0033, p);
 			// only clippable objects need to be checked for collisions against other objects
 			this->collision_check(p);
+			p->set_lifetime();
 		}
 	}
 }
