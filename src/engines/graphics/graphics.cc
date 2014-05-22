@@ -71,7 +71,7 @@ osg::Node* GraphicsEngine::create_world_cube() {
 	osg::Group* world_cube_root = new osg::Group();
 
 	// Define height, width, and depth values of world cube.
-	osg::Box* unit_cube = new osg::Box(osg::Vec3(0, 0, 0), 110.0f);
+	osg::Box* unit_cube = new osg::Box(osg::Vec3(0, 0, 0), 30000.0f);
 	osg::ShapeDrawable* unit_cube_drawable = new osg::ShapeDrawable(unit_cube);
 	osg::Geode* basic_shapes_geode = new osg::Geode();
 
