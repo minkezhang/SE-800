@@ -16,6 +16,7 @@
 #include "networks/client.h"
 #include "engines/scheduling/scheduling.h"
 #include "engines/scheduling/calendar.h"
+#include "engines/cleanup/cleanup.h"
 #include "classes/asteroid.h"
 
 void handler(int sig) {
@@ -61,6 +62,9 @@ int main(int argc, char **argv) {
 	AIEngine *a;
 	Calendar *cal_a;
 
+	CleanupEngine *c;
+	Calendar *cal_c;
+
 	GraphicsEngine *g;
 	Calendar *cal_g;
 
@@ -81,6 +85,11 @@ int main(int argc, char **argv) {
 
 		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
 		world.get_physics_engine()->set_environment(e);
+
+		c = new CleanupEngine(e);
+		cal_c = new Calendar(30, c);
+		scheduler.add_calendar(cal_c);
+
 		for(int i = 0; i < 0; i++) {
 			world.get_physics_engine()->get_environment()->add_projectile(world.join(NULL));
 		}
