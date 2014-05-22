@@ -60,15 +60,14 @@ void Projectile::set_v(vector<float> v) {
 	float vx = v.at(0);
 	float vy = v.at(1);
 	float vz = v.at(2);
-	float curr_mag = vx * vx + vy * vy + vz * vz;
-	if (curr_mag <= (max_v*max_v)) {
+	float curr_mag = sqrt(vx * vx + vy * vy + vz * vz);
+	if (curr_mag < max_v*) {
 		this->v = v;
 	} else {
-		curr_mag = 1 / sqrt(curr_mag);
 		vector<float> vmod = {0,0,0};
-		vmod.at(0) = curr_mag * vx * max_v;
-		vmod.at(1) = curr_mag * vy * max_v;
-		vmod.at(2) = curr_mag * vz * max_v;
+		vmod.at(0) = vx * max_v / curr_mag;
+		vmod.at(1) = vy * max_v / curr_mag;
+		vmod.at(2) = vz * max_v / curr_mag;
 		this->v = vmod;
 	}
 }
