@@ -108,7 +108,8 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RenderedObj));
   Event_descriptor_ = file->message_type(2);
-  static const int Event_offsets_[1] = {
+  static const int Event_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Event, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Event, event_type_),
   };
   Event_reflection_ =
@@ -307,18 +308,18 @@ void protobuf_AddDesc_packetprotos_2eproto() {
     "(\002\022#\n\013roll_vector\030\013 \002(\0132\016.protos.vector\022"
     "$\n\014pitch_vector\030\014 \002(\0132\016.protos.vector\022\r\n"
     "\005pitch\030\r \002(\002\022\014\n\004roll\030\016 \002(\002\022\033\n\003yaw\030\017 \002(\0132"
-    "\016.protos.vector\022\024\n\014weapon_index\030\020 \001(\r\"\033\n"
-    "\005Event\022\022\n\nevent_type\030\001 \002(\r\",\n\014ControlInp"
-    "ut\022\016\n\006action\030\001 \002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n\rGene"
-    "ralPacket\022\022\n\npacketType\030\001 \002(\r\022\016\n\006packet\030"
-    "\002 \001(\014\022\020\n\010packetId\030\003 \001(\t\"3\n\016ShipInitPacke"
-    "t\022!\n\004ship\030\001 \002(\0132\023.protos.RenderedObj\"U\n\023"
-    "ObjsAndEventsPacket\022 \n\003obj\030\001 \003(\0132\023.proto"
-    "s.RenderedObj\022\034\n\005event\030\002 \003(\0132\r.protos.Ev"
-    "ent\"%\n\026ObjsAndEventsReqPacket\022\013\n\003req\030\001 \002"
-    "(\r\"\035\n\016EventAckPacket\022\013\n\003ack\030\001 \002(\r\";\n\022Con"
-    "trolInputPacket\022%\n\007control\030\001 \002(\0132\024.proto"
-    "s.ControlInput", 854);
+    "\016.protos.vector\022\024\n\014weapon_index\030\020 \001(\r\"\'\n"
+    "\005Event\022\n\n\002id\030\001 \002(\r\022\022\n\nevent_type\030\002 \002(\r\","
+    "\n\014ControlInput\022\016\n\006action\030\001 \002(\r\022\014\n\004tilt\030\002"
+    " \001(\002\"E\n\rGeneralPacket\022\022\n\npacketType\030\001 \002("
+    "\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010packetId\030\003 \001(\t\"3\n\016S"
+    "hipInitPacket\022!\n\004ship\030\001 \002(\0132\023.protos.Ren"
+    "deredObj\"U\n\023ObjsAndEventsPacket\022 \n\003obj\030\001"
+    " \003(\0132\023.protos.RenderedObj\022\034\n\005event\030\002 \003(\013"
+    "2\r.protos.Event\"%\n\026ObjsAndEventsReqPacke"
+    "t\022\013\n\003req\030\001 \002(\r\"\035\n\016EventAckPacket\022\013\n\003ack\030"
+    "\001 \002(\r\";\n\022ControlInputPacket\022%\n\007control\030\001"
+    " \002(\0132\024.protos.ControlInput", 866);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -1480,6 +1481,7 @@ void RenderedObj::Swap(RenderedObj* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int Event::kIdFieldNumber;
 const int Event::kEventTypeFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1499,6 +1501,7 @@ Event::Event(const Event& from)
 
 void Event::SharedCtor() {
   _cached_size_ = 0;
+  id_ = 0u;
   event_type_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1535,6 +1538,7 @@ Event* Event::New() const {
 
 void Event::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    id_ = 0u;
     event_type_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1547,10 +1551,26 @@ bool Event::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required uint32 event_type = 1;
+      // required uint32 id = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
+                 input, &id_)));
+          set_has_id();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_event_type;
+        break;
+      }
+
+      // required uint32 event_type = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_event_type:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &event_type_)));
@@ -1580,9 +1600,14 @@ bool Event::MergePartialFromCodedStream(
 
 void Event::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required uint32 event_type = 1;
+  // required uint32 id = 1;
+  if (has_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->id(), output);
+  }
+
+  // required uint32 event_type = 2;
   if (has_event_type()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->event_type(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(2, this->event_type(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1593,9 +1618,14 @@ void Event::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* Event::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required uint32 event_type = 1;
+  // required uint32 id = 1;
+  if (has_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->id(), target);
+  }
+
+  // required uint32 event_type = 2;
   if (has_event_type()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->event_type(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(2, this->event_type(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1609,7 +1639,14 @@ int Event::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required uint32 event_type = 1;
+    // required uint32 id = 1;
+    if (has_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::UInt32Size(
+          this->id());
+    }
+
+    // required uint32 event_type = 2;
     if (has_event_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
@@ -1643,6 +1680,9 @@ void Event::MergeFrom(const ::google::protobuf::Message& from) {
 void Event::MergeFrom(const Event& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_id()) {
+      set_id(from.id());
+    }
     if (from.has_event_type()) {
       set_event_type(from.event_type());
     }
@@ -1663,13 +1703,14 @@ void Event::CopyFrom(const Event& from) {
 }
 
 bool Event::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void Event::Swap(Event* other) {
   if (other != this) {
+    std::swap(id_, other->id_);
     std::swap(event_type_, other->event_type_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

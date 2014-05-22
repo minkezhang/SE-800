@@ -444,24 +444,34 @@ class Event : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required uint32 event_type = 1;
+  // required uint32 id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::uint32 id() const;
+  inline void set_id(::google::protobuf::uint32 value);
+
+  // required uint32 event_type = 2;
   inline bool has_event_type() const;
   inline void clear_event_type();
-  static const int kEventTypeFieldNumber = 1;
+  static const int kEventTypeFieldNumber = 2;
   inline ::google::protobuf::uint32 event_type() const;
   inline void set_event_type(::google::protobuf::uint32 value);
 
   // @@protoc_insertion_point(class_scope:protos.Event)
  private:
+  inline void set_has_id();
+  inline void clear_has_id();
   inline void set_has_event_type();
   inline void clear_has_event_type();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::google::protobuf::uint32 id_;
   ::google::protobuf::uint32 event_type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_packetprotos_2eproto();
   friend void protobuf_AssignDesc_packetprotos_2eproto();
@@ -1617,15 +1627,37 @@ inline void RenderedObj::set_weapon_index(::google::protobuf::uint32 value) {
 
 // Event
 
-// required uint32 event_type = 1;
-inline bool Event::has_event_type() const {
+// required uint32 id = 1;
+inline bool Event::has_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Event::set_has_event_type() {
+inline void Event::set_has_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Event::clear_has_event_type() {
+inline void Event::clear_has_id() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void Event::clear_id() {
+  id_ = 0u;
+  clear_has_id();
+}
+inline ::google::protobuf::uint32 Event::id() const {
+  return id_;
+}
+inline void Event::set_id(::google::protobuf::uint32 value) {
+  set_has_id();
+  id_ = value;
+}
+
+// required uint32 event_type = 2;
+inline bool Event::has_event_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Event::set_has_event_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Event::clear_has_event_type() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void Event::clear_event_type() {
   event_type_ = 0u;

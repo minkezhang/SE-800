@@ -31,7 +31,8 @@ message RenderedObj {
 }
 
 message Event {
-	required uint32 event_type = 1;
+	required uint32 id = 1;
+	required uint32 event_type = 2;
 }
 
 message ControlInput {
