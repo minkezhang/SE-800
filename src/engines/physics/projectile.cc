@@ -56,6 +56,8 @@ int Projectile::get_lifetime() { return(this->lifetime); }
 void Projectile::set_d(vector<float> d) { this->d = d; }
 void Projectile::set_a(float a) { this->a = a; }
 void Projectile::set_v(vector<float> v) { 
+	this->v = v;
+	/*
 	float max_v = this->preset_max_vel;
 	float vx = v.at(0);
 	float vy = v.at(1);
@@ -70,6 +72,7 @@ void Projectile::set_v(vector<float> v) {
 		vmod.at(2) = vz * max_v / curr_mag;
 		this->v = vmod;
 	}
+	*/
 }
 
 
