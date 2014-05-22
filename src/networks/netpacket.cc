@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../engines/physics/projectile.h"
+#include "../classes/event.h"
 #include "../classes/ship.h"
 #include "../classes/control.h"
 #include "netpacket.h"
@@ -84,15 +85,22 @@ void PacketUtils::make_packet(
 	} else if (type == PacketType::OBJS_AND_EVENTS) {
 		// Read arguments
 		std::vector<Projectile*> *objs = (std::vector<Projectile*> *) payload;
-		// TODO(DEFINE EVENT CLASS!!
-		//list<Event> *events;
-		//if (extra_payload != NULL) {
-		// events = (list<Event> *) extra_payload;
-		//}
-	 
-		// Fill specific proto packet
+		std::vector<Event*> *events = NULL;
 		protos::ObjsAndEventsPacket objs_and_events_packet;
-	 
+
+		if (extra_payload != NULL) {
+			// Add events to packet
+			events = (std::vector<Event*> *) extra_payload;
+			for (std::vector<Event*>::iterator i = events->begin(); i != events->end(); ++i) {
+				protos::Event* event_packet = objs_and_events_packet.add_event();
+				event_packet->set_id((*i)->get_id());
+				event_packet->set_event_type((*i)->get_event_type());
+			}
+		} else {
+			std::cout << "Not sending any events." << std::endl;
+		}
+
+		// Add objects to packet
 		for (std::vector<Projectile*>::iterator i = objs->begin(); i != objs->end(); ++i) {
 			protos::RenderedObj* obj_packet = objs_and_events_packet.add_obj();
 			int type = (*i)->get_type();
@@ -103,11 +111,6 @@ void PacketUtils::make_packet(
 			// obj_packet->set_weapon_index(ship->get_weapon_index());
 			//}
 		}
-	 
-	 //for (list<Event>::iterator i = events->begin(); i != events->end(); ++i) {
-	 // protos::Event* event_packet = objs_and_events_packet.add_event();
-	 // event_packet->set_event_type(*i.type);
-	 //}
 	 
 	 // Serialize specific proto packet
 		if (!objs_and_events_packet.SerializeToString(&serialized_packet)) {
