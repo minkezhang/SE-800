@@ -9,10 +9,28 @@
 #include "../networks/packetprotos.pb.h"
 #include "../engines/physics/physics.h"
 
+float ClientControl::UIEventHandler::get_prev_x() {
+	return this->prev_x;
+}
+
+float ClientControl::UIEventHandler::get_prev_y() {
+	return this->prev_y;
+}
+
+void ClientControl::UIEventHandler::set_prev_x(float x) {
+	this->prev_x = x;
+}
+
+void ClientControl::UIEventHandler::set_prev_y(float y) {
+	this->prev_y = y;
+}
+
 ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils) {
 	this->net_utils = net_utils;
 	this->is_pressing_accel = false;
 	this->is_pressing_brake = false;
+	this->prev_x = 0;
+	this->prev_y = 0;
 }
 
 bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter&) {
@@ -84,18 +102,44 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 			{
 				int action = Action::ROLL_TILT;
 				NetPacket packet;
+				float prev_x = get_prev_x();
 				float mouse_x = ea.getXnormalized();
-				PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_x));
-				if (net_utils->send_to_server(&packet))
-					std::cout << "Sent roll tilt control packet." << std::endl;
+				float bin_x = 0;
+
+				if (-0.5 <= mouse_x <= 0.5) {
+					bin_x = 0;
+				} else if (mouse_x > 0.5) {
+					bin_x = ((mouse_x - 0.5) * 2 * 100) % 10) * 0.1;
+				} else {
+					bin_x = ((mouse_x + 0.5) * 2 * 100) % 10) * 0.1;
+				}
+
+				if (bin_x != prev_x) {
+					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_x));
+					if (net_utils->send_to_server(&packet))
+						std::cout << "Sent roll tilt control packet." << std::endl;
+				}
 			}
 			{
 				int action = Action::PITCH_TILT;
 				NetPacket packet;
+				float prev_y = get_prev_y();
 				float mouse_y = ea.getYnormalized();
-				PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_y));
-				if (net_utils->send_to_server(&packet))
-					std::cout << "Sent pitch tilt control packet." << std::endl;
+				float bin_y = 0;
+
+				if (-0.5 <= mouse_y <= 0.5) {
+					bin_y = 0;
+				} else if (mouse_y > 0.5) {
+					bin_y = ((mouse_y - 0.5) * 2 * 100) % 10) * 0.1;
+				} else {
+					bin_y = ((mouse_y + 0.5) * 2 * 100) % 10) * 0.1;
+				}
+
+				if (bix_y != prev_y) {
+					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_y));
+					if (net_utils->send_to_server(&packet))
+						std::cout << "Sent pitch tilt control packet." << std::endl;
+				}
 			}
 				return false;
 				break;
@@ -126,18 +170,18 @@ void ServerControl::update_physics(int obj_id, int action, void *action_arg, Phy
 		p->toggle_r_dot(obj_id, *tilt);
 	}
 /*
-	} else if (action == Roll::R_DOT) {
-		p->toggle_rdot(obj_id, 1.0)
-	//TODO: Add rotation updates
-	if (-0.5 < y_posn < 0.5) {
-		pitch_val = 0;
-	} else if {
-		1.0 -> 1.0
-		0.5 -> 0.0
-		0.6 -> 0.2
-	  0.7 -> 0.4
- 		-1.0 -> -1.0
-		-0.5 -> 0.0
-		-0.6 -> -0.2
+-1.0 : -1.0 -> -.95
+-0.9 : -0.95 -> -0.90
+-0.8 : -0.90 -> -0.85
+-0.7 : -0.85 -> -0.80
+-0.6 : -0.80 -> -0.75
+-0.5 : -0.75 -> -0.70
+-0.4 : -0.70 ->
+-0.3 :
+-0.2 :
+-0.1 :
+0 : -0.5 -> 0.5
+0.1
+0.2
 */
 }
