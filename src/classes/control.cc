@@ -106,13 +106,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 				float mouse_x = ea.getXnormalized();
 				float bin_x = 0;
 
-				if (-0.5 <= mouse_x <= 0.5) {
-					bin_x = 0;
-				} else if (mouse_x > 0.5) {
-					bin_x = ((mouse_x - 0.5) * 2 * 100) % 10) * 0.1;
-				} else {
-					bin_x = ((mouse_x + 0.5) * 2 * 100) % 10) * 0.1;
-				}
+				bin_x = ((int) (mouse_x * 100) % 10) * 0.1;
 
 				if (bin_x != prev_x) {
 					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_x));
@@ -127,15 +121,9 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 				float mouse_y = ea.getYnormalized();
 				float bin_y = 0;
 
-				if (-0.5 <= mouse_y <= 0.5) {
-					bin_y = 0;
-				} else if (mouse_y > 0.5) {
-					bin_y = ((mouse_y - 0.5) * 2 * 100) % 10) * 0.1;
-				} else {
-					bin_y = ((mouse_y + 0.5) * 2 * 100) % 10) * 0.1;
-				}
+					bin_y = ((int) (mouse_y * 100) % 10) * 0.1;
 
-				if (bix_y != prev_y) {
+				if (bin_y != prev_y) {
 					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_y));
 					if (net_utils->send_to_server(&packet))
 						std::cout << "Sent pitch tilt control packet." << std::endl;
