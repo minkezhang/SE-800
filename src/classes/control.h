@@ -28,10 +28,16 @@ class ClientControl {
 				UIEventHandler(ClientNetUtils *net_utils);
 				virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter&);
 				virtual void accept(osgGA::GUIEventHandlerVisitor& v);
+				float get_prev_x();
+				float get_prev_y();
+				void set_prev_x(float x);
+				void set_prev_y(float y);
 			private:
 				ClientNetUtils *net_utils;
 				bool is_pressing_accel;
 				bool is_pressing_brake;
+				float prev_x;
+				float prev_y;
 		};
 };
 
