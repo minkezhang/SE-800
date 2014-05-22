@@ -162,6 +162,7 @@ void GraphicsEngine::update_camera() {
 	osg::Vec3 y_vec(yaw_vector.x(), yaw_vector.y(), yaw_vector.z());
 
 	// Set prev roll, pitch, and yaw if first cycle
+/*
 	if (this->prev_roll.x() == -99) {
 		this->prev_roll = r_vec;
 	} else {
@@ -195,6 +196,12 @@ void GraphicsEngine::update_camera() {
 		osg::DegreesToRadians(r_angle), prev_roll,	// roll
 		osg::DegreesToRadians(p_angle), prev_pitch,	// pitch
 		osg::DegreesToRadians(y_angle), prev_yaw);	// heading
+*/
+
+	camera_rotation.makeRotate(
+		osg::DegreesToRadians(0.0), osg::Vec3(0, 1, 0),	// roll
+		osg::DegreesToRadians(0.0), osg::Vec3(1, 0, 0),	// pitch
+		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
 
 	prev_roll = r_vec;
 	prev_pitch = p_vec;
@@ -204,8 +211,12 @@ void GraphicsEngine::update_camera() {
 	std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
 	std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
 
-
+/*
 	camera_trans.makeTranslate(this->main_ship->obj.pos().x() - r_vec.x(), this->main_ship->obj.pos().y() - (40*r_vec.y()), this->main_ship->obj.pos().z() + 8 - (10*r_vec.z()));
+*/
+
+
+	camera_trans.makeTranslate(this->main_ship->obj.pos().x(), this->main_ship->obj.pos().y() - 39, this->main_ship->obj.pos().z() + 8);
 
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
