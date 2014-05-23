@@ -18,6 +18,8 @@
 #include <osg/Vec3>
 #include <osg/ShapeDrawable> 
 #include <osgDB/ReadFile>
+#include <osgParticle/ExplosionEffect>
+#include <osgParticle/ExplosionDebrisEffect>
 #include <osgViewer/ViewerBase>
 #include <ctime>
 #include <math.h>
@@ -285,7 +287,7 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	rendered_obj *ren_obj = new rendered_obj;
 	ren_obj->obj = obj;
 	ren_obj->update_pos = false;
-  ren_obj->should_render = true;
+	ren_obj->should_render = true;
 	ren_obj->trans_matrix = obj_transform;
 	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
 
@@ -301,7 +303,7 @@ void GraphicsEngine::remove_object(rendered_obj *ren_obj) {
 void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj) {
 	ren_obj->obj = update_obj;
 	ren_obj->update_pos = true;
-  ren_obj->should_render = true;
+	ren_obj->should_render = true;
 
 	protos::vector pos_vector = update_obj.pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
@@ -353,19 +355,31 @@ void GraphicsEngine::update_rendered_objects() {
 		protos::Event event = packet->event(i);
 		if (event.event_type() == EventType::DESTROY) {
 			std::cout << "RECEIVED REQUEST TO DESTROY OBJECT OF ID " << event.id() << std::endl;
+			// If event pertains to object which is not being rendered, ignore.
+			if (cur_objs.count(event.id()) == 0)
+				continue;
+			osg::Vec3 explosion_pos = osg::Vec3(
+				cur_objs.at(event.id())->obj.pos().x(),
+				cur_objs.at(event.id())->obj.pos().y(),
+				cur_objs.at(event.id())->obj.pos().z());
+			float explosion_size = cur_objs.at(event.id())->obj.size();
+
+			osgParticle::ExplosionEffect* explosion = new osgParticle::ExplosionEffect(explosion_pos, explosion_size);
+			osgParticle::ExplosionDebrisEffect* explosion_debri = new osgParticle::ExplosionDebrisEffect(explosion_pos, explosion_size);
+
+			root->addChild(explosion);
+			root->addChild(explosion_debri);
 		}
 	}
 
 	// Do not render any object which was not sent in update packet.
-	if (packet->obj_size() > 0) {
-		for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
-			if ((*i).second->should_render == false) {
-				rendered_obj* not_rendered_obj = (*i).second;
-				i = cur_objs.erase(i);
-				remove_object(not_rendered_obj);
-			} else {
-				++i;
-			}
+	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
+		if ((*i).second->should_render == false) {
+			rendered_obj* not_rendered_obj = (*i).second;
+			i = cur_objs.erase(i);
+			remove_object(not_rendered_obj);
+		} else {
+			++i;
 		}
 	}
 

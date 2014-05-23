@@ -223,8 +223,7 @@ void * Server::serve_client(void *args) {
 					std::vector<Projectile*> objs;
 					objs = world->get_physics_engine()->get_environment()->get_neighbors(p->get_ship());
 
-					// TODO: Add events to objs and events packet.
-					std::vector<Event *> events = cleanup->send_event_vec();
+					std::vector<Event *> events = cleanup->send_event_vec(client_socketfd, num_clients);
 					PacketUtils::make_packet(&objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &objs, (void *) &events);
 					serv_utils.send_to_client(&objs_and_events_packet, client_socketfd);
 				} else {
