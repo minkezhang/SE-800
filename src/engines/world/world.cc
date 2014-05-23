@@ -65,7 +65,9 @@ void WorldEngine::shutdown() {
  * 3) return ship object
  */
 Ship *WorldEngine::join(Pilot *p) {
-	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
+//	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
+	std::vector<float> pos;
+	pos = { 5.0, (float) obj_count * 19, 6.0 };
 
 	Ship *s = new ShipCarrier(this->obj_count, pos);
 	std::cout << "SPAWNED NEW SHIP OF ID " << this->obj_count << std::endl;

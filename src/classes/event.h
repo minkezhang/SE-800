@@ -1,18 +1,20 @@
 #ifndef _EVENT_H
 #define _EVENT_H
 
+#include "../engines/physics/projectile.h"
+
 enum EventType {
 	DESTROY
 };
 
 class Event {
 	public:
-		Event(int id, int event_type);
+		Event(Projectile *obj, int event_type);
 		int get_id();
 		int get_event_type();
+    Projectile* obj;
 
 	private:
-		int id;		// id of the object which event affects
 		int event_type;
 };
 

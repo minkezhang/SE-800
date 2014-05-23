@@ -1,9 +1,11 @@
+#include "../engines/cleanup/cleanup.h"
 #include "netpacket.h"
 #include "packetprotos.pb.h"
 #include "server.h"
 #include "../classes/ship.h"
 #include "../classes/control.h"
 #include "../classes/player.h"
+#include "../classes/event.h"
 #include "../engines/world/world.h"
 
 #include <iostream>
@@ -23,9 +25,10 @@
 int num_clients = 0;
 std::mutex num_clients_lock;
 
-Server::Server(WorldEngine *world) {
+Server::Server(WorldEngine *world, CleanupEngine *cleanup) {
 	this->server_socketfd = -1;
 	this->world = world;
+	this->cleanup = cleanup;
 }
 
 Server::~Server() {
@@ -112,6 +115,7 @@ void *Server::accept_clients(void *args) {
 		args->server_socketfd = this->server_socketfd;
 		args->client_socketfd = *clientSocket;
 		args->world = this->world;
+		args->cleanup = this->cleanup;
 		if (pthread_create(&worker_thread, NULL, serve_client, args) != 0) {
 			std::cout << "Could not create a worker thread." << std::endl;
 			num_clients_lock.lock();
@@ -132,10 +136,11 @@ void * Server::serve_client(void *args) {
 	num_clients++;
 	num_clients_lock.unlock();
 
-	Server serv_utils(NULL);
+	Server serv_utils(NULL, NULL);
 	serve_client_args *sockets = (serve_client_args *) args;
 	int client_socketfd = sockets->client_socketfd;
 	WorldEngine *world = sockets->world;
+	CleanupEngine *cleanup = sockets->cleanup;
 
 	// Send a ship init packet to client.
 	Player *p = new Player("Name", client_socketfd);
@@ -219,7 +224,8 @@ void * Server::serve_client(void *args) {
 					objs = world->get_physics_engine()->get_environment()->get_neighbors(p->get_ship());
 
 					// TODO: Add events to objs and events packet.
-					PacketUtils::make_packet(&objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &objs, NULL);
+					std::vector<Event *> events = cleanup->send_event_vec();
+					PacketUtils::make_packet(&objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &objs, (void *) &events);
 					serv_utils.send_to_client(&objs_and_events_packet, client_socketfd);
 				} else {
 					std::cout << "Received Invalid Packet Type" << std::endl;

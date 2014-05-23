@@ -2,6 +2,7 @@
 #include "../physics/projectile.h"
 #include "../common/engine.h"
 #include "../../classes/control.h"
+#include "../../classes/event.h"
 #include "../../networks/client.h"
 
 #include <iostream>
@@ -208,8 +209,8 @@ void GraphicsEngine::update_camera() {
 	prev_yaw = y_vec;	
 
 	// Z axis refers to Y axis, Y axis refers to Z axis
-	std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
-	std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
+	//std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
+	//std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
 
 /*
 	camera_trans.makeTranslate(this->main_ship->obj.pos().x() - r_vec.x(), this->main_ship->obj.pos().y() - (40*r_vec.y()), this->main_ship->obj.pos().z() + 8 - (10*r_vec.z()));
@@ -347,14 +348,24 @@ void GraphicsEngine::update_rendered_objects() {
 		}
 	}
 
+	// Process destroy events.
+	for (int i = 0; i < packet->event_size(); ++i) {
+		protos::Event event = packet->event(i);
+		if (event.event_type() == EventType::DESTROY) {
+			std::cout << "RECEIVED REQUEST TO DESTROY OBJECT OF ID " << event.id() << std::endl;
+		}
+	}
+
 	// Do not render any object which was not sent in update packet.
-	for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
-		if ((*i).second->should_render == false) {
-			rendered_obj* not_rendered_obj = (*i).second;
-			i = cur_objs.erase(i);
-			remove_object(not_rendered_obj);
-		} else {
-			++i;
+	if (packet->obj_size() > 0) {
+		for (std::map<int, rendered_obj *>::iterator i = cur_objs.begin(); i != cur_objs.end(); ) {
+			if ((*i).second->should_render == false) {
+				rendered_obj* not_rendered_obj = (*i).second;
+				i = cur_objs.erase(i);
+				remove_object(not_rendered_obj);
+			} else {
+				++i;
+			}
 		}
 	}
 

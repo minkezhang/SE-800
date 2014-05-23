@@ -7,6 +7,7 @@
 
 #include "netpacket.h"
 #include "../engines/world/world.h"
+#include "../engines/cleanup/cleanup.h"
 
 
 using namespace std;
@@ -16,6 +17,7 @@ struct serve_client_args {
 	int server_socketfd;
 	int client_socketfd;
 	WorldEngine *world;
+	CleanupEngine *cleanup;
 };
 
 class Server {
@@ -30,7 +32,7 @@ class Server {
 		-start world engine & scheduler
 		*/
 
-		Server(WorldEngine *world);
+		Server(WorldEngine *world, CleanupEngine *cleanup);
 		~Server();
 		
 		void start_server(int port);
@@ -43,6 +45,7 @@ class Server {
 		void *accept_clients(void *args);
 	private:
 		WorldEngine *world;
+		CleanupEngine *cleanup;
 		map<int, struct sockaddr_in> client_id_to_sockaddr; 
 		//PhysicsEngine *physics_engine;
 		int server_socketfd;

@@ -69,7 +69,9 @@ int main(int argc, char **argv) {
 	Calendar *cal_g;
 
 	if(!strcmp(argv[1], "server")) {
-		Server *server = new Server(&world);
+		Environment *e = new  Environment({ 3000, 3000, 3000 }, { 10, 10, 10 });
+		c = new CleanupEngine(e);
+		Server *server = new Server(&world, c);
 		network = std::thread(&Server::accept_clients, server, (void *) &port);
 
 		p = new PhysicsEngine();
@@ -83,10 +85,8 @@ int main(int argc, char **argv) {
 		scheduler.add_calendar(cal_p);
 		scheduler.add_calendar(cal_a);
 
-		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
 		world.get_physics_engine()->set_environment(e);
 
-		c = new CleanupEngine(e);
 		cal_c = new Calendar(30, c);
 		scheduler.add_calendar(cal_c);
 
@@ -95,8 +95,16 @@ int main(int argc, char **argv) {
 		}
 
 		// Initializing asteroids (TODO): Move this to world engine ignite?
-		for (int i = 0; i < 20; i++) {
-			std::vector<float> pos { (float) (rand() % (15 - 4) + 4), (float) ((rand() % (20-8)) + 8), (float) ((rand() % (15-10)) + 10) };
+		for (int i = 0; i < 1; i++) {
+			std::vector<float> pos { (float) 10, (float) 40, (float) 17 };
+			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
+			world.obj_count++;
+			world.get_physics_engine()->get_environment()->add_projectile(a);
+		}
+
+
+		for (int i = 0; i < 1; i++) {
+			std::vector<float> pos { (float) 15, (float) 35, (float) 17 };
 			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
 			world.obj_count++;
 			world.get_physics_engine()->get_environment()->add_projectile(a);
@@ -117,7 +125,7 @@ int main(int argc, char **argv) {
 		g->net_utils = c;
 		g->ignite();
 
-		cal_g = new Calendar(60, g);
+		cal_g = new Calendar(300, g);
 		scheduler.add_calendar(cal_g);
 
 		world.ignite(argv[1]);

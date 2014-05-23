@@ -96,8 +96,6 @@ void PacketUtils::make_packet(
 				event_packet->set_id((*i)->get_id());
 				event_packet->set_event_type((*i)->get_event_type());
 			}
-		} else {
-			std::cout << "Not sending any events." << std::endl;
 		}
 
 		// Add objects to packet
