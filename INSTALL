@@ -1,1 +1,46 @@
-HOW TO INSTALL THIS GAME
+HOW TO INSTALL AND RUN THIS GAME
+
+INSTALLATION:
+
+SE-800 has only been successfully tested on Ubuntu 12.04.
+
+Prerequisites:
+cmake, cmake-gui
+Google Protocol Buffers 2.5.0 full source (https://code.google.com/p/protobuf/downloads/list)
+OpenScenGraph Debian Dependencies (http://trac.openscenegraph.org/projects/osg//wiki/Support/PlatformSpecifics/Debian-Dependencies)
+OpenSceneGraph 3.2.1 rc2 full source (http://www.openscenegraph.org/downloads/developer_releases/OpenSceneGraph-3.2.1-rc2.zip)
+
+
+After having configured, built, and installed all of the above prerequisites,
+you are now ready to build SE-800! Once in the SE-800 directory, the following
+commands will build the game:
+
+cd src
+cmake CMakeLists.txt
+make
+
+----------------------------------
+
+RUNNING THE GAME:
+
+SE-800 can either run in server mode or in client mode.
+The server processes the game state, physics engine, and AI engine.
+The client renders game graphics and sends UI input.
+A client cannot be started without a running server.
+
+To run in server mode from the SE-800 directory:
+cd src
+./se800 server PORT
+
+To run in client mode from the SE-800 directory:
+cd src
+./se800 client PORT IP_OF_SERVER
+
+For example, to run a server and client on the same machine, one would
+open two terminals in the SE-800 directory and run the following commands:
+
+cd src
+./se800 server 8000
+
+cd src
+./se800 client 8000 127.0.0.1
