@@ -10,6 +10,8 @@
 #include <osg/Group>
 #include <osg/PositionAttitudeTransform>
 #include <osg/Geode>
+#include <osg/Light>
+#include <osg/LightSource>
 #include <osg/Object>
 #include <osg/Quat>
 #include <osg/StateAttribute>
@@ -38,6 +40,7 @@ void GraphicsEngine::ignite() {
 
 	root = new osg::Group();
 	render_world();
+	set_light_source();
 	ship_init();
 	viewer_init();
 }
@@ -243,6 +246,25 @@ void GraphicsEngine::render() {
 }
 
 void GraphicsEngine::set_light_source() {
+	//TODO: DETERMINE CORRECT LOCATION OF THE LIGHT SOURCE
+	osg::Light *light = new osg::Light();
+	light->setLightNum(0);
+	light->setPosition(osg::Vec4(0.0, 0.0, 19000.0, 1.0));
+	// Set the light color as white
+	light->setDiffuse(osg::Vec4(1.0, 1.0, 1.0, 1.0));
+	light->setSpecular(osg::Vec4(0.5, 0.5, 0.5, 1.0));
+	// Set color of object shadows
+	light->setAmbient(osg::Vec4(0.25, 0.25, 0.25, 1.0));
+
+	osg::LightSource *l_source = new osg::LightSource();
+	l_source->setLight(light);
+	l_source->setLocalStateSetModes(osg::StateAttribute::ON);
+	l_source->setStateSetModes(*(this->root->getOrCreateStateSet()), osg::StateAttribute::ON);
+
+	osg::PositionAttitudeTransform *l_trans = new osg::PositionAttitudeTransform();
+	l_trans->addChild(l_source);
+
+	this->root->addChild(l_trans);
 }
 
 void GraphicsEngine::set_shader() {
@@ -283,6 +305,10 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
 			osg::Vec3d(0, 1, 0))));
 	} else if (obj.type() == ObjType::ASTEROID) {
+			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
 	}
 
 	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;
@@ -313,10 +339,17 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(obj_pos);
 
-	ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
-		osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
-		osg::Vec3d(0, 1, 0))));
+	if (update_obj.type() == ObjType::SHIP) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
+	} else if (update_obj.type() == ObjType::ASTEROID) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
+	}
 }
 
 void GraphicsEngine::reset_rendered_objects() {
