@@ -16,5 +16,5 @@ void Ship::fire(Environment *e) {
 	this->weapons.at(this->weapon_index)->fire(this->get_d(), this->get_r(), this->get_v(), this->get_size(), e);
 }
 
-void Ship::add_weapon(Weapon *weapon) {}
+void Ship::add_weapon(Weapon *weapon) { this->weapons.push_back(weapon); }
 void Ship::sel_weapon(int index) {}
