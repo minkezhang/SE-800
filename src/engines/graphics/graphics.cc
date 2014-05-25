@@ -34,6 +34,7 @@ void GraphicsEngine::ignite() {
 
 	this->ship_mesh = "../Assets/ship.obj";
 	this->asteroid_mesh = "../Assets/asteroid.obj";
+	this->bullet_mesh = "../Assets/bullet.obj";
 
 	root = new osg::Group();
 	render_world();
@@ -257,6 +258,9 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	} else if (obj.type() == ObjType::ASTEROID) {
 		node = osgDB::readNodeFile(this->asteroid_mesh);
 		obj_transform->addChild(node);
+	} else if (obj.type() == ObjType::BULLET) {
+		node = osgDB::readNodeFile(this->bullet_mesh);
+		obj_transform->addChild(node);
 	}
 
 
@@ -272,13 +276,13 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	obj_transform->setScale(osg::Vec3(scale_amt, scale_amt, scale_amt));
 
 	if (obj.type() == ObjType::SHIP) {
-		obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		// Ship is initally rotated such that camera sees its side -- it needs to be
+		// rotated such that camera sees its back.
+			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
 			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch()*57.295779),
 			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
 			osg::Vec3d(0, 1, 0))));
-//		obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
 	} else if (obj.type() == ObjType::ASTEROID) {
-//		obj_transform->setScale(osg::Vec3(0.2,0.2,0.2));
 	}
 
 	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;

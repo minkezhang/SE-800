@@ -213,7 +213,7 @@ void * Server::serve_client(void *args) {
 						std::cout << "Received Pitch tilt packet." << std::endl;
 						float tilt = control_input_packet.tilt();
 						ServerControl::update_physics(p->get_ship()->get_id(), Action::PITCH_TILT, (void *) &tilt, world->get_physics_engine());
-					} else if (control_input_packet.action() == Action::BULLET) {
+					} else if (control_input_packet.action() == Action::BULLET_FIRE) {
 						std::cout << "Received Bullet packet." << std::endl;
 					}
 				} else if (packet_type == PacketType::EVENT_ACK) {
