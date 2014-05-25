@@ -34,7 +34,7 @@ class Weapon {
 		 *
 		 * set last to update the last time a munition is fired and decrement ammo
 		 */
-		void fire(std::vector<float> d, std::vector<float> r);
+		void fire(std::vector<float> d, std::vector<float> r, std::vector<float> v);
 
 	private:
 		std::string name;			// weapon name -- set in constructor

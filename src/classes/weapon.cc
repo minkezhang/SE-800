@@ -6,4 +6,5 @@ int Weapon::get_max_ammo() { return(this->max_ammo); }
 int Weapon::get_cur_ammo() { return(this->cur_ammo); }
 float Weapon::get_rate() { return(this->rate); }
 // Munition *Weapon::get_munition();
-void Weapon::fire(std::vector<float> d, std::vector<float> r) {}
+void Weapon::fire(std::vector<float> d, std::vector<float> r, std::vector<float> v) {
+}

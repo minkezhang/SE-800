@@ -12,7 +12,7 @@ int Ship::get_weapon_index() {
 }
 
 void Ship::fire() {
-	this->weapons.at(this->weapon_index)->fire(this->get_d(), this->get_r());
+	this->weapons.at(this->weapon_index)->fire(this->get_d(), this->get_r(), this->get_v());
 }
 
 void Ship::add_weapon(Weapon *weapon) {}
