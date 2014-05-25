@@ -21,7 +21,7 @@ class Weapon {
 		int get_max_ammo();			// get maximum ammo
 		int get_cur_ammo();			// get current ammo
 		float get_rate();			// get the rate of fire
-		Munition *get_munition(std::vector<float> d, std::vector<float> r, std::vector<float> v);
+		Munition *get_munition(std::vector<float> d, std::vector<float> p, std::vector<float> r, std::vector<float> y, std::vector<float> v);
 
 		/**
 		 * creates an instance of the munition and sets instance d, r and v
@@ -31,7 +31,7 @@ class Weapon {
 		 *
 		 * set last to update the last time a munition is fired and decrement ammo
 		 */
-		void fire(std::vector<float> d, std::vector<float> r, std::vector<float> v, float size, Environment *environment);
+		void fire(std::vector<float> d, std::vector<float> p, std::vector<float> r, std::vector<float> y, std::vector<float> v, float size, Environment *environment);
 
 	private:
 		std::string name;			// weapon name -- set in constructor

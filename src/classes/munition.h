@@ -11,7 +11,7 @@
 
 class Munition : public Projectile {
 	public:
-		Munition(int id, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> r, float aoe, int lifetime);	// spawn in bullet with appropriate speed and direction
+		Munition(int id, float max_tolerance, std::vector<float> d, std::vector<float> v, std::vector<float> p, std::vector<float> r, std::vector<float> y, float aoe, int lifetime);	// spawn in bullet with appropriate speed and direction
 		~Munition();
 
 		/**
