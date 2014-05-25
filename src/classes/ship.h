@@ -15,8 +15,10 @@ class Ship : public Projectile {
 		Ship(int id, float mass, float max_tolerance, std::vector<float> d, float size, float preset_a, float preset_p_dot, float preset_r_dot);
 		virtual int get_weapon_index();			// get current weapon index
 
-		virtual void add_weapon(Weapon *weapon);	// add a weapon to the ship
-		virtual void sel_weapon(int index);		// sets currently active weapon
+		void add_weapon(Weapon *weapon);	// add a weapon to the ship
+		void sel_weapon(int index);		// sets currently active weapon
+
+		void fire();				// fires the currently active weapon
 
 	private:
 		std::vector<Weapon *> weapons;
