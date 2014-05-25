@@ -19,7 +19,7 @@ void Weapon::fire(std::vector<float> d, std::vector<float> r, std::vector<float>
 		return;
 	}
 	std::vector<float> pos = { 0, 0, 0 };
-	for(int i = 0; i < 2; i++) {
+	for(int i = 0; i < 3; i++) {
 		pos.at(i) = size * this->offset.at(i) + d.at(i);
 	}
 	e->add_projectile(this->get_munition(pos, r, v));
