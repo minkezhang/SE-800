@@ -11,6 +11,7 @@
 #include "../../classes/pilot.h"
 #include "../physics/physics.h"
 #include "../ai/ai.h"
+#include <mutex>
 
 /**
  * consider implementing an Game interface to handle network events and building and destroying the world
@@ -22,6 +23,7 @@ class WorldEngine : Engine {
 		~WorldEngine();
 
 		std::vector<Team *> get_teams();
+		std::mutex obj_count_lock;
 		int obj_count;
 
 		void ignite(char *mode);
