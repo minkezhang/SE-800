@@ -6,11 +6,6 @@
 
 #include "../classes/munition.h"
 
-enum m_type {
-	MUNITION_BULLET,
-	MUNITION_BOMB,
-};
-
 /**
  * all weapons should inherit from this class
  */
