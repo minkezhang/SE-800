@@ -281,8 +281,11 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 		node = osgDB::readNodeFile(this->asteroid_mesh);
 		obj_transform->addChild(node);
 	} else if (obj.type() == ObjType::BULLET) {
+		std::cout << "rendering bullet" << std::endl;
 		node = osgDB::readNodeFile(this->bullet_mesh);
 		obj_transform->addChild(node);
+	} else {
+		std::cout << "RECEIVE OBJECT OF UNKNOWN TYPE!!" << std::endl;
 	}
 
 
@@ -374,6 +377,7 @@ void GraphicsEngine::update_rendered_objects() {
 	this->que_lock.unlock();
 	// Iterate through all rendered object entries in packet
 	int updated = 0;
+	std::cout << "RECEIVED " << packet->obj_size() << " objects " << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
 		if (cur_objs.count(obj.id())!= 0) {

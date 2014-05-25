@@ -215,6 +215,7 @@ void * Server::serve_client(void *args) {
 						ServerControl::update_physics(p->get_ship()->get_id(), Action::PITCH_TILT, (void *) &tilt, world->get_physics_engine());
 					} else if (control_input_packet.action() == Action::BULLET_FIRE) {
 						std::cout << "Received Bullet packet." << std::endl;
+						p->get_ship()->fire(world->get_physics_engine()->get_environment());
 					}
 				} else if (packet_type == PacketType::EVENT_ACK) {
 					// TODO: Handle event ack packet receipt.
@@ -222,7 +223,7 @@ void * Server::serve_client(void *args) {
 					NetPacket objs_and_events_packet;
 					std::vector<Projectile*> objs;
 					objs = world->get_physics_engine()->get_environment()->get_neighbors(p->get_ship());
-
+					std::cout << "SENDING " << objs.size() << " OBJECTS" << std::endl;
 					std::vector<Event *> events = cleanup->send_event_vec(client_socketfd, num_clients);
 					PacketUtils::make_packet(&objs_and_events_packet, PacketType::OBJS_AND_EVENTS, (void *) &objs, (void *) &events);
 					serv_utils.send_to_client(&objs_and_events_packet, client_socketfd);
