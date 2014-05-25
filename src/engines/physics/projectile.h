@@ -9,7 +9,8 @@
 
 enum ObjType {
 	SHIP,
-	ASTEROID
+	ASTEROID,
+	BULLET
 };
 
 class Projectile {
