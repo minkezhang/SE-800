@@ -5,6 +5,7 @@
 
 #include "../classes/weapon.h"
 #include "../engines/physics/projectile.h"
+#include "../engines/physics/environment.h"
 
 /**
  * all ships directly implement this interface
@@ -18,7 +19,7 @@ class Ship : public Projectile {
 		void add_weapon(Weapon *weapon);	// add a weapon to the ship
 		void sel_weapon(int index);		// sets currently active weapon
 
-		void fire();				// fires the currently active weapon
+		void fire(Environment *environment);	// fires the currently active weapon
 
 	private:
 		std::vector<Weapon *> weapons;

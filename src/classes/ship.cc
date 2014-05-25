@@ -11,8 +11,8 @@ int Ship::get_weapon_index() {
 	return this->weapon_index;
 }
 
-void Ship::fire() {
-	this->weapons.at(this->weapon_index)->fire(this->get_d(), this->get_r(), this->get_v());
+void Ship::fire(Environment *e) {
+	this->weapons.at(this->weapon_index)->fire(this->get_d(), this->get_r(), this->get_v(), this->get_size(), e);
 }
 
 void Ship::add_weapon(Weapon *weapon) {}

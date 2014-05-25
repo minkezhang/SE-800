@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 
-#include "../classes/munition.h"
+#include "munition.h"
+#include "../engines/physics/projectile.h"
+#include "../engines/physics/environment.h"
 
 /**
  * all weapons should inherit from this class
@@ -19,7 +21,7 @@ class Weapon {
 		int get_max_ammo();			// get maximum ammo
 		int get_cur_ammo();			// get current ammo
 		float get_rate();			// get the rate of fire
-		Munition *get_munition();		// get munition instance
+		Munition *get_munition(std::vector<float> d, std::vector<float> r, std::vector<float> v);
 
 		/**
 		 * creates an instance of the munition and sets instance d, r and v
@@ -29,13 +31,14 @@ class Weapon {
 		 *
 		 * set last to update the last time a munition is fired and decrement ammo
 		 */
-		void fire(std::vector<float> d, std::vector<float> r, std::vector<float> v);
+		void fire(std::vector<float> d, std::vector<float> r, std::vector<float> v, float size, Environment *environment);
 
 	private:
 		std::string name;			// weapon name -- set in constructor
 		int max_ammo;
 		int cur_ammo;
 		std::vector<float> offset;		// given the ship's position, calculate the position at which the munition will spawn
+							//	relative : { 0, 0, 0 } to { 1, 1, 1 }
 
 		float rate;				// minimum time between shots
 		float last;				// last time that a munition was fired
