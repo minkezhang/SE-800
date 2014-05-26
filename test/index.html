@@ -1,0 +1,81 @@
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>SE-800</title>
+	<style>
+		body {
+			background-color: #000000;
+		}
+		canvas {
+			background-color: #222222;
+		}
+		body {width:100%; height:100%; overflow:hidden, margin:0}
+		html {width:100%; height:100%; overflow:hidden}
+	</style>
+</head>
+
+<body onload="init();">
+	<div align="center">
+		<canvas id="game-canvas" width="1920" height="1200"></canvas>
+	</div>
+	<script src="soundjs-0.5.2.min.js"></script>
+	<script src="pixi.dev.js"></script>
+	<script src="pan.js"></script>
+	<script>
+		function init() {
+			stage = new PIXI.Stage(0x000103);
+			renderer = PIXI.autoDetectRenderer(
+				document.getElementById("game-canvas").width,
+				document.getElementById("game-canvas").height,
+				document.getElementById("game-canvas")
+			);
+			//
+			var farTexture = PIXI.Texture.fromImage("sb2.png");
+			far = new pan(farTexture, farTexture.baseTexture.width, farTexture.baseTexture.height);
+			stage.addChild(far);
+
+			var midTexture = PIXI.Texture.fromImage("sb3.png");
+			mid = new pan(midTexture, midTexture.baseTexture.width, midTexture.baseTexture.height);
+			stage.addChild(mid);
+
+			var nerTexture = PIXI.Texture.fromImage("sb4.png");
+			ner = new pan(nerTexture, nerTexture.baseTexture.width, nerTexture.baseTexture.height);
+			stage.addChild(ner);
+			
+			var ovlTexture = PIXI.Texture.fromImage("sb5.png");
+			ovl = new pan(ovlTexture, ovlTexture.baseTexture.width, ovlTexture.baseTexture.height);
+			stage.addChild(ovl);
+			//
+			requestAnimFrame(update);
+			//
+			if (!createjs.Sound.initializeDefaultPlugins()) {return;}
+
+			var manifest = [
+				{id:"bgm", src:"maia.ogg"},
+			];
+
+			createjs.Sound.alternateExtensions = ["mp3"];
+			createjs.Sound.addEventListener("fileload", handleLoad);
+			createjs.Sound.registerManifest(manifest, "");
+			//
+		}
+
+		function update() {
+			far.tilePosition.x -= 0.05;
+			ovl.tilePosition.x -= 0.1;
+			mid.tilePosition.x -= 0.1;
+			ner.tilePosition.x -= 0.1;
+
+			renderer.render(stage);
+			requestAnimFrame(update);
+		}
+		
+		function handleLoad(event) {
+			createjs.Sound.play(event.src,loop=-1,[volume=1]);
+		}
+
+	</script>
+</body>
+
+</html>
