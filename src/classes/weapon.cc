@@ -1,7 +1,7 @@
 #include "weapon.h"
 #include "munition_instance.h"
 
-Weapon::Weapon(std::string name, int max_ammo, std::vector<float> offset, float rate, int munition_type) : name(name), max_ammo(max_ammo), cur_ammo(max_ammo), offset(offset), rate(rate), last(0), munition_type(munition_type) {}
+Weapon::Weapon(std::string name, int max_ammo, std::vector<float> d_offset, std::vector<float> v_offset, float rate, int munition_type) : name(name), max_ammo(max_ammo), cur_ammo(max_ammo), d_offset(d_offset), v_offset(v_offset), rate(rate), last(0), munition_type(munition_type) {}
 std::string Weapon::get_name() { return(this->name); }
 int Weapon::get_max_ammo() { return(this->max_ammo); }
 int Weapon::get_cur_ammo() { return(this->cur_ammo); }
@@ -21,9 +21,10 @@ void Weapon::fire(std::vector<float> d, std::vector<float> p, std::vector<float>
 	std::vector<float> pos = { 0, 0, 0 };
 	std::vector<float> vel = { 0, 0, 0 };
 	for(int i = 0; i < 3; i++) {
-		pos.at(i) = size * this->offset.at(i) + d.at(i);
-		vel.at(i) = r.at(i) * this->offset.at(i) + v.at(i);
+		pos.at(i) = d.at(i) + (MUNITION_SIZE + size) * r.at(i);
+		vel.at(i) = v.at(i) + MUNITION_VEL * r.at(i);
 	}
+
 	e->add_projectile(this->get_munition(pos, p, r, y, vel));
 	this->cur_ammo--;
 }

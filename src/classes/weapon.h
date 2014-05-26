@@ -14,7 +14,7 @@
 
 class Weapon {
 	public:
-		Weapon(std::string name, int max_ammo, std::vector<float> offset, float rate, int munition_type);
+		Weapon(std::string name, int max_ammo, std::vector<float> d_offset, std::vector<float> v_offset, float rate, int munition_type);
 		~Weapon();
 
 		std::string get_name();
@@ -37,8 +37,9 @@ class Weapon {
 		std::string name;			// weapon name -- set in constructor
 		int max_ammo;
 		int cur_ammo;
-		std::vector<float> offset;		// given the ship's position, calculate the position at which the munition will spawn
+		std::vector<float> d_offset;		// given the ship's position, calculate the position at which the munition will spawn
 							//	relative : { 0, 0, 0 } to { 1, 1, 1 }
+		std::vector<float> v_offset;
 
 		float rate;				// minimum time between shots
 		float last;				// last time that a munition was fired

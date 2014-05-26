@@ -1,6 +1,9 @@
 #ifndef _MUNITION_H
 #define _MUNITION_H
 
+#define MUNITION_SIZE 1
+#define MUNITION_VEL 100
+
 #include <vector>
 
 #include "../engines/physics/projectile.h"
