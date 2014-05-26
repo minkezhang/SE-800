@@ -2,6 +2,7 @@
 #include "../physics/projectile.h"
 #include "../common/engine.h"
 #include "../../classes/control.h"
+#include "../../classes/event.h"
 #include "../../networks/client.h"
 
 #include <iostream>
@@ -9,6 +10,8 @@
 #include <osg/Group>
 #include <osg/PositionAttitudeTransform>
 #include <osg/Geode>
+#include <osg/Light>
+#include <osg/LightSource>
 #include <osg/Object>
 #include <osg/Quat>
 #include <osg/StateAttribute>
@@ -17,6 +20,8 @@
 #include <osg/Vec3>
 #include <osg/ShapeDrawable> 
 #include <osgDB/ReadFile>
+#include <osgParticle/ExplosionEffect>
+#include <osgParticle/ExplosionDebrisEffect>
 #include <osgViewer/ViewerBase>
 #include <ctime>
 #include <math.h>
@@ -31,9 +36,11 @@ void GraphicsEngine::ignite() {
 
 	this->ship_mesh = "../Assets/ship.obj";
 	this->asteroid_mesh = "../Assets/asteroid.obj";
+	this->bullet_mesh = "../Assets/bullet.obj";
 
 	root = new osg::Group();
 	render_world();
+	set_light_source();
 	ship_init();
 	viewer_init();
 }
@@ -208,8 +215,8 @@ void GraphicsEngine::update_camera() {
 	prev_yaw = y_vec;	
 
 	// Z axis refers to Y axis, Y axis refers to Z axis
-	std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
-	std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
+	//std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
+	//std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
 
 /*
 	camera_trans.makeTranslate(this->main_ship->obj.pos().x() - r_vec.x(), this->main_ship->obj.pos().y() - (40*r_vec.y()), this->main_ship->obj.pos().z() + 8 - (10*r_vec.z()));
@@ -239,6 +246,25 @@ void GraphicsEngine::render() {
 }
 
 void GraphicsEngine::set_light_source() {
+	//TODO: DETERMINE CORRECT LOCATION OF THE LIGHT SOURCE
+	osg::Light *light = new osg::Light();
+	light->setLightNum(0);
+	light->setPosition(osg::Vec4(0.0, 0.0, 19000.0, 1.0));
+	// Set the light color as white
+	light->setDiffuse(osg::Vec4(1.0, 1.0, 1.0, 1.0));
+	light->setSpecular(osg::Vec4(0.5, 0.5, 0.5, 1.0));
+	// Set color of object shadows
+	light->setAmbient(osg::Vec4(0.25, 0.25, 0.25, 1.0));
+
+	osg::LightSource *l_source = new osg::LightSource();
+	l_source->setLight(light);
+	l_source->setLocalStateSetModes(osg::StateAttribute::ON);
+	l_source->setStateSetModes(*(this->root->getOrCreateStateSet()), osg::StateAttribute::ON);
+
+	osg::PositionAttitudeTransform *l_trans = new osg::PositionAttitudeTransform();
+	l_trans->addChild(l_source);
+
+	this->root->addChild(l_trans);
 }
 
 void GraphicsEngine::set_shader() {
@@ -254,6 +280,12 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	} else if (obj.type() == ObjType::ASTEROID) {
 		node = osgDB::readNodeFile(this->asteroid_mesh);
 		obj_transform->addChild(node);
+	} else if (obj.type() == ObjType::BULLET) {
+		std::cout << "rendering bullet" << std::endl;
+		node = osgDB::readNodeFile(this->bullet_mesh);
+		obj_transform->addChild(node);
+	} else {
+		std::cout << "RECEIVE OBJECT OF UNKNOWN TYPE!!" << std::endl;
 	}
 
 
@@ -269,13 +301,17 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	obj_transform->setScale(osg::Vec3(scale_amt, scale_amt, scale_amt));
 
 	if (obj.type() == ObjType::SHIP) {
-		obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		// Ship is initally rotated such that camera sees its side -- it needs to be
+		// rotated such that camera sees its back.
+			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
 			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch()*57.295779),
 			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
 			osg::Vec3d(0, 1, 0))));
-//		obj_transform->setScale(osg::Vec3(2.0, 2.0, 2.0));
 	} else if (obj.type() == ObjType::ASTEROID) {
-//		obj_transform->setScale(osg::Vec3(0.2,0.2,0.2));
+			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
 	}
 
 	std::cout << "THIS IS BOUNDING SPHERE RADIUS " << obj_transform->getBound().radius() << std::endl;
@@ -284,7 +320,7 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	rendered_obj *ren_obj = new rendered_obj;
 	ren_obj->obj = obj;
 	ren_obj->update_pos = false;
-  ren_obj->should_render = true;
+	ren_obj->should_render = true;
 	ren_obj->trans_matrix = obj_transform;
 	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
 
@@ -300,16 +336,23 @@ void GraphicsEngine::remove_object(rendered_obj *ren_obj) {
 void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj) {
 	ren_obj->obj = update_obj;
 	ren_obj->update_pos = true;
-  ren_obj->should_render = true;
+	ren_obj->should_render = true;
 
 	protos::vector pos_vector = update_obj.pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(obj_pos);
 
-	ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-		osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
-		osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
-		osg::Vec3d(0, 1, 0))));
+	if (update_obj.type() == ObjType::SHIP) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
+	} else if (update_obj.type() == ObjType::ASTEROID) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.pitch()*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 1, 0))));
+	}
 }
 
 void GraphicsEngine::reset_rendered_objects() {
@@ -334,6 +377,7 @@ void GraphicsEngine::update_rendered_objects() {
 	this->que_lock.unlock();
 	// Iterate through all rendered object entries in packet
 	int updated = 0;
+	std::cout << "RECEIVED " << packet->obj_size() << " objects " << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
 		protos::RenderedObj obj = packet->obj(i);
 		if (cur_objs.count(obj.id())!= 0) {
@@ -344,6 +388,28 @@ void GraphicsEngine::update_rendered_objects() {
 		} else {
 			// Case when object is being rendered for the first time.
 			create_object(obj);
+		}
+	}
+
+	// Process destroy events.
+	for (int i = 0; i < packet->event_size(); ++i) {
+		protos::Event event = packet->event(i);
+		if (event.event_type() == EventType::DESTROY) {
+			std::cout << "RECEIVED REQUEST TO DESTROY OBJECT OF ID " << event.id() << std::endl;
+			// If event pertains to object which is not being rendered, ignore.
+			if (cur_objs.count(event.id()) == 0)
+				continue;
+			osg::Vec3 explosion_pos = osg::Vec3(
+				cur_objs.at(event.id())->obj.pos().x(),
+				cur_objs.at(event.id())->obj.pos().y(),
+				cur_objs.at(event.id())->obj.pos().z());
+			float explosion_size = cur_objs.at(event.id())->obj.size();
+
+			osgParticle::ExplosionEffect* explosion = new osgParticle::ExplosionEffect(explosion_pos, explosion_size);
+			osgParticle::ExplosionDebrisEffect* explosion_debri = new osgParticle::ExplosionDebrisEffect(explosion_pos, explosion_size);
+
+			root->addChild(explosion);
+			root->addChild(explosion_debri);
 		}
 	}
 

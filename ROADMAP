@@ -1,1 +1,17 @@
-WHAT IS WHERE IN THE TREE STRUCTURE
+WHAT IS WHERE IN THE DIRECTORY TREE STRUCTURE
+
+SE-800
+  Assets - All of the objects and meshes
+  menu   - Menu code
+  src    - Game source code and Makefile
+    classes  - All nonengine major classes used in game
+    engines  - All engine classes and auxiliary classes
+      ai         - AI engine
+      cleanup    - Engine which sweeps environment for destroyed objects to notify clients
+      common     - Engine class from which all other engine classes derive
+      graphics   - Graphics engine
+      physics    - Physics engine and auxiliary classes
+      scheduling - Scheduler for threads running a specific engine
+      world      - Server world engine which contains copy of environment and physics/ai engines
+    networks  - Client and server network classes as well as network packet classes
+

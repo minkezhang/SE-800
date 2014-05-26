@@ -43,6 +43,7 @@ class GraphicsEngine : public Engine {
 		osgViewer::Viewer viewer;
 		string ship_mesh;
 		string asteroid_mesh;
+		string bullet_mesh;
 		osg::Vec3 prev_roll;
 		osg::Vec3 prev_pitch;
 		osg::Vec3 prev_yaw;

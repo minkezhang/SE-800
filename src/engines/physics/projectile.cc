@@ -10,16 +10,15 @@ Projectile::Projectile(
 	int id, int is_clippable, float mass, float max_tolerance,
 	vector<float> d, vector<float> v,
 	float size,
-	vector<float> p, vector<float> r,
+	vector<float> p, vector<float> r, vector<float> y,
 	float p_dot, float r_dot,
 	float preset_a, float preset_p_dot, float preset_r_dot, int lifetime
 	) : id(id), is_clippable(is_clippable), mass(mass), max_tolerance(max_tolerance),
 		d(d), v(v),
 		size(size),
-		p(p), r(r),
+		p(p), r(r), y(y),
 		p_dot(p_dot), r_dot(r_dot),
 		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500), lifetime(lifetime) {
-	y = { 0, 0, 1 };
 }
 
 // GET FUNCTIONS

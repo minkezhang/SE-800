@@ -9,12 +9,14 @@
 
 enum ObjType {
 	SHIP,
-	ASTEROID
+	ASTEROID,
+	BULLET,
+	BOMB
 };
 
 class Projectile {
 	public:
-		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, float size, std::vector<float> p, std::vector<float> r, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot, int lifetime);
+		Projectile(int id, int is_clippable, float mass, float max_tolerance, std::vector<float> d, std::vector<float> v, float size, std::vector<float> p, std::vector<float> r, std::vector<float> y, float p_dot, float r_dot, float preset_a, float preset_p_dot, float preset_r_dot, int lifetime);
 
 		/**
 		 * public-facing functions which can be freely queried

@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 
 	// create empty world and schedule
 	SchedulingEngine scheduler = SchedulingEngine();
-	WorldEngine world = WorldEngine(&scheduler);
+	WorldEngine *world = new WorldEngine(&scheduler);
 	std::thread game;
 	std::thread network;
 
@@ -69,7 +69,9 @@ int main(int argc, char **argv) {
 	Calendar *cal_g;
 
 	if(!strcmp(argv[1], "server")) {
-		Server *server = new Server(&world);
+		Environment *e = new  Environment({ 3000, 3000, 3000 }, { 10, 10, 10 });
+		c = new CleanupEngine(e);
+		Server *server = new Server(world, c);
 		network = std::thread(&Server::accept_clients, server, (void *) &port);
 
 		p = new PhysicsEngine();
@@ -77,32 +79,42 @@ int main(int argc, char **argv) {
 		cal_p = new Calendar(300, p);
 		cal_a = new Calendar(.5, a);
 
-		world.set_physics_engine(p);
-		world.set_ai_engine(a);
+		world->set_physics_engine(p);
+		world->set_ai_engine(a);
 
 		scheduler.add_calendar(cal_p);
 		scheduler.add_calendar(cal_a);
 
-		Environment *e = new  Environment({ 30, 30, 30 }, { 10, 10, 10 });
-		world.get_physics_engine()->set_environment(e);
+		world->get_physics_engine()->set_environment(e);
 
-		c = new CleanupEngine(e);
 		cal_c = new Calendar(30, c);
 		scheduler.add_calendar(cal_c);
 
 		for(int i = 0; i < 0; i++) {
-			world.get_physics_engine()->get_environment()->add_projectile(world.join(NULL));
+			world->get_physics_engine()->get_environment()->add_projectile(world->join(NULL));
 		}
 
 		// Initializing asteroids (TODO): Move this to world engine ignite?
-		for (int i = 0; i < 20; i++) {
-			std::vector<float> pos { (float) (rand() % (15 - 4) + 4), (float) ((rand() % (20-8)) + 8), (float) ((rand() % (15-10)) + 10) };
-			Asteroid *a = new Asteroid(world.obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
-			world.obj_count++;
-			world.get_physics_engine()->get_environment()->add_projectile(a);
+		for (int i = 0; i < 1; i++) {
+			std::vector<float> pos { (float) 10, (float) 40, (float) 17 };
+			world->obj_count_lock.lock();
+			Asteroid *a = new Asteroid(world->obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
+			world->obj_count++;
+			world->obj_count_lock.unlock();
+			world->get_physics_engine()->get_environment()->add_projectile(a);
 		}
 
-		world.ignite(argv[1], 2);
+
+		for (int i = 0; i < 1; i++) {
+			std::vector<float> pos { (float) 15, (float) 35, (float) 17 };
+			world->obj_count_lock.lock();
+			Asteroid *a = new Asteroid(world->obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
+			world->obj_count++;
+			world->obj_count_lock.unlock();
+			world->get_physics_engine()->get_environment()->add_projectile(a);
+		}
+
+		world->ignite(argv[1], 2);
 	} else if(!strcmp(argv[1], "client")) {
 		string ip(argv[3]);
 		g = new GraphicsEngine();
@@ -117,20 +129,20 @@ int main(int argc, char **argv) {
 		g->net_utils = c;
 		g->ignite();
 
-		cal_g = new Calendar(60, g);
+		cal_g = new Calendar(300, g);
 		scheduler.add_calendar(cal_g);
 
-		world.ignite(argv[1]);
+		world->ignite(argv[1]);
 	}
 
 	// execute the game
-	game = std::thread(&WorldEngine::cycle, &world);
+	game = std::thread(&WorldEngine::cycle, world);
 
 	// wait for the network to shutdown when clients == 0
 	network.join();
 
 	// end the game
-	world.shutdown();
+	world->shutdown();
 	game.join();
 
 	return(0);

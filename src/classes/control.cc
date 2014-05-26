@@ -66,7 +66,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 						break;
 					case osgGA::GUIEventAdapter::KEY_Space:
 					{
-						int action = Action::BULLET;
+						int action = Action::BULLET_FIRE;
 						NetPacket packet;
 						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
 						if (net_utils->send_to_server(&packet))
