@@ -4,11 +4,14 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-//import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
 
 public class Game extends Canvas implements Runnable {
@@ -22,9 +25,12 @@ public class Game extends Canvas implements Runnable {
 	private boolean running = false;
 	private Thread thread;
 	
-	private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
+	private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_ARGB);
 	private BufferedImage spriteSheet = null;
 	private BufferedImage background = null;
+	private BufferedImage bg2 = null;
+	private BufferedImage bg3 = null;
+	private BufferedImage bg4 = null;
 	
 	private Player p;
 	private Menu menu;
@@ -35,6 +41,9 @@ public class Game extends Canvas implements Runnable {
 		try{
 			spriteSheet = loader.loadImage("/thomaswasalone.png");
 			background = loader.loadImage("/sb5.png");
+			bg2 = loader.loadImage("/sb4.png");
+			bg3 = loader.loadImage("/sb3.png");
+			bg4 = loader.loadImage("/sb2.png");
 		}catch(IOException e){
 			e.printStackTrace();
 		}
@@ -42,6 +51,16 @@ public class Game extends Canvas implements Runnable {
 		this.addMouseListener(new MouseInput());
 		p = new Player(200,200,this);
 		menu = new Menu();
+	    try {
+	    	File bgmf = new File("sdly.wav");
+	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bgmf);
+	        Clip clip = AudioSystem.getClip();
+	        clip.open(audioInputStream);
+	        clip.start();
+	    } catch(Exception ex) {
+	        System.out.println("Error with playing sound.");
+	        ex.printStackTrace();
+	    }
 	}
 	
 	public enum STATE{
@@ -120,6 +139,9 @@ public class Game extends Canvas implements Runnable {
 		///////////////////
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
 		
+		g.drawImage(bg4, 0, 0, null);
+		g.drawImage(bg3, 0, 0, null);
+		g.drawImage(bg2, 0, 0, null);
 		g.drawImage(background, 0, 0, null);
 		//////////////////
 		if(State == STATE.GAME){
@@ -161,6 +183,8 @@ public class Game extends Canvas implements Runnable {
 			p.setVelY(0);;
 		}
 	}
+	
+	
 	
 	public static void main(String args[]){
 		Game game = new Game();

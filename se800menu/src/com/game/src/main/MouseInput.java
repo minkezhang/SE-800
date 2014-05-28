@@ -1,6 +1,8 @@
 package com.game.src.main;
 
-import java.awt.Rectangle;
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -55,7 +57,18 @@ public class MouseInput implements MouseListener{
 		try
 		{
 		Runtime rt = Runtime.getRuntime();
-		Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
+		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
+		Process p = Runtime.getRuntime().exec(new String[] {"C:\\Windows\\System32\\notepad.exe"/*, "arg0", "arg1"*/});
+		  /*try {
+			    Robot r = new Robot();
+			    r.keyPress(KeyEvent.VK_ALT);
+			    r.keyPress(KeyEvent.VK_TAB);
+			    r.delay(10); //set the delay
+			    r.keyRelease(KeyEvent.VK_ALT);
+			    r.keyRelease(KeyEvent.VK_TAB);
+			  } catch(AWTException e) {
+			    // handle
+			  }*/
 		}
 		catch(Exception e)
 		{
