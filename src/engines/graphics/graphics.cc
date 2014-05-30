@@ -115,13 +115,14 @@ void GraphicsEngine::render_world() {
 }
 
 void GraphicsEngine::ship_init() {
-	protos::RenderedObj *ship;
+	protos::RenderedObj *ship = new protos::RenderedObj;
 
 	// Wait for ship init packet to be received.
 	while (1) {
 		this->que_lock.lock();
 		if (this->ship_que.size() > 0) {
-			ship = this->ship_que.front();
+			const protos::RenderedObj &ship_from_que = *this->ship_que.front();
+			ship->CopyFrom(ship_from_que);
 			this->ship_que.pop();
 			this->que_lock.unlock();
 			break;
@@ -379,15 +380,17 @@ void GraphicsEngine::update_rendered_objects() {
 	int updated = 0;
 	std::cout << "RECEIVED " << packet->obj_size() << " objects " << std::endl;
 	for (int i = 0; i < packet->obj_size(); ++i) {
-		protos::RenderedObj obj = packet->obj(i);
-		if (cur_objs.count(obj.id())!= 0) {
+		protos::RenderedObj *obj = new protos::RenderedObj;
+		const protos::RenderedObj &obj_from_que = packet->obj(i);
+		obj->CopyFrom(obj_from_que);
+		if (cur_objs.count(obj->id())!= 0) {
 			updated++;
 			// Case when object has already been rendered in prev cycle.
-			rendered_obj* ren_obj = cur_objs.at(obj.id());
-			update_object_transform(ren_obj, obj);
+			rendered_obj* ren_obj = cur_objs.at(obj->id());
+			update_object_transform(ren_obj, *obj);
 		} else {
 			// Case when object is being rendered for the first time.
-			create_object(obj);
+			create_object(*obj);
 		}
 	}
 
