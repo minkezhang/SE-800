@@ -18,8 +18,13 @@
 
 class GraphicsEngine : public Engine {
 	struct rendered_obj {
-		protos::RenderedObj obj;
-		bool update_pos;
+		float obj_roll;
+		float obj_pitch;
+		float obj_size;
+		osg::Vec3 obj_pos;
+		osg::Vec3 obj_roll_vector;
+		osg::Vec3 obj_pitch_vector;
+		osg::Vec3 obj_yaw_vector;
     bool should_render;
 		osg::PositionAttitudeTransform* trans_matrix;
 	};

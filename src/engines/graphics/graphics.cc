@@ -159,15 +159,11 @@ void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_rotation;
 	osg::Matrixd camera_trans;
 
-	protos::vector roll_vector = this->main_ship->obj.roll_vector();
-	protos::vector pitch_vector = this->main_ship->obj.pitch_vector();
-	protos::vector yaw_vector = this->main_ship->obj.yaw();
+	osg::Vec3 r_vec = this->main_ship->obj_roll_vector;
+	osg::Vec3 p_vec = this->main_ship->obj_pitch_vector;
+	osg::Vec3 y_vec = this->main_ship->obj_yaw_vector;
 
 	float r_angle = 0, p_angle = 0, y_angle = 0;
-
-	osg::Vec3 r_vec(roll_vector.x(), roll_vector.y(), roll_vector.z());
-	osg::Vec3 p_vec(pitch_vector.x(), pitch_vector.y(), pitch_vector.z());
-	osg::Vec3 y_vec(yaw_vector.x(), yaw_vector.y(), yaw_vector.z());
 
 	// Set prev roll, pitch, and yaw if first cycle
 /*
@@ -224,7 +220,7 @@ void GraphicsEngine::update_camera() {
 */
 
 
-	camera_trans.makeTranslate(this->main_ship->obj.pos().x(), this->main_ship->obj.pos().y() - 39, this->main_ship->obj.pos().z() + 8);
+	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 39, this->main_ship->obj_pos.z() + 8);
 
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
@@ -319,8 +315,13 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 
 	// Add object to rendered object list.
 	rendered_obj *ren_obj = new rendered_obj;
-	ren_obj->obj = obj;
-	ren_obj->update_pos = false;
+	ren_obj->obj_roll = obj.roll();
+	ren_obj->obj_pitch = obj.pitch();
+	ren_obj->obj_size = obj.size();
+	ren_obj->obj_pos = osg::Vec3(obj.pos().x(), obj.pos().y(), obj.pos().z());
+	ren_obj->obj_roll_vector = osg::Vec3(obj.roll_vector().x(), obj.roll_vector().y(), obj.roll_vector().z());
+	ren_obj->obj_pitch_vector = osg::Vec3(obj.pitch_vector().x(), obj.pitch_vector().y(), obj.pitch_vector().z());
+	ren_obj->obj_yaw_vector = osg::Vec3(obj.yaw().x(), obj.yaw().y(), obj.yaw().z());
 	ren_obj->should_render = true;
 	ren_obj->trans_matrix = obj_transform;
 	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
@@ -335,8 +336,13 @@ void GraphicsEngine::remove_object(rendered_obj *ren_obj) {
 }
 
 void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::RenderedObj update_obj) {
-	ren_obj->obj = update_obj;
-	ren_obj->update_pos = true;
+	ren_obj->obj_pitch = update_obj.pitch();
+	ren_obj->obj_roll = update_obj.roll();
+	ren_obj->obj_size = update_obj.size();
+	ren_obj->obj_pos = osg::Vec3(update_obj.pos().x(), update_obj.pos().y(), update_obj.pos().z());
+	ren_obj->obj_roll_vector = osg::Vec3(update_obj.roll_vector().x(), update_obj.roll_vector().y(), update_obj.roll_vector().z());
+	ren_obj->obj_pitch_vector = osg::Vec3(update_obj.pitch_vector().x(), update_obj.pitch_vector().y(), update_obj.pitch_vector().z());
+	ren_obj->obj_yaw_vector = osg::Vec3(update_obj.yaw().x(), update_obj.yaw().y(), update_obj.yaw().z());
 	ren_obj->should_render = true;
 
 	protos::vector pos_vector = update_obj.pos();
@@ -345,13 +351,13 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 
 	if (update_obj.type() == ObjType::SHIP) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
 			osg::Vec3d(0, 1, 0))));
 	} else if (update_obj.type() == ObjType::ASTEROID) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch*57.295779),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
 			osg::Vec3d(0, 1, 0))));
 	}
 }
@@ -403,10 +409,10 @@ void GraphicsEngine::update_rendered_objects() {
 			if (cur_objs.count(event.id()) == 0)
 				continue;
 			osg::Vec3 explosion_pos = osg::Vec3(
-				cur_objs.at(event.id())->obj.pos().x(),
-				cur_objs.at(event.id())->obj.pos().y(),
-				cur_objs.at(event.id())->obj.pos().z());
-			float explosion_size = cur_objs.at(event.id())->obj.size();
+				cur_objs.at(event.id())->obj_pos.x(),
+				cur_objs.at(event.id())->obj_pos.y(),
+				cur_objs.at(event.id())->obj_pos.z());
+			float explosion_size = cur_objs.at(event.id())->obj_size;
 
 			osgParticle::ExplosionEffect* explosion = new osgParticle::ExplosionEffect(explosion_pos, explosion_size);
 			osgParticle::ExplosionDebrisEffect* explosion_debri = new osgParticle::ExplosionDebrisEffect(explosion_pos, explosion_size);
