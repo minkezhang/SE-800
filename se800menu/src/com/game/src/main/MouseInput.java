@@ -47,7 +47,7 @@ public class MouseInput implements MouseListener{
 		//Quit
 				if(mx >= Game.WIDTH / 2 + 120 && mx <= Game.WIDTH/2 + 220){
 					if(my >= 350 && my <= 400){
-						//pressed play
+						//quit game
 						System.exit(1);
 					}
 				}
@@ -58,7 +58,8 @@ public class MouseInput implements MouseListener{
 		{
 		Runtime rt = Runtime.getRuntime();
 		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
-		Process p = Runtime.getRuntime().exec(new String[] {"C:\\Windows\\System32\\notepad.exe"/*, "arg0", "arg1"*/});
+		Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
+		Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
 		  /*try {
 			    Robot r = new Robot();
 			    r.keyPress(KeyEvent.VK_ALT);
@@ -72,6 +73,7 @@ public class MouseInput implements MouseListener{
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 		}
 	}
 

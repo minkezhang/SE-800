@@ -21,6 +21,7 @@ public class Game extends Canvas implements Runnable {
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 2;
 	public final String TITLE = "SE-800";
+	public int mitem = 1;
 	
 	private boolean running = false;
 	private Thread thread;
@@ -148,7 +149,7 @@ public class Game extends Canvas implements Runnable {
 			p.render(g);
 		}
 		else if(State == STATE.MENU){
-			menu.render(g);
+			menu.render(g,mitem);
 		}
 		g.dispose();
 		bs.show();
@@ -167,12 +168,32 @@ public class Game extends Canvas implements Runnable {
 		} else if(key == KeyEvent.VK_UP){
 			p.setVelY(-5);;
 		}
+		}else if(State == STATE.MENU){
+			if(key == KeyEvent.VK_UP){
+				mitem -= 1;
+				if(mitem<1)
+					mitem = 3;
+			} else if(key == KeyEvent.VK_DOWN){
+				mitem += 1;
+				if(mitem>3)
+					mitem = 1;
+			} else if(key == KeyEvent.VK_ENTER ||
+					key == KeyEvent.VK_CONTROL||
+					key == KeyEvent.VK_SPACE){
+				if(mitem == 1)
+					this.openGAME();
+				else if(mitem == 2)
+					mitem = 2;//no-op
+				else if(mitem == 3)
+					System.exit(1);//this.quitGAME();
+			}
 		}
 	}
 	
 	public void keyReleased(KeyEvent e){
 		int key = e.getKeyCode();
 		
+		if(State == STATE.GAME){
 		if(key == KeyEvent.VK_RIGHT){
 			p.setVelX(0);
 		} else if(key == KeyEvent.VK_LEFT){
@@ -181,6 +202,7 @@ public class Game extends Canvas implements Runnable {
 			p.setVelY(0);
 		} else if(key == KeyEvent.VK_UP){
 			p.setVelY(0);;
+		}
 		}
 	}
 	
@@ -207,4 +229,28 @@ public class Game extends Canvas implements Runnable {
 	public BufferedImage getSpriteSheet(){
 		return spriteSheet;
 	}
+	public void openGAME() {
+		try
+		{
+		Runtime rt = Runtime.getRuntime();
+		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
+		Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
+		Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
+		  /*try {
+			    Robot r = new Robot();
+			    r.keyPress(KeyEvent.VK_ALT);
+			    r.keyPress(KeyEvent.VK_TAB);
+			    r.delay(10); //set the delay
+			    r.keyRelease(KeyEvent.VK_ALT);
+			    r.keyRelease(KeyEvent.VK_TAB);
+			  } catch(AWTException e) {
+			    // handle
+			  }*/
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 }
+
