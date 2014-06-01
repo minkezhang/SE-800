@@ -27,30 +27,30 @@ public class Game extends Canvas implements Runnable {
 	private Thread thread;
 	
 	private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_ARGB);
-	private BufferedImage spriteSheet = null;
+	//private BufferedImage spriteSheet = null;
 	private BufferedImage background = null;
 	private BufferedImage bg2 = null;
 	private BufferedImage bg3 = null;
 	private BufferedImage bg4 = null;
 	
-	private Player p;
+	//private Player p;
 	private Menu menu;
 	
 	public void init(){
 		requestFocus();
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try{
-			spriteSheet = loader.loadImage("/thomaswasalone.png");
+			//spriteSheet = loader.loadImage("/thomaswasalone.png");
 			background = loader.loadImage("/sb5.png");
 			bg2 = loader.loadImage("/sb4.png");
 			bg3 = loader.loadImage("/sb3.png");
 			bg4 = loader.loadImage("/sb2.png");
 		}catch(IOException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		this.addKeyListener(new KeyInput(this));
 		this.addMouseListener(new MouseInput());
-		p = new Player(200,200,this);
+		//p = new Player(200,200,this);
 		menu = new Menu();
 	    try {
 	    	File bgmf = new File("sdly.wav");
@@ -59,14 +59,14 @@ public class Game extends Canvas implements Runnable {
 	        clip.open(audioInputStream);
 	        clip.start();
 	    } catch(Exception ex) {
-	        System.out.println("Error with playing sound.");
-	        ex.printStackTrace();
+	        //System.out.println("Error with playing sound.");
+	        //ex.printStackTrace();
 	    }
 	}
 	
 	public enum STATE{
 		MENU,
-		GAME
+		//GAME
 	};
 	
 	public static STATE State = STATE.MENU;
@@ -87,7 +87,7 @@ public class Game extends Canvas implements Runnable {
 		try {
 		thread.join();
 		} catch(InterruptedException e){
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		System.exit(1);
 	}
@@ -116,7 +116,7 @@ public class Game extends Canvas implements Runnable {
 			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
-				System.out.println(updates + "Ticks, FPS " + frames);
+				//System.out.println(updates + "Ticks, FPS " + frames);
 				updates = 0;
 				frames = 0;
 			}
@@ -125,9 +125,9 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	private void tick(){
-		if(State == STATE.GAME){
+		/*(State == STATE.GAME){
 			p.tick();
-		}
+		}*/
 	}
 	
 	private void render(){
@@ -145,12 +145,12 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(bg2, 0, 0, null);
 		g.drawImage(background, 0, 0, null);
 		//////////////////
-		if(State == STATE.GAME){
+		/*if(State == STATE.GAME){
 			p.render(g);
 		}
-		else if(State == STATE.MENU){
+		else if(State == STATE.MENU){*/
 			menu.render(g,mitem);
-		}
+		//}
 		g.dispose();
 		bs.show();
 	}
@@ -158,7 +158,7 @@ public class Game extends Canvas implements Runnable {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		
-		if(State == STATE.GAME){
+		/*if(State == STATE.GAME){
 		if(key == KeyEvent.VK_RIGHT){
 			p.setVelX(5);
 		} else if(key == KeyEvent.VK_LEFT){
@@ -168,7 +168,7 @@ public class Game extends Canvas implements Runnable {
 		} else if(key == KeyEvent.VK_UP){
 			p.setVelY(-5);;
 		}
-		}else if(State == STATE.MENU){
+		}else if(State == STATE.MENU){*/
 			if(key == KeyEvent.VK_UP){
 				mitem -= 1;
 				if(mitem<1)
@@ -188,12 +188,12 @@ public class Game extends Canvas implements Runnable {
 					System.exit(1);//this.quitGAME();
 			}
 		}
-	}
+	//}
 	
 	public void keyReleased(KeyEvent e){
-		int key = e.getKeyCode();
+		//int key = e.getKeyCode();
 		
-		if(State == STATE.GAME){
+		/*if(State == STATE.GAME){
 		if(key == KeyEvent.VK_RIGHT){
 			p.setVelX(0);
 		} else if(key == KeyEvent.VK_LEFT){
@@ -203,7 +203,7 @@ public class Game extends Canvas implements Runnable {
 		} else if(key == KeyEvent.VK_UP){
 			p.setVelY(0);;
 		}
-		}
+		}*/
 	}
 	
 	
@@ -227,7 +227,7 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public BufferedImage getSpriteSheet(){
-		return spriteSheet;
+		return null;//spriteSheet;
 	}
 	public void openGAME() {
 		try
@@ -249,7 +249,7 @@ public class Game extends Canvas implements Runnable {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 }
