@@ -9,7 +9,23 @@ cmake, cmake-gui
 Google Protocol Buffers 2.5.0 full source (https://code.google.com/p/protobuf/downloads/list)
 OpenScenGraph Debian Dependencies (http://trac.openscenegraph.org/projects/osg//wiki/Support/PlatformSpecifics/Debian-Dependencies)
 OpenSceneGraph 3.2.1 rc2 full source (http://www.openscenegraph.org/downloads/developer_releases/OpenSceneGraph-3.2.1-rc2.zip)
+OpenAL
+freeALUT
+OggVorbis (both the libogg and libvorbis libraries are required)
+osgAudio (https://code.google.com/p/osgaudio/downloads/detail?name=osgAudio200.tar.gz)
 
+Configure, build, and install all of the above prerequisites.
+---
+NOTE: osgAudio installation must be customized as follows:
+-In the root directory of osgAudio, open CMakeLists.txt
+-Set the 0_ENABLE_SUBSYSTEM_OPENAL option to ON and set the 0_ENABLE_SUBSYSTEM_FMOD
+to OFF
+-Set 0_BUILD_EXAMPLES_* to OFF (Examples use deprecated OpenSceneGraph classes and
+thus do not compile.
+-In the root directory of osgAudio, generate the Makefile by typing
+cmake CMakeLists.txt
+-Finally, build and install osgAudio with the generated Makefile
+---
 
 After having configured, built, and installed all of the above prerequisites,
 you are now ready to build SE-800! Once in the SE-800 directory, the following

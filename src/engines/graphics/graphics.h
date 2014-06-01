@@ -12,6 +12,7 @@
 
 #include "../physics/projectile.h"
 #include "../common/engine.h"
+#include "../../classes/gameaudio.h"
 #include "../../classes/ship.h"
 #include "../../networks/client.h"
 #include "../../networks/packetprotos.pb.h"
@@ -44,6 +45,7 @@ class GraphicsEngine : public Engine {
 	private:
 		int team_id;
 		osg::Group *root;
+		GameAudio *audio;
 		rendered_obj *main_ship;
 		osgViewer::Viewer viewer;
 		string ship_mesh;
@@ -60,6 +62,7 @@ class GraphicsEngine : public Engine {
 		void render_world();						// draw world cube from pre-loaded dimensions and assets
 		void ship_init();								// creates the user-controlled ship
 		void viewer_init();							// initializes callbacks, viewing window, and scene
+		void audio_init();							// Initializes game audio
 		void send_update_req();					// sends req for objs and events from server
 		void update_camera();						// positions the camera behind used-controlled ship
 		void reset_rendered_objects();	// sets all rendered objects for removal (these objects will be removed in next cycle if not requested to be rendered again)

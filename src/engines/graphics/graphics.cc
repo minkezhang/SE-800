@@ -1,6 +1,7 @@
 #include "graphics.h"
 #include "../physics/projectile.h"
 #include "../common/engine.h"
+#include "../../classes/gameaudio.h"
 #include "../../classes/control.h"
 #include "../../classes/event.h"
 #include "../../networks/client.h"
@@ -43,6 +44,7 @@ void GraphicsEngine::ignite() {
 	set_light_source();
 	ship_init();
 	viewer_init();
+	audio_init();
 }
 
 void GraphicsEngine::cycle() {
@@ -71,6 +73,8 @@ void GraphicsEngine::cycle() {
 }
 
 void GraphicsEngine::shutdown() {
+	this->audio->shutdown();
+	this->net_utils->close_connection();
 	exit(1);
 }
 
@@ -136,13 +140,18 @@ void GraphicsEngine::ship_init() {
 
 void GraphicsEngine::viewer_init() {
 	// Set up UI update callback
-	ClientControl::UIEventHandler* ui_handler = new ClientControl::UIEventHandler(this->net_utils);
+	ClientControl::UIEventHandler* ui_handler = new ClientControl::UIEventHandler(this->net_utils, this->audio);
 	this->viewer.addEventHandler(ui_handler);
 
 	// Assign the scene we created to the viewer
 	this->viewer.setSceneData(this->root);
 	// Create the windows and start the required threads
 	this->viewer.realize();
+}
+
+void GraphicsEngine::audio_init() {
+	this->audio = new GameAudio(this->root, &this->viewer);
+	this->audio->init();
 }
 
 void GraphicsEngine::send_update_req() {
@@ -375,6 +384,11 @@ void GraphicsEngine::update_rendered_objects() {
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
 	if (this->objs_que.size() > 0) {
+		// If graphics engine is more than 4 packets behind, dump all older packets
+		// such that only 4 remain in queue
+		while (this->objs_que.size() > 4) {
+			this->objs_que.pop();
+		}
 		packet = this->objs_que.front();
 		this->objs_que.pop();
 	} else {
@@ -416,7 +430,7 @@ void GraphicsEngine::update_rendered_objects() {
 
 			osgParticle::ExplosionEffect* explosion = new osgParticle::ExplosionEffect(explosion_pos, explosion_size);
 			osgParticle::ExplosionDebrisEffect* explosion_debri = new osgParticle::ExplosionDebrisEffect(explosion_pos, explosion_size);
-
+			audio->explosion_audio(explosion_pos);
 			root->addChild(explosion);
 			root->addChild(explosion_debri);
 		}

@@ -4,9 +4,11 @@
 #include <osgGA/GUIEventHandler>
 
 #include "control.h"
+#include "gameaudio.h"
 #include "../networks/client.h"
 #include "../networks/netpacket.h"
 #include "../networks/packetprotos.pb.h"
+#include "../engines/physics/projectile.h"
 #include "../engines/physics/physics.h"
 
 float ClientControl::UIEventHandler::get_prev_x() {
@@ -25,8 +27,9 @@ void ClientControl::UIEventHandler::set_prev_y(float y) {
 	this->prev_y = y;
 }
 
-ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils) {
+ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils, GameAudio *audio) {
 	this->net_utils = net_utils;
+	this->audio = audio;
 	this->is_pressing_accel = false;
 	this->is_pressing_brake = false;
 	this->prev_x = 0;
@@ -66,11 +69,15 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 						break;
 					case osgGA::GUIEventAdapter::KEY_Space:
 					{
-						int action = Action::BULLET_FIRE;
-						NetPacket packet;
-						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
-						if (net_utils->send_to_server(&packet))
-							std::cout << "Sent bullet control packet." << std::endl;
+						if (this->audio != NULL) {
+							int action = Action::BULLET_FIRE;
+							NetPacket packet;
+							PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
+							if (net_utils->send_to_server(&packet))
+								std::cout << "Sent bullet control packet." << std::endl;
+							// Play bullet audio (we do this before the bullet is rendered.
+							audio->munition_audio(ObjType::BULLET);
+						}
 					}
 						return false;
 						break;
