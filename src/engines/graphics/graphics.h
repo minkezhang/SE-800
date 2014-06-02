@@ -6,6 +6,7 @@
 #include <osg/Group>
 #include <osg/Node>
 #include <osg/Vec3>
+#include <osg/Vec4>
 #include <osgViewer/Viewer>
 #include <vector>
 #include <queue>
@@ -31,7 +32,7 @@ class GraphicsEngine : public Engine {
 	};
 
 	public:
-		GraphicsEngine();
+		GraphicsEngine(string color);
 
 		queue<protos::ObjsAndEventsPacket *> objs_que;
 		queue<protos::RenderedObj *> ship_que;
@@ -46,6 +47,7 @@ class GraphicsEngine : public Engine {
 		int team_id;
 		osg::Group *root;
 		GameAudio *audio;
+		osg::Vec4 player_color;
 		rendered_obj *main_ship;
 		osgViewer::Viewer viewer;
 		string ship_mesh;

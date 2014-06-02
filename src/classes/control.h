@@ -4,6 +4,7 @@
 #include <osgGA/GUIActionAdapter>
 #include <osgGA/GUIEventAdapter>
 #include <osgGA/GUIEventHandler>
+#include <osg/PositionAttitudeTransform>
 
 #include "gameaudio.h"
 #include "../networks/client.h"
@@ -26,7 +27,7 @@ class ClientControl {
 	public:
 		class UIEventHandler : public osgGA::GUIEventHandler {
 			public:
-				UIEventHandler(ClientNetUtils *net_utils, GameAudio *audio);
+				UIEventHandler(ClientNetUtils *net_utils, GameAudio *audio, osg::PositionAttitudeTransform *main_ship_trans);
 				virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter&);
 				virtual void accept(osgGA::GUIEventHandlerVisitor& v);
 				float get_prev_x();
@@ -36,6 +37,7 @@ class ClientControl {
 			private:
 				ClientNetUtils *net_utils;
 				GameAudio *audio;
+				osg::PositionAttitudeTransform *main_ship_trans;
 				bool is_pressing_accel;
 				bool is_pressing_brake;
 				float prev_x;

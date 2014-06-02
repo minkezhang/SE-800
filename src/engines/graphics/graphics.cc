@@ -13,12 +13,14 @@
 #include <osg/Geode>
 #include <osg/Light>
 #include <osg/LightSource>
+#include <osg/Material>
 #include <osg/Object>
 #include <osg/Quat>
 #include <osg/StateAttribute>
 #include <osg/StateSet>
 #include <osg/Texture2D>
 #include <osg/Vec3>
+#include <osg/Vec4>
 #include <osg/ShapeDrawable> 
 #include <osgDB/ReadFile>
 #include <osgParticle/ExplosionEffect>
@@ -27,7 +29,23 @@
 #include <ctime>
 #include <math.h>
 
-GraphicsEngine::GraphicsEngine() {}
+GraphicsEngine::GraphicsEngine(string color) {
+	// Define main color of ship.
+	if (color.compare("RED") == 0) {
+		this->player_color = osg::Vec4(1, 0, 0, 1);
+	} else if (color.compare("BLUE") == 0) {
+		this->player_color = osg::Vec4(0, 1, 1, 1);
+	} else if (color.compare("YELLOW") == 0) {
+		this->player_color = osg::Vec4(1, 1, 0, 1);
+	} else if (color.compare("GREEN") == 0) {
+		this->player_color = osg::Vec4(0, 1, 0, 1);
+	} else if (color.compare("ORANGE") == 0) {
+		this->player_color = osg::Vec4(1, 0.5, 0, 1);
+	} else {
+		// Set ship to white if unknown color provided.
+		this->player_color = osg::Vec4(1, 1, 1, 1);
+	}
+}
 
 void GraphicsEngine::ignite() {
 	// TODO: MOVE CAMERA INIT SOMEWHERE ELSE
@@ -140,7 +158,7 @@ void GraphicsEngine::ship_init() {
 
 void GraphicsEngine::viewer_init() {
 	// Set up UI update callback
-	ClientControl::UIEventHandler* ui_handler = new ClientControl::UIEventHandler(this->net_utils, this->audio);
+	ClientControl::UIEventHandler* ui_handler = new ClientControl::UIEventHandler(this->net_utils, this->audio, this->main_ship->trans_matrix);
 	this->viewer.addEventHandler(ui_handler);
 
 	// Assign the scene we created to the viewer
@@ -283,6 +301,18 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	if (obj.type() == ObjType::SHIP) {
 		node = osgDB::readNodeFile(this->ship_mesh);
 		obj_transform->addChild(node);
+
+		osg::StateSet* state_set = new osg::StateSet();
+		osg::Material *mat = new osg::Material;
+		mat->setDiffuse(osg::Material::FRONT, this->player_color);
+//		mat->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1.0, 1.0, 1.0, 1.0));
+//		mat->setAmbient(osg::Material::FRONT, osg::Vec4(0.25, 0.25, 0.25, 1.0));
+//		mat->setEmission(osg::Material::FRONT, osg::Vec4(0.0, 0.0, 0.0, 1.0));
+//		mat->setShininess(osg::Material::FRONT, 63.0);
+		state_set->setAttribute(mat);
+		obj_transform->setStateSet(state_set);
+
+
 	} else if (obj.type() == ObjType::ASTEROID) {
 		node = osgDB::readNodeFile(this->asteroid_mesh);
 		obj_transform->addChild(node);

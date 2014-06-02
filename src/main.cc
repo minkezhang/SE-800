@@ -34,7 +34,7 @@ void handler(int sig) {
 
 
 void usage(char *exec) {
-	std::cout << "usage: " << exec << " ( server < port > | client < port > < ip > )\n";
+	std::cout << "usage: " << exec << " ( server < port > | client < port > < ip > < color > )\n";
 	exit(0);
 }
 
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
 
 	if(argc < 3) {
 		usage(argv[0]);
-	} else if((argc == 3) && !strcmp(argv[1], "client")) {
+	} else if((argc == 4) && !strcmp(argv[1], "client")) {
 		usage(argv[0]);
 	}
 	int port = std::stoi(argv[2]);
@@ -117,7 +117,8 @@ int main(int argc, char **argv) {
 		world->ignite(argv[1], 2);
 	} else if(!strcmp(argv[1], "client")) {
 		string ip(argv[3]);
-		g = new GraphicsEngine();
+		string color(argv[4]);
+		g = new GraphicsEngine(color);
 		ClientNetUtils *c = new ClientNetUtils(&g->objs_que, &g->ship_que, &g->que_lock);
 
 		if (!c->connect_to_server(port, ip)) {

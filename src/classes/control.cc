@@ -2,6 +2,10 @@
 #include <osgGA/GUIActionAdapter>
 #include <osgGA/GUIEventAdapter>
 #include <osgGA/GUIEventHandler>
+#include <osg/PositionAttitudeTransform>
+#include <osg/Material>
+#include <osg/StateAttribute>
+#include <osg/StateSet>
 
 #include "control.h"
 #include "gameaudio.h"
@@ -27,9 +31,10 @@ void ClientControl::UIEventHandler::set_prev_y(float y) {
 	this->prev_y = y;
 }
 
-ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils, GameAudio *audio) {
+ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils, GameAudio *audio, osg::PositionAttitudeTransform *main_ship_trans) {
 	this->net_utils = net_utils;
 	this->audio = audio;
+	this->main_ship_trans = main_ship_trans;
 	this->is_pressing_accel = false;
 	this->is_pressing_brake = false;
 	this->prev_x = 0;
@@ -50,6 +55,9 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 							PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
 							if (net_utils->send_to_server(&packet))
 								std::cout << "Sent accel control packet." << std::endl;
+								// Update ship's effusive lighting upon acceleration.
+								osg::Material* mat = (osg::Material *) this->main_ship_trans->getStateSet()->getAttribute(osg::StateAttribute::MATERIAL);
+								mat->setEmission(osg::Material::FRONT, osg::Vec4(0.25, 0.25, 0.25, 1.0));
 						}
 					}
 						return false;
@@ -98,6 +106,9 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 						PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, NULL);
 						if (net_utils->send_to_server(&packet))
 							std::cout << "Sent reset acceleration control packet." << std::endl;
+							// Update ship's effusive lighting upon acceleration.
+							osg::Material* mat = (osg::Material *) this->main_ship_trans->getStateSet()->getAttribute(osg::StateAttribute::MATERIAL);
+							mat->setEmission(osg::Material::FRONT, osg::Vec4(0, 0, 0, 1.0));
 					}
 						return false;
 						break;
