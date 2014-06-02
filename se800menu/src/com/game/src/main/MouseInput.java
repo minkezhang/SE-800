@@ -5,6 +5,7 @@ import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.lang.ProcessBuilder.Redirect;
 
 public class MouseInput implements MouseListener{
 
@@ -55,25 +56,18 @@ public class MouseInput implements MouseListener{
 
 	private void run() {
 		try
-		{
-		Runtime rt = Runtime.getRuntime();
-		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
-		Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
-		Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
-		  /*try {
-			    Robot r = new Robot();
-			    r.keyPress(KeyEvent.VK_ALT);
-			    r.keyPress(KeyEvent.VK_TAB);
-			    r.delay(10); //set the delay
-			    r.keyRelease(KeyEvent.VK_ALT);
-			    r.keyRelease(KeyEvent.VK_TAB);
-			  } catch(AWTException e) {
-			    // handle
-			  }*/
+		{//openGAME() for mouse
+			String[] cserv = {"./se800","server", "6667"};
+			String[] cclie = {"./se800","client", "6667", "127.0.0.1"};
+			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
+			Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			p.waitFor();
+			q.waitFor();
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
