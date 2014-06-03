@@ -48,11 +48,6 @@ GraphicsEngine::GraphicsEngine(string color) {
 }
 
 void GraphicsEngine::ignite() {
-	// TODO: MOVE CAMERA INIT SOMEWHERE ELSE
-	this->prev_roll = osg::Vec3( -99, -99, -99);
-	this->prev_pitch = osg::Vec3( -99, -99, -99);
-	this->prev_yaw = osg::Vec3( -99, -99, -99);
-
 	this->ship_mesh = "../Assets/ship.obj";
 	this->asteroid_mesh = "../Assets/asteroid.obj";
 	this->bullet_mesh = "../Assets/bullet.obj";
@@ -181,7 +176,7 @@ void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_trans;
 
 	// Set tolerance on camera roll.
-	float camera_roll = this->main_ship->obj_roll * 57.295779;
+	float camera_roll = this->main_ship->obj_roll * 180 / M_PI;
 	camera_roll -= camera_roll * .4;
 
 	camera_rotation.makeRotate(
@@ -281,13 +276,13 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 		// Ship is initally rotated such that camera sees its side -- it needs to be
 		// rotated such that camera sees its back.
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch() * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	} else if (obj.type() == ObjType::ASTEROID) {
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch() * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	}
 
@@ -332,13 +327,13 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 
 	if (update_obj.type() == ObjType::SHIP) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	} else if (update_obj.type() == ObjType::ASTEROID) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	}
 }
