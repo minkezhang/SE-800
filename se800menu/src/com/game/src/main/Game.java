@@ -8,11 +8,14 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JFrame;
+
+import java.util.logging.StreamHandler;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -232,20 +235,18 @@ public class Game extends Canvas implements Runnable {
 	public void openGAME() {
 		try
 		{
-		Runtime rt = Runtime.getRuntime();
+		//Runtime rt = Runtime.getRuntime();
 		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
-		Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
-		Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
-		  /*try {
-			    Robot r = new Robot();
-			    r.keyPress(KeyEvent.VK_ALT);
-			    r.keyPress(KeyEvent.VK_TAB);
-			    r.delay(10); //set the delay
-			    r.keyRelease(KeyEvent.VK_ALT);
-			    r.keyRelease(KeyEvent.VK_TAB);
-			  } catch(AWTException e) {
-			    // handle
-			  }*/
+		//Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
+		//Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
+			String[] cserv = {"./se800","server", "6667"};
+			String[] cclie = {"./se800","client", "6667", "127.0.0.1"};
+			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
+			Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			p.waitFor();
+			q.waitFor();
+
 		}
 		catch(Exception e)
 		{
