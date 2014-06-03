@@ -13,6 +13,7 @@
 
 #include "../physics/projectile.h"
 #include "../common/engine.h"
+#include "../../classes/control.h"
 #include "../../classes/gameaudio.h"
 #include "../../classes/ship.h"
 #include "../../networks/client.h"
@@ -46,6 +47,7 @@ class GraphicsEngine : public Engine {
 	private:
 		int team_id;
 		osg::Group *root;
+		ClientControl::UIEventHandler* ui_handler;
 		GameAudio *audio;
 		osg::Vec4 player_color;
 		rendered_obj *main_ship;
