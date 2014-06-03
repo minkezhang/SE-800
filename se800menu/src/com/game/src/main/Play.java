@@ -10,7 +10,7 @@ import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 
-public class Menu {
+public class Play {
 	
 	public Rectangle playbut = new Rectangle(Game.WIDTH/2 +120,150,105,50);
 	public Rectangle helpbut = new Rectangle(Game.WIDTH/2 +120,250,105,50);
