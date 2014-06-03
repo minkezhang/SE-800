@@ -29,7 +29,7 @@ public class Menu {
 					GraphicsEnvironment.getLocalGraphicsEnvironment();
 			 ge.registerFont(fnt0);
 			 } catch (IOException|FontFormatException e) {
-				 
+				 e.printStackTrace();
 			 }
 		g.setFont(fnt0);
 		Color high = new Color(125, 250, 250, 195);
