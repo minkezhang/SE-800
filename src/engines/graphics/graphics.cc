@@ -416,7 +416,7 @@ void GraphicsEngine::update_rendered_objects() {
 	if (this->objs_que.size() > 0) {
 		// If graphics engine is more than 4 packets behind, dump all older packets
 		// such that only 4 remain in queue
-		while (this->objs_que.size() > 4) {
+		while (this->objs_que.size() > 3) {
 			this->objs_que.pop();
 		}
 		packet = this->objs_que.front();
