@@ -99,7 +99,7 @@ void GameAudio::explosion_audio_init() {
 
 void GameAudio::munition_audio_init() {
 	osgAudio::Sample *bullet_sample = new osgAudio::Sample(
-		osgDB::findDataFile("../Assets/bullet.wav"));
+		osgDB::findDataFile("../Assets/bullet/bullet1.wav"));
 	osg::ref_ptr<osgAudio::SoundState> bullet_sound_state = new osgAudio::SoundState("bullet");
 	bullet_sound_state->setSample(bullet_sample);
 	bullet_sound_state->setGain(0.7f);

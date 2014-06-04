@@ -12,10 +12,10 @@ import java.io.IOException;
 
 public class Menu {
 	
-	public Rectangle playbut = new Rectangle(Game.WIDTH/2 +120,150,100,50);
-	public Rectangle helpbut = new Rectangle(Game.WIDTH/2 +120,250,100,50);
-	public Rectangle quitbut = new Rectangle(Game.WIDTH/2 +120,350,100,50);
-	public Rectangle select = new Rectangle(Game.WIDTH/2 +120,050,100,50);
+	public Rectangle playbut = new Rectangle(Game.WIDTH/2 +120,150,105,50);
+	public Rectangle helpbut = new Rectangle(Game.WIDTH/2 +120,250,105,50);
+	public Rectangle quitbut = new Rectangle(Game.WIDTH/2 +120,350,105,50);
+	public Rectangle select = new Rectangle(Game.WIDTH/2 +120,050,105,50);
 	
 	public void render(Graphics g, int key){
 		Graphics2D g2d = (Graphics2D) g;
@@ -29,10 +29,11 @@ public class Menu {
 					GraphicsEnvironment.getLocalGraphicsEnvironment();
 			 ge.registerFont(fnt0);
 			 } catch (IOException|FontFormatException e) {
-				 
+				 e.printStackTrace();
 			 }
 		g.setFont(fnt0);
-		g.setColor(Color.CYAN);
+		Color high = new Color(125, 250, 250, 195);
+		g.setColor(high);
 		select.y = (key*100) + 50;
 		g2d.draw(select);
 		g2d.fill(select);
@@ -43,9 +44,9 @@ public class Menu {
 		
 		Font fnt1 = new Font("arial", Font.BOLD, 30);
 		g.setFont(fnt1);
-		g.drawString("Play",playbut.x + 19,playbut.y + 30);
-		g.drawString("Help",helpbut.x + 19,helpbut.y + 30);
-		g.drawString("Quit",quitbut.x + 19,quitbut.y + 30);
+		g.drawString("Play",playbut.x + 21,playbut.y + 30);
+		g.drawString("Credits",helpbut.x + 2,helpbut.y + 30);
+		g.drawString("Quit",quitbut.x + 21,quitbut.y + 30);
 		g2d.draw(playbut);
 		g2d.draw(helpbut);
 		g2d.draw(quitbut);

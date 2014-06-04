@@ -8,6 +8,7 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.ProcessBuilder.Redirect;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -27,20 +28,20 @@ public class Game extends Canvas implements Runnable {
 	private Thread thread;
 	
 	private BufferedImage image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_ARGB);
-	//private BufferedImage spriteSheet = null;
 	private BufferedImage background = null;
 	private BufferedImage bg2 = null;
 	private BufferedImage bg3 = null;
 	private BufferedImage bg4 = null;
 	
 	//private Player p;
-	private Menu menu;
+	private Menu menu;//main menu
+	private Cred cred;//team credits
+	private Play play;//play submenu
 	
 	public void init(){
 		requestFocus();
 		BufferedImageLoader loader = new BufferedImageLoader();
 		try{
-			//spriteSheet = loader.loadImage("/thomaswasalone.png");
 			background = loader.loadImage("/sb5.png");
 			bg2 = loader.loadImage("/sb4.png");
 			bg3 = loader.loadImage("/sb3.png");
@@ -49,9 +50,10 @@ public class Game extends Canvas implements Runnable {
 			//e.printStackTrace();
 		}
 		this.addKeyListener(new KeyInput(this));
-		this.addMouseListener(new MouseInput());
-		//p = new Player(200,200,this);
+		this.addMouseListener(new MouseInput(this));
 		menu = new Menu();
+		cred = new Cred();
+		play = new Play();
 	    try {
 	    	File bgmf = new File("sdly.wav");
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bgmf);
@@ -66,7 +68,8 @@ public class Game extends Canvas implements Runnable {
 	
 	public enum STATE{
 		MENU,
-		//GAME
+		CREDITS,
+		PLAY
 	};
 	
 	public static STATE State = STATE.MENU;
@@ -97,8 +100,8 @@ public class Game extends Canvas implements Runnable {
 		final double amountOfTicks = 60.0;
 		double ns = 1000000000/amountOfTicks;
 		double delta = 0;
-		int updates = 0;
-		int frames = 0;
+		//int updates = 0;
+		//int frames = 0;
 		long timer = System.currentTimeMillis();
 		
 		while(running){
@@ -108,17 +111,17 @@ public class Game extends Canvas implements Runnable {
 			lastTime = now;
 			if(delta >=1){
 				tick();
-				updates++;
-				delta--;
+				//updates++;
+				//delta--;
 			}
 			render();
-			frames++;
+			//frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
 				timer += 1000;
 				//System.out.println(updates + "Ticks, FPS " + frames);
-				updates = 0;
-				frames = 0;
+				//updates = 0;
+				//frames = 0;
 			}
 		}
 		stop();
@@ -145,12 +148,13 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(bg2, 0, 0, null);
 		g.drawImage(background, 0, 0, null);
 		//////////////////
-		/*if(State == STATE.GAME){
-			p.render(g);
-		}
-		else if(State == STATE.MENU){*/
+		if(State == STATE.MENU){
 			menu.render(g,mitem);
-		//}
+		}else if(State == STATE.PLAY){
+			play.render(g,mitem);
+		}else if(State == STATE.CREDITS){
+			cred.render(g,mitem);
+		}
 		g.dispose();
 		bs.show();
 	}
@@ -158,17 +162,7 @@ public class Game extends Canvas implements Runnable {
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		
-		/*if(State == STATE.GAME){
-		if(key == KeyEvent.VK_RIGHT){
-			p.setVelX(5);
-		} else if(key == KeyEvent.VK_LEFT){
-			p.setVelX(-5);
-		} else if(key == KeyEvent.VK_DOWN){
-			p.setVelY(5);
-		} else if(key == KeyEvent.VK_UP){
-			p.setVelY(-5);;
-		}
-		}else if(State == STATE.MENU){*/
+		if(State == STATE.MENU){
 			if(key == KeyEvent.VK_UP){
 				mitem -= 1;
 				if(mitem<1)
@@ -181,29 +175,31 @@ public class Game extends Canvas implements Runnable {
 					key == KeyEvent.VK_CONTROL||
 					key == KeyEvent.VK_SPACE){
 				if(mitem == 1)
-					this.openGAME();
+					this.openGAME("8000","127.0.0.1","BLUE");
 				else if(mitem == 2)
-					mitem = 2;//no-op
+					State = STATE.CREDITS;
 				else if(mitem == 3)
 					System.exit(1);//this.quitGAME();
 			}
+		}else if(State == STATE.PLAY){
+			
+		}else if(State == STATE.CREDITS){
+			if(key == KeyEvent.VK_UP||key == KeyEvent.VK_DOWN){
+				if(mitem==0)
+					mitem = 1;
+				else
+					mitem = 0;
+			} else if(key == KeyEvent.VK_ENTER ||
+					key == KeyEvent.VK_CONTROL||
+					key == KeyEvent.VK_SPACE){
+				if(mitem == 1)
+					State = STATE.MENU;
+			}
 		}
-	//}
+	}
 	
 	public void keyReleased(KeyEvent e){
 		//int key = e.getKeyCode();
-		
-		/*if(State == STATE.GAME){
-		if(key == KeyEvent.VK_RIGHT){
-			p.setVelX(0);
-		} else if(key == KeyEvent.VK_LEFT){
-			p.setVelX(0);
-		} else if(key == KeyEvent.VK_DOWN){
-			p.setVelY(0);
-		} else if(key == KeyEvent.VK_UP){
-			p.setVelY(0);;
-		}
-		}*/
 	}
 	
 	
@@ -229,23 +225,21 @@ public class Game extends Canvas implements Runnable {
 	public BufferedImage getSpriteSheet(){
 		return null;//spriteSheet;
 	}
-	public void openGAME() {
+	public void openGAME(String port, String addr, String color) {
 		try
 		{
-		Runtime rt = Runtime.getRuntime();
+		//Runtime rt = Runtime.getRuntime();
 		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
-		Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
-		Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
-		  /*try {
-			    Robot r = new Robot();
-			    r.keyPress(KeyEvent.VK_ALT);
-			    r.keyPress(KeyEvent.VK_TAB);
-			    r.delay(10); //set the delay
-			    r.keyRelease(KeyEvent.VK_ALT);
-			    r.keyRelease(KeyEvent.VK_TAB);
-			  } catch(AWTException e) {
-			    // handle
-			  }*/
+		//Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
+		//Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
+			String[] cserv = {"./se800","server", "6667"};
+			String[] cclie = {"./se800","client", port, addr, color};
+			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
+			Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			p.waitFor();
+			q.waitFor();
+
 		}
 		catch(Exception e)
 		{

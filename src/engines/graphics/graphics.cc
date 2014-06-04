@@ -48,11 +48,6 @@ GraphicsEngine::GraphicsEngine(string color) {
 }
 
 void GraphicsEngine::ignite() {
-	// TODO: MOVE CAMERA INIT SOMEWHERE ELSE
-	this->prev_roll = osg::Vec3( -99, -99, -99);
-	this->prev_pitch = osg::Vec3( -99, -99, -99);
-	this->prev_yaw = osg::Vec3( -99, -99, -99);
-
 	this->ship_mesh = "../Assets/ship.obj";
 	this->asteroid_mesh = "../Assets/asteroid.obj";
 	this->bullet_mesh = "../Assets/bullet.obj";
@@ -70,7 +65,6 @@ void GraphicsEngine::cycle() {
 	if (this->viewer.done())
 		shutdown();
 
-	//clock_t time1 = clock();
 	// check packet queue for updates
 	// if found object and event packet, compare each object to list of rendered objects
 	// for each object which is already rendered, set UpdateObjectCallback (simply a boolean) to true -- this boolean can be mapped to the object
@@ -83,11 +77,6 @@ void GraphicsEngine::cycle() {
 	update_camera();
 	render();
 	reset_rendered_objects();
-
-	//clock_t time2 = clock();
-	//clock_t timediff = time2 - time1;
-	//float timediff_sec = ((float)timediff) / CLOCKS_PER_SEC;
-	//std::cout << "CYCLE LENGTH: " << timediff_sec << "SECONDS" << std::endl;
 }
 
 void GraphicsEngine::shutdown() {
@@ -158,8 +147,8 @@ void GraphicsEngine::ship_init() {
 
 void GraphicsEngine::viewer_init() {
 	// Set up UI update callback
-	ClientControl::UIEventHandler* ui_handler = new ClientControl::UIEventHandler(this->net_utils, this->audio, this->main_ship->trans_matrix);
-	this->viewer.addEventHandler(ui_handler);
+	this->ui_handler = new ClientControl::UIEventHandler(this->net_utils, this->audio, this->main_ship->trans_matrix);
+	this->viewer.addEventHandler(this->ui_handler);
 
 	// Assign the scene we created to the viewer
 	this->viewer.setSceneData(this->root);
@@ -186,68 +175,16 @@ void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_rotation;
 	osg::Matrixd camera_trans;
 
-	osg::Vec3 r_vec = this->main_ship->obj_roll_vector;
-	osg::Vec3 p_vec = this->main_ship->obj_pitch_vector;
-	osg::Vec3 y_vec = this->main_ship->obj_yaw_vector;
-
-	float r_angle = 0, p_angle = 0, y_angle = 0;
-
-	// Set prev roll, pitch, and yaw if first cycle
-/*
-	if (this->prev_roll.x() == -99) {
-		this->prev_roll = r_vec;
-	} else {
-		float r_xdot = prev_roll.x()*r_vec.x();
-		float r_ydot = prev_roll.y()*r_vec.y();
-		float r_zdot = prev_roll.z()*r_vec.z();
-		r_angle = acos(r_xdot + r_ydot + r_zdot);
-	}
-
-	if (this->prev_pitch.x() == -99) {
-		this->prev_pitch = p_vec;
-	} else {
-		float p_xdot = prev_pitch.x()*p_vec.x();		
-		float p_ydot = prev_pitch.y()*p_vec.y();
-		float p_zdot = prev_pitch.z()*p_vec.z();
-		p_angle = acos(p_xdot + p_ydot + p_zdot);
-	}
-	
-	if (this->prev_yaw.x() == -99) {
-		this->prev_yaw = y_vec;
-	} else {
-		float y_xdot = prev_yaw.x()*y_vec.x();		
-		float y_ydot = prev_yaw.y()*y_vec.y();
-		float y_zdot = prev_yaw.z()*y_vec.z();
-		y_angle = acos(y_xdot + y_ydot + y_zdot);
-	}
-	// TODO: Update camera based on ship tilts.
-
-	std::cout << "THIS IS ROLL ANGLE :" << r_angle << " THIS IS PITCH ANGLE " << p_angle << " THIS IS YAW ANGLE : " << y_angle << std::endl;
-	camera_rotation.makeRotate(
-		osg::DegreesToRadians(r_angle), prev_roll,	// roll
-		osg::DegreesToRadians(p_angle), prev_pitch,	// pitch
-		osg::DegreesToRadians(y_angle), prev_yaw);	// heading
-*/
+	// Set tolerance on camera roll.
+	float camera_roll = this->main_ship->obj_roll * 180 / M_PI;
+	camera_roll -= camera_roll * .4;
 
 	camera_rotation.makeRotate(
-		osg::DegreesToRadians(0.0), osg::Vec3(0, 1, 0),	// roll
-		osg::DegreesToRadians(0.0), osg::Vec3(1, 0, 0),	// pitch
+		osg::DegreesToRadians(camera_roll), osg::Vec3(0, 1, 0),	// roll
+		osg::DegreesToRadians(10.0), osg::Vec3(1, 0, 0),	// pitch
 		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
 
-	prev_roll = r_vec;
-	prev_pitch = p_vec;
-	prev_yaw = y_vec;	
-
-	// Z axis refers to Y axis, Y axis refers to Z axis
-	//std::cout << "THIS IS MAIN SHIP POS: " << this->main_ship->obj.pos().x() << " " << this->main_ship->obj.pos().y() << " " << this->main_ship->obj.pos().z() << "THIS IS ROLL VECTOR " << r_vec.x() << " " << r_vec.y() << " " << r_vec.z() << std::endl;
-	//std::cout << "THIS IS YAW VECTOR " << y_vec.x() << " " << y_vec.y() << " " << y_vec.z() << std::endl;
-
-/*
-	camera_trans.makeTranslate(this->main_ship->obj.pos().x() - r_vec.x(), this->main_ship->obj.pos().y() - (40*r_vec.y()), this->main_ship->obj.pos().z() + 8 - (10*r_vec.z()));
-*/
-
-
-	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 39, this->main_ship->obj_pos.z() + 8);
+	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 39, this->main_ship->obj_pos.z());
 
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
@@ -324,7 +261,6 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 		std::cout << "RECEIVE OBJECT OF UNKNOWN TYPE!!" << std::endl;
 	}
 
-
 	// Set position.
 	protos::vector pos_vector = obj.pos();
 	std::cout << pos_vector.x() << pos_vector.y() << pos_vector.z() << std::endl;
@@ -340,13 +276,13 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 		// Ship is initally rotated such that camera sees its side -- it needs to be
 		// rotated such that camera sees its back.
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch() * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	} else if (obj.type() == ObjType::ASTEROID) {
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch()*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll()*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch() * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	}
 
@@ -371,6 +307,7 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 
 void GraphicsEngine::remove_object(rendered_obj *ren_obj) {
 	root->removeChild(ren_obj->trans_matrix);
+	ren_obj->trans_matrix = NULL;
 	free(ren_obj);
 }
 
@@ -386,17 +323,17 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 
 	protos::vector pos_vector = update_obj.pos();
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
-	ren_obj->trans_matrix->setPosition(obj_pos);
+	ren_obj->trans_matrix->setPosition(osg::Vec3(obj_pos.x(), obj_pos.y(), obj_pos.z()));
 
 	if (update_obj.type() == ObjType::SHIP) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	} else if (update_obj.type() == ObjType::ASTEROID) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch*57.295779),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll*57.295779),
+			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch * 180 / M_PI),
+			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	}
 }
@@ -408,8 +345,6 @@ void GraphicsEngine::reset_rendered_objects() {
 }
 
 void GraphicsEngine::update_rendered_objects() {
-	// TODO: Scan for graphical events and update nodes.
-
 	// Find new objects and events packet
 	protos::ObjsAndEventsPacket *packet = new protos::ObjsAndEventsPacket;
 	this->que_lock.lock();
@@ -471,6 +406,11 @@ void GraphicsEngine::update_rendered_objects() {
 		if ((*i).second->should_render == false) {
 			rendered_obj* not_rendered_obj = (*i).second;
 			i = cur_objs.erase(i);
+			// Lose game scenario when main ship is destroyed
+			// TODO: Put in another function
+			if (not_rendered_obj == this->main_ship) {
+				this->viewer.removeEventHandler(this->ui_handler);
+			}
 			remove_object(not_rendered_obj);
 		} else {
 			++i;
