@@ -78,12 +78,84 @@ void PhysicsEngine::apply_rotation(float angle, int flag, Projectile *p) {
 		yaw.at(1) = y * term_c2 + b * cost + (z * a - x * c) * sint;
 		yaw.at(2) = z * term_c2 + c * cost + (x * b - y * a) * sint;
 	}
+
 	// Write in vectors to projectile
 	p->set_r(rol);
 	p->set_p(pit);
 	p->set_y(yaw);
 }
 
+// Verlet 1:
+void PhysicsEngine::verlet_step(float t, Projectile*p) {
+  Grid *old_g = this->environment->get_grid(p);
+
+  // Read in vectors from projectile
+  vector<float> vel = p->get_v();
+  vector<float> pos = p->get_d();
+  
+  // Get scalables
+  vector<float> pos_next = {0,0,0};
+  vector<float> vel_next = {0,0,0};
+  float a = p->get_a();
+  
+  // Get rate of angular change
+  float r_angle = p->get_r_dot();
+  float p_angle = p->get_p_dot();
+
+  // Apply rotations for time step to p
+  vector<float> roll = p->get_r();
+  vector<float> pitch = p->get_p();
+  vector<float> yaw = p->get_y();
+  this->apply_rotation(r_angle*t, 0, p);
+  this->apply_rotation(p_angle*t, 1, p);
+  vector<float> new_orient = p->get_r();
+  
+  // Reorient velocity
+  float vx = vel.at(0);
+  float vy = vel.at(1);
+  float vz = vel.at(2);
+  float mag = sqrt(vx*vx + vy*vy + vz*vz);
+
+
+  // Iterate over
+  int i = 0;
+  if (mag < p->get_preset_max_vel()) {
+ 	for (i = 0; i < 3; i++) {
+   	 	pos_next.at(i) = pos.at(i) + vel.at(i)*t;
+    	vel_next.at(i) = new_orient.at(i) * (mag + a * t);
+    }
+  } else {
+  	for (i = 0; i < 3; i++) {
+    	pos_next.at(i) = pos.at(i) + vel.at(i) * t;
+    	vel_next.at(i) = new_orient.at(i) * mag;
+    }
+  }
+ 
+    // resolves bounding problems
+  	for (i = 0; i < 3; i++) {
+    	if(pos_next.at(i) < 0) {
+      		pos_next.at(i) += this->environment->get_size().at(i);
+    	} else if(pos_next.at(i) >= this->environment->get_size().at(i)) {
+      		pos_next.at(i) -= this->environment->get_size().at(i);
+    	}
+    }
+  
+	if (p->get_type() == SHIP) {
+		cout << "Ship Position: (x = " << pos_next.at(i) << ", y = " << pos_next.at(i) << ", z = " << pos_next.at(i) << std::endl;
+	}
+
+  // Write in vectors to projectile
+  p->set_d(pos_next);
+  p->set_v(vel_next);
+
+  // update grids
+  Grid *new_g = this->environment->get_grid(p);
+  old_g->del_projectile(p);
+  new_g->add_projectile(p);
+}
+    
+/*
+// Verlet 2:
 // Arguments are timestep (for 300 Hz, set t to 1/300) and projectile to be integrated
 void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	Grid *old_g = this->environment->get_grid(p);
@@ -130,6 +202,7 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	old_g->del_projectile(p);
 	new_g->add_projectile(p);
 }
+*/
 
 void PhysicsEngine::collision_check(Projectile *p) {
 	std::vector<Projectile *> neighbors = this->environment->get_neighbors(p);
