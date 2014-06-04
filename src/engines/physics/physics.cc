@@ -141,7 +141,7 @@ void PhysicsEngine::verlet_step(float t, Projectile*p) {
     }
   
 	if (p->get_type() == SHIP) {
-		cout << "Ship Position: (x = " << pos_next.at(i) << ", y = " << pos_next.at(i) << ", z = " << pos_next.at(i) << std::endl;
+		cout << "Ship Position: (x = " << pos_next.at(0) << ", y = " << pos_next.at(1) << ", z = " << pos_next.at(2) << std::endl;
 	}
 
   // Write in vectors to projectile
