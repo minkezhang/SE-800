@@ -200,8 +200,8 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 
 	obj_packet->set_accel(obj->get_a());
 
-	obj_packet->set_pitch(obj->get_p_dot());
-	obj_packet->set_roll(obj->get_r_dot());
+	obj_packet->set_pitch(obj->get_p_float());
+	obj_packet->set_roll(obj->get_r_float());
 
 	protos::vector *roll_vector = obj_packet->mutable_roll_vector();
 	roll_vector->set_x(obj->get_r().at(0));

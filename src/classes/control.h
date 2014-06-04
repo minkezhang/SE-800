@@ -16,6 +16,8 @@ enum Action {
 	BRAKE,
 	RESET_ACCEL,
 	ROLL_TILT,
+	RESET_ROLL_TILT,
+	RESET_PITCH_TILT,
 	PITCH_TILT,
 	BULLET_FIRE,
 	MISSILE_FIRE,
@@ -40,6 +42,8 @@ class ClientControl {
 				osg::PositionAttitudeTransform *main_ship_trans;
 				bool is_pressing_accel;
 				bool is_pressing_brake;
+				bool is_mouse_move_roll;
+				bool is_mouse_move_pitch;
 				float prev_x;
 				float prev_y;
 		};

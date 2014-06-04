@@ -37,6 +37,8 @@ ClientControl::UIEventHandler::UIEventHandler(ClientNetUtils* net_utils, GameAud
 	this->main_ship_trans = main_ship_trans;
 	this->is_pressing_accel = false;
 	this->is_pressing_brake = false;
+	this->is_mouse_move_roll = false;
+	this->is_mouse_move_pitch = false;
 	this->prev_x = 0;
 	this->prev_y = 0;
 }
@@ -119,6 +121,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 		case(osgGA::GUIEventAdapter::MOVE):
 			{
 				int action = Action::ROLL_TILT;
+				this->is_mouse_move_roll = true;
 				NetPacket packet;
 				float prev_x = get_prev_x();
 				float mouse_x = ea.getXnormalized();
@@ -134,6 +137,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 			}
 			{
 				int action = Action::PITCH_TILT;
+				this->is_mouse_move_pitch = true;
 				NetPacket packet;
 				float prev_y = get_prev_y();
 				float mouse_y = ea.getYnormalized();
@@ -150,6 +154,27 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 				return false;
 				break;
 		default:
+			{
+/*
+				NetPacket packet;
+				float tilt = 0;
+				if (this->is_mouse_move_roll) {
+					this->is_mouse_move_roll = false;
+					int action = Action::RESET_PITCH_TILT;
+					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(tilt));
+					if (net_utils->send_to_server(&packet))
+						std::cout << "Sent roll tilt control packet." << std::endl;
+				}
+
+				if (this->is_mouse_move_pitch) {
+					this->is_mouse_move_pitch = false;
+					int action = Action::RESET_ROLL_TILT;
+					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(tilt));
+					if (net_utils->send_to_server(&packet))
+						std::cout << "Sent pitch tilt control packet." << std::endl;
+				}
+*/
+			}
 			return false;
 	}
 }
@@ -171,7 +196,13 @@ void ServerControl::update_physics(int obj_id, int action, void *action_arg, Phy
 	} else if (action == Action::PITCH_TILT) {
 		float *tilt = (float *) action_arg;
 		p->toggle_p_dot(obj_id, *tilt);
+	} else if (action == Action::RESET_PITCH_TILT) {
+		float *tilt = (float *) action_arg;
+		p->toggle_p_dot(obj_id, *tilt);
 	} else if (action == Action::ROLL_TILT) {
+		float *tilt = (float *) action_arg;
+		p->toggle_r_dot(obj_id, *tilt);
+	} else if (action == Action::RESET_ROLL_TILT) {
 		float *tilt = (float *) action_arg;
 		p->toggle_r_dot(obj_id, *tilt);
 	}
