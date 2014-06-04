@@ -23,7 +23,11 @@ public class Game extends Canvas implements Runnable {
 	public static final int SCALE = 2;
 	public final String TITLE = "SE-800";
 	public int mitem = 1;
-	
+	public JFrame frame;
+	public String color = "RED";
+	public String addr = "121.0.0.1";
+	public String port = "8000";
+	public boolean host = true;
 	private boolean running = false;
 	private Thread thread;
 	
@@ -53,12 +57,14 @@ public class Game extends Canvas implements Runnable {
 		this.addMouseListener(new MouseInput(this));
 		menu = new Menu();
 		cred = new Cred();
-		play = new Play();
+		play = new Play(this);
 	    try {
 	    	File bgmf = new File("sdly.wav");
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bgmf);
 	        Clip clip = AudioSystem.getClip();
 	        clip.open(audioInputStream);
+	        clip.loop(Clip.LOOP_CONTINUOUSLY);
+	        //Thread.sleep(10000);
 	        clip.start();
 	    } catch(Exception ex) {
 	        //System.out.println("Error with playing sound.");
@@ -175,14 +181,60 @@ public class Game extends Canvas implements Runnable {
 					key == KeyEvent.VK_CONTROL||
 					key == KeyEvent.VK_SPACE){
 				if(mitem == 1)
-					this.openGAME("8000","127.0.0.1","BLUE");
+					State = STATE.PLAY;//
 				else if(mitem == 2)
 					State = STATE.CREDITS;
 				else if(mitem == 3)
 					System.exit(1);//this.quitGAME();
 			}
 		}else if(State == STATE.PLAY){
-			
+			if(key == KeyEvent.VK_UP){
+				mitem -= 1;
+				if(mitem<1)
+					mitem = 11;
+			} else if(key == KeyEvent.VK_DOWN){
+				mitem += 1;
+				if(mitem>11)
+					mitem = 1;
+			} else if(key == KeyEvent.VK_ENTER ||
+					key == KeyEvent.VK_CONTROL||
+					key == KeyEvent.VK_SPACE){
+				switch(mitem){
+				case 1:
+					State = STATE.MENU;
+					break;
+				case 2:
+					host = true;
+					break;
+				case 3:
+					host = false;
+					break;
+				case 4:
+					port = "8000";
+					break;
+				case 5:
+					addr = "121.0.0.1";
+					break;
+				case 6:
+					color = "RED";
+					break;
+				case 7:
+					color = "BLUE";
+					break;
+				case 8:
+					color = "GREEN";
+					break;
+				case 9:
+					color = "YELLOW";
+					break;
+				case 10:
+					color = "ORANGE";
+					break;
+				case 11:
+					this.openGAME(port,addr,color);
+					break;
+				}
+			}
 		}else if(State == STATE.CREDITS){
 			if(key == KeyEvent.VK_UP||key == KeyEvent.VK_DOWN){
 				if(mitem==0)
@@ -219,7 +271,7 @@ public class Game extends Canvas implements Runnable {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
-		 game.start();
+		game.start();
 	}
 	
 	public BufferedImage getSpriteSheet(){
@@ -235,10 +287,10 @@ public class Game extends Canvas implements Runnable {
 			String[] cserv = {"./se800","server", "6667"};
 			String[] cclie = {"./se800","client", port, addr, color};
 			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
+			@SuppressWarnings("unused")
 			Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
-			p.waitFor();
-			q.waitFor();
+			q.wait(100);//force client to wait
 
 		}
 		catch(Exception e)
