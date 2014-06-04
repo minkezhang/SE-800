@@ -292,11 +292,13 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	rendered_obj *ren_obj = new rendered_obj;
 	ren_obj->obj_roll = obj.roll();
 	ren_obj->obj_pitch = obj.pitch();
+	ren_obj->obj_yaw = obj.yaw();
+
 	ren_obj->obj_size = obj.size();
 	ren_obj->obj_pos = osg::Vec3(obj.pos().x(), obj.pos().y(), obj.pos().z());
 	ren_obj->obj_roll_vector = osg::Vec3(obj.roll_vector().x(), obj.roll_vector().y(), obj.roll_vector().z());
 	ren_obj->obj_pitch_vector = osg::Vec3(obj.pitch_vector().x(), obj.pitch_vector().y(), obj.pitch_vector().z());
-	ren_obj->obj_yaw_vector = osg::Vec3(obj.yaw().x(), obj.yaw().y(), obj.yaw().z());
+	ren_obj->obj_yaw_vector = osg::Vec3(obj.yaw_vector().x(), obj.yaw_vector().y(), obj.yaw_vector().z());
 	ren_obj->should_render = true;
 	ren_obj->trans_matrix = obj_transform;
 	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
@@ -318,7 +320,7 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	ren_obj->obj_pos = osg::Vec3(update_obj.pos().x(), update_obj.pos().y(), update_obj.pos().z());
 	ren_obj->obj_roll_vector = osg::Vec3(update_obj.roll_vector().x(), update_obj.roll_vector().y(), update_obj.roll_vector().z());
 	ren_obj->obj_pitch_vector = osg::Vec3(update_obj.pitch_vector().x(), update_obj.pitch_vector().y(), update_obj.pitch_vector().z());
-	ren_obj->obj_yaw_vector = osg::Vec3(update_obj.yaw().x(), update_obj.yaw().y(), update_obj.yaw().z());
+	ren_obj->obj_yaw_vector = osg::Vec3(update_obj.yaw_vector().x(), update_obj.yaw_vector().y(), update_obj.yaw_vector().z());
 	ren_obj->should_render = true;
 
 	protos::vector pos_vector = update_obj.pos();

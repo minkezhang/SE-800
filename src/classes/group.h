@@ -12,7 +12,7 @@ class Team;
 class Group {
 	public:
 		Group(Team *team);
-		~Group();
+//		~Group();
 
 		Team *get_team();
 		int get_id();
