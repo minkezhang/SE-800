@@ -23,8 +23,11 @@ class GraphicsEngine : public Engine {
 	struct rendered_obj {
 		float obj_roll;
 		float obj_pitch;
+		// TODO: GET YAW
+		float obj_yaw;
 		float obj_size;
 		osg::Vec3 obj_pos;
+		// TODO: GET THESE
 		osg::Vec3 obj_roll_vector;
 		osg::Vec3 obj_pitch_vector;
 		osg::Vec3 obj_yaw_vector;

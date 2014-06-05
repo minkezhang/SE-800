@@ -39,7 +39,7 @@ void WorldEngine::ignite(char *mode) {
 // settings
 void WorldEngine::ignite(char *mode, int n_teams) {
 	for(int i = 0; i < n_teams; i++) {
-		this->add_team(new Team(i));
+		this->add_team(new Team);
 	}
 }
 
