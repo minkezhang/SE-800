@@ -24,7 +24,26 @@ public class Play {
 	public Rectangle corg = new Rectangle(530,280,60,40);
 	public Rectangle bgmb = new Rectangle(600,20,20,20);
 	public Rectangle selbgmb = new Rectangle(600,20,20,20);
-	
+	//color
+	public Color top = new Color(250, 125, 125, 105);
+	public Color high = new Color(125, 250, 250, 195);
+	public Color color2 = new Color(250, 250, 150, 195);
+	public Color color3 = new Color(225, 250, 150, 195);
+	public Color color4 = new Color(225, 250, 150, 195);
+	public Color myred = new Color(255, 50, 50, 255);
+	public Color supred = new Color(255, 0, 0, 195);
+	public Color myblu = new Color(50, 50, 255, 255);
+	public Color supblu = new Color(0, 0, 255, 195);
+	public Color mygre = new Color(10, 255, 50, 255);
+	public Color supgre = new Color(0, 255, 0, 195);
+	public Color myyel = new Color(255, 255, 50, 255);
+	public Color supyel = new Color(255, 255, 0, 195);
+	public Color myorg = new Color(255, 128, 50, 255);
+	public Color suporg = new Color(255, 128, 0, 195);
+	//font
+	public Font fntt = new Font("arial", Font.BOLD, 30);
+	public Font fnt0 = new Font("arial", Font.PLAIN, 15);
+	public Font fnt1 = new Font("arial", Font.BOLD, 30);
 	// RED, BLUE, GREEN, YELLOW, ORANGE
 	
 	//public Rectangle body = new Rectangle(10,100,Game.WIDTH/2 + 360,Game.HEIGHT/2+230);
@@ -40,10 +59,6 @@ public class Play {
 	
 	public void render(Graphics g, int key){
 		Graphics2D g2d = (Graphics2D) g;
-		
-		Color top = new Color(250, 125, 125, 105);
-		//Color bot = new Color(0,0,0,175);
-		Color high = new Color(125, 250, 250, 195);
 		
 		if(this.game.bgmon == true){
 		g.setColor(top);
@@ -140,8 +155,7 @@ public class Play {
 		g2d.draw(select);
 		g2d.fill(select);
 		//////////
-		g.setColor(new Color(250, 250, 150, 195));
-		//public Rectangle thghli = new Rectangle(215,140,18,40);
+		g.setColor(color2);
 		switch(key){
 		case 4://port
 			thghli.x = 215;
@@ -175,7 +189,6 @@ public class Play {
 		}
 		g2d.fill(thghli);
 		g.setColor(top);
-		Font fntt = new Font("arial", Font.BOLD, 30);
 		g.setFont(fntt);
 		//port number
 		g.drawString(Integer.toString(this.game.portnum[0]),porten.x+6,porten.y+32);
@@ -204,11 +217,9 @@ public class Play {
 		//g.drawString("0",addrn4.x+60,addrn4.y+32);
 		//////////
 		g.setColor(top);
-		Font fnt0 = new Font("arial", Font.PLAIN, 15);
 		g.setFont(fnt0);
 		g.drawString("BGM",bgmb.x-38,bgmb.y+16);
 		g2d.draw(bgmb);
-		Font fnt1 = new Font("arial", Font.BOLD, 30);
 		g.setFont(fnt1);
 		g.drawString("<<Back",back.x+1,back.y+36);
 		g.drawString("Host Type",servme.x-200,servme.y+30);
@@ -218,13 +229,13 @@ public class Play {
 		g.drawString("Submit",submit.x+4,submit.y+36);
 		g2d.draw(back);
 		if(this.game.host == true){
-			g.setColor(new Color(225, 250, 150, 195));
+			g.setColor(color3);
 			g2d.fill(servme);
 		}
 		g.setColor(top);
 		g2d.draw(servme);
 		if(this.game.host == false){
-			g.setColor(new Color(225, 250, 150, 195));
+			g.setColor(color4);
 			g2d.fill(clieme);
 		}
 		g.setColor(top);
@@ -237,33 +248,33 @@ public class Play {
 		g2d.draw(addrn3);
 		g2d.draw(addrn4);
 		if(this.game.color == "RED")
-			g.setColor(new Color(255, 50, 50, 255));
+			g.setColor(myred);
 		else
-		g.setColor(new Color(255, 0, 0, 195));
+		g.setColor(supred);
 		g2d.draw(cred);
 		g2d.fill(cred);
 		if(this.game.color == "BLUE")
-			g.setColor(new Color(50, 50, 255, 255));
+			g.setColor(myblu);
 		else
-		g.setColor(new Color(0, 0, 255, 195));
+		g.setColor(supblu);
 		g2d.draw(cblu);
 		g2d.fill(cblu);
 		if(this.game.color == "GREEN")
-			g.setColor(new Color(10, 255, 50, 255));
+			g.setColor(mygre);
 		else
-		g.setColor(new Color(0, 255, 0, 195));
+		g.setColor(supgre);
 		g2d.draw(cgre);
 		g2d.fill(cgre);
 		if(this.game.color == "YELLOW")
-			g.setColor(new Color(255, 255, 50, 255));
+			g.setColor(myyel);
 		else
-		g.setColor(new Color(255, 255, 0, 195));
+		g.setColor(supyel);
 		g2d.draw(cyel);
 		g2d.fill(cyel);
 		if(this.game.color == "ORANGE")
-			g.setColor(new Color(255, 128, 50, 255));
+			g.setColor(myorg);
 		else
-		g.setColor(new Color(255, 128, 0, 195));
+		g.setColor(suporg);
 		g2d.draw(corg);
 		g2d.fill(corg);
 		g.setColor(top);
