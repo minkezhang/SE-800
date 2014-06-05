@@ -50,13 +50,15 @@ public class Cred {
 		g2d.fill(body);
 		g.setColor(top);
 		g.setFont(new Font("arial", Font.PLAIN,20));
-		g.drawString("Credits:",body.x+5,body.y+30);
-		g.drawString("Steven Garcia:",body.x+5,body.y+80);
-		g.drawString("Eric Guan:",body.x+5,body.y+130);
-		g.drawString("Justin Lang:",body.x+5,body.y+180);
-		g.drawString("Laura Macaddino:",body.x+5,body.y+230);
-		g.drawString("Seun Ogedengbe:",body.x+5,body.y+280);
-		g.drawString("Minke Zhang:",body.x+5,body.y+330);
+		g.drawString("SE-800 ",body.x+5,body.y+30);
+		g.drawString("Group 329 Game Construction CMSC 23800 (C) 2014",body.x+5,body.y+50);
+		g.drawString("Not for Commercial Use",body.x+5,body.y+70);
+		g.drawString("Steven Garcia: Asset Modeling, Physics",body.x+5,body.y+100);
+		g.drawString("Eric Guan: AI",body.x+5,body.y+140);
+		g.drawString("Justin Lang: AI",body.x+5,body.y+180);
+		g.drawString("Laura Macaddino: Rendering, Networks, Audio",body.x+5,body.y+220);
+		g.drawString("Seun Ogedengbe: Menu, Audio",body.x+5,body.y+260);
+		g.drawString("Minke Zhang: Physics, Interface, Rendering",body.x+5,body.y+300);
 	}
 	
 }
