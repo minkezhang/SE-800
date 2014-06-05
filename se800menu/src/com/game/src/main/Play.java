@@ -30,6 +30,7 @@ public class Play {
 	//public Rectangle body = new Rectangle(10,100,Game.WIDTH/2 + 360,Game.HEIGHT/2+230);
 	public Rectangle select = new Rectangle(10,10,110,50);
 	public Rectangle submit = new Rectangle(210,350,110,50);
+	public Rectangle thghli = new Rectangle(215,140,18,40);
 	
 	Game game;
 	
@@ -139,6 +140,40 @@ public class Play {
 		g2d.draw(select);
 		g2d.fill(select);
 		//////////
+		g.setColor(new Color(250, 250, 150, 195));
+		//public Rectangle thghli = new Rectangle(215,140,18,40);
+		switch(key){
+		case 4://port
+			thghli.x = 215;
+			thghli.y = 140;
+			thghli.x = 215 + this.game.tiscounter*18;
+			break;
+		case 5://addr1
+			thghli.x = 215;
+			thghli.y = 210;
+			thghli.x = 215 + this.game.tiscounter*18;
+			break;
+		case 6://addr2
+			thghli.x = 315;
+			thghli.y = 210;
+			thghli.x = 315 + this.game.tiscounter*18;
+			break;
+		case 7://addr3
+			thghli.x = 415;
+			thghli.y = 210;
+			thghli.x = 415 + this.game.tiscounter*18;
+			break;
+		case 8://addr4
+			thghli.x = 515;
+			thghli.y = 210;
+			thghli.x = 515 + this.game.tiscounter*18;
+			break;
+		default:
+			thghli.x = 215;
+			thghli.y = 140;
+			break;
+		}
+		g2d.fill(thghli);
 		g.setColor(top);
 		Font fntt = new Font("arial", Font.BOLD, 30);
 		g.setFont(fntt);
@@ -153,7 +188,7 @@ public class Play {
 		g.drawString(Integer.toString(this.game.addr1[2]),addrn1.x+42,addrn1.y+32);
 		//g.drawString("0",addrn1.x+60,addrn1.y+32);
 		//address 2
-		g.drawString(Integer.toString(this.game.addr1[0]),addrn2.x+6,addrn2.y+32);
+		g.drawString(Integer.toString(this.game.addr2[0]),addrn2.x+6,addrn2.y+32);
 		g.drawString(Integer.toString(this.game.addr2[1]),addrn2.x+24,addrn2.y+32);
 		g.drawString(Integer.toString(this.game.addr2[2]),addrn2.x+42,addrn2.y+32);
 		//g.drawString("0",addrn2.x+60,addrn2.y+32);

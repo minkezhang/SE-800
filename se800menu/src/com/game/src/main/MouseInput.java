@@ -81,17 +81,30 @@ public class MouseInput implements MouseListener{
 	public Rectangle bgmb = new Rectangle(600,20,20,20);
 		*/
 		}else if(Game.State == STATE.PLAY){
-			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60)
+			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60){
+				this.game.mitem = 1;
 				Game.State = STATE.MENU;
+			}
 			else if(mx >= 210 && mx <= 285 && my >= 70 && my <= 110)
 				this.game.host = true;
 			else if(mx >= 310 && mx <= 385 && my >= 70 && my <= 110)
 				this.game.host = false;
-			else if(mx >= 210 && mx <= 290 && my >= 140 && my <= 180)
-				this.game.host = this.game.host;//allows number entry
-			else if(mx >= 210 && mx <= 290 && my >= 210 && my <= 250)
-				this.game.host = this.game.host;//allows number entry
-			else if(mx >= 210 && mx <= 270 && my >= 280 && my <= 320)
+			else if(mx >= 210 && mx <= 290 && my >= 140 && my <= 180){
+				this.game.mitem = 4;
+				this.game.tiscounter = 0;
+			}else if(mx >= 210 && mx <= 290 && my >= 210 && my <= 250){
+				this.game.mitem = 5;
+				this.game.tiscounter = 0;
+			}else if(mx >= 310 && mx <= 390 && my >= 210 && my <= 250){
+				this.game.mitem = 6;
+				this.game.tiscounter = 0;
+			}else if(mx >= 410 && mx <= 490 && my >= 210 && my <= 250){
+				this.game.mitem = 7;
+				this.game.tiscounter = 0;
+			}else if(mx >= 510 && mx <= 590 && my >= 210 && my <= 250){
+				this.game.mitem = 8;
+				this.game.tiscounter = 0;
+			}else if(mx >= 210 && mx <= 270 && my >= 280 && my <= 320)
 				this.game.color = "RED";
 			else if(mx >= 290 && mx <= 350 && my >= 280 && my <= 320)
 				this.game.color = "BLUE";

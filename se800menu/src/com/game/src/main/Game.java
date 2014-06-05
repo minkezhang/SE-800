@@ -26,6 +26,7 @@ public class Game extends Canvas implements Runnable {
 	public int mitem = 1;
 	public JFrame frame;
 	public String color = "RED";
+	public int tiscounter = 0;
 	public int[] addr1 = new int[] {1,2,1};
 	public int[] addr2 = new int[] {0,0,0};
 	public int[] addr3 = new int[] {0,0,0};
@@ -71,7 +72,7 @@ public class Game extends Canvas implements Runnable {
 		cred = new Cred(this);
 		play = new Play(this);
 	    try {
-	    	File bgmf = new File("sdly.wav");
+	    	File bgmf = new File(/*"sdly.ogg");//*/"sdly.wav");
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bgmf);
 	        Clip clip = AudioSystem.getClip();
 	        this.clip = clip;
@@ -252,50 +253,49 @@ public class Game extends Canvas implements Runnable {
 					||key == KeyEvent.VK_7
 					||key == KeyEvent.VK_8
 					||key == KeyEvent.VK_9){
-				int u = 0;
 				switch(mitem){
 				case 4://port
-					portnum[u] = key2int(key);
-					u++;
-					if(u>=4){
+					portnum[tiscounter] = key2int(key);
+					tiscounter++;
+					if(tiscounter>=4){
 						mitem++;
-						u=0;
+						tiscounter=0;
 						port = Integer.toString(intmerge(portnum));
 					}
 					break;
 				case 5://addr 1
-					addr1[u] = key2int(key);
-					u++;
-					if(u>=3){
+					addr1[tiscounter] = key2int(key);
+					tiscounter++;
+					if(tiscounter>=3){
 						mitem++;
-						u=0;
+						tiscounter=0;
 						sadr1 = Integer.toString(intmerge(addr1));
 					}
 					break;
 				case 6://addr 2
-					addr2[u] = key2int(key);
-					u++;
-					if(u>=3){
+					addr2[tiscounter] = key2int(key);
+					tiscounter++;
+					if(tiscounter>=3){
 						mitem++;
-						u=0;
+						tiscounter=0;
 						sadr2 = Integer.toString(intmerge(addr2));
 					}
 					break;
 				case 7://addr 3
-					addr3[u] = key2int(key);
-					u++;
-					if(u>=3){
+					addr3[tiscounter] = key2int(key);
+					tiscounter++;
+					if(tiscounter>=3){
 						mitem++;
-						u=0;
+						tiscounter=0;
 						sadr3 = Integer.toString(intmerge(addr3));
 					}
 					break;
 				case 8://addr 4
-					addr4[u] = key2int(key);
-					u++;
-					if(u>=3){
+					addr4[tiscounter] = key2int(key);
+					tiscounter++;
+					if(tiscounter>=3){
 						mitem++;
-						u=0;
+						tiscounter=0;
 						sadr4 = Integer.toString(intmerge(addr4));
 					}
 					break;
@@ -424,14 +424,14 @@ public class Game extends Canvas implements Runnable {
 			String[] cclie = {"./se800","client", port, addr, color};
 			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
 			if(this.host == true){
-				//for(int w = 0; w < cserv.length;w++)
-					//System.out.println(cserv[w]);
+				for(int w = 0; w < cserv.length;w++)
+					System.out.println(cserv[w]);
 				@SuppressWarnings("unused")
 				Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			}
 			
-			//for(int r = 0; r < cclie.length;r++)
-				//System.out.println(cclie[r]);
+			for(int r = 0; r < cclie.length;r++)
+				System.out.println(cclie[r]);
 			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			q.wait(100);//force client to wait
 
