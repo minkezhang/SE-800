@@ -13,6 +13,14 @@ public class Cred {
 	public Rectangle select = new Rectangle(10,10,110,50);
 	public Rectangle bgmb = new Rectangle(600,20,20,20);
 	public Rectangle selbgmb = new Rectangle(600,20,20,20);
+	//colors
+	public Color top = new Color(250, 125, 125, 105);
+	public Color bot = new Color(0,0,0,175);
+	public Color high = new Color(125, 250, 250, 195);
+	//fonts
+	public Font fnt0 = new Font("arial", Font.PLAIN, 15);
+	public Font fnt1 = new Font("arial", Font.BOLD, 30);
+	public Font fnt2 = new Font("arial", Font.PLAIN,20);
 	
 	Game game;
 	
@@ -23,9 +31,6 @@ public class Cred {
 	public void render(Graphics g, int key){
 		Graphics2D g2d = (Graphics2D) g;
 		
-		Color top = new Color(250, 125, 125, 105);
-		Color bot = new Color(0,0,0,175);
-		Color high = new Color(125, 250, 250, 195);
 		if(this.game.bgmon == true){
 			g.setColor(top);
 			g2d.draw(selbgmb);
@@ -37,11 +42,9 @@ public class Cred {
 		g2d.fill(select);
 		}
 		g.setColor(top);
-		Font fnt0 = new Font("arial", Font.PLAIN, 15);
 		g.setFont(fnt0);
 		g.drawString("BGM",bgmb.x-38,bgmb.y+16);
 		g2d.draw(bgmb);
-		Font fnt1 = new Font("arial", Font.BOLD, 30);
 		g.setFont(fnt1);
 		g.drawString("<<Back",back.x+1,back.y+36);
 		g2d.draw(back);
@@ -49,7 +52,7 @@ public class Cred {
 		g.setColor(bot);
 		g2d.fill(body);
 		g.setColor(top);
-		g.setFont(new Font("arial", Font.PLAIN,20));
+		g.setFont(fnt2);
 		g.drawString("SE-800 ",body.x+5,body.y+30);
 		g.drawString("Group 329 Game Construction CMSC 23800 (C) 2014",body.x+5,body.y+50);
 		g.drawString("Not for Commercial Use",body.x+5,body.y+70);

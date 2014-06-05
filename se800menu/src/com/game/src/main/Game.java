@@ -27,6 +27,7 @@ public class Game extends Canvas implements Runnable {
 	public static final int HEIGHT = WIDTH / 12 * 9;
 	public static final int SCALE = 2;
 	public final String TITLE = "SE-800";
+	public static int imgsize;
 	public int mitem = 1;
 	public int tickcount = 0;
 	public int[] pos = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//8 images 0-3 xs 4-7 ys 8-15= duplicates
@@ -78,6 +79,7 @@ public class Game extends Canvas implements Runnable {
 			bg22 = loader.loadImage("/sb4.png");
 			bg32 = loader.loadImage("/sb3.png");
 			bg42 = loader.loadImage("/sb2.png");
+			imgsize = background2.getWidth();
 			pos[11] = background2.getWidth();
 			pos[10] = bg22.getWidth();
 			pos[9] = bg32.getWidth();
@@ -149,11 +151,15 @@ public class Game extends Canvas implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if(delta >=1){
+				//System.out.println("ticking");
 				tick();
+				//System.out.println("tock");
 				//updates++;
 				//delta--;
 			}
+			//System.out.println("Start Render");
 			render();
+			//System.out.println("Stop Render");
 			//frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
@@ -162,7 +168,9 @@ public class Game extends Canvas implements Runnable {
 				//updates = 0;
 				//frames = 0;
 			}
+			//System.out.println(running);
 		}
+		//System.out.println("STAHP!");
 		stop();
 	}
 	
@@ -175,6 +183,7 @@ public class Game extends Canvas implements Runnable {
 				//bg3, pos[9], pos[13]
 				//bg2, pos[10], pos[14]
 				//background, pos[11], pos[15]
+		//System.out.println("TKP1");
 		if(tickcount%30==0){
 			pos[3]--;
 			pos[11]--;
@@ -187,14 +196,24 @@ public class Game extends Canvas implements Runnable {
 			pos[0]--;
 			pos[8]--;
 		}
-		for(int q=0;q>11;q++){
-			if(pos[q]==4)
+		//System.out.println("TKP2");
+		for(int q=0;q<11;q++){
+			if(q==4)
 				q=8;
-			if(pos[q]>(-bg42.getWidth())){//assuming all images the same size
-				pos[q]=bg42.getWidth();
+			if(pos[q]<(-imgsize)){//assuming all images the same size
+				pos[q]=imgsize;
 			}
+			//System.out.println(q);
 		}
 		tickcount++;
+		//System.out.println("TKP3");
+		if(tickcount>60){
+			tickcount = 0;
+			//for(int i = 0; i < pos.length;i++)
+				//System.out.print("|"+pos[i]+"|");
+			//System.out.println(tickcount);
+		}
+		//System.out.println(tickcount);
 	}
 	
 	private void render(){
