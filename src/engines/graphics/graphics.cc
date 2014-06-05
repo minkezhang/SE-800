@@ -21,7 +21,7 @@
 #include <osg/Texture2D>
 #include <osg/Vec3>
 #include <osg/Vec4>
-#include <osg/ShapeDrawable> 
+#include <osg/ShapeDrawable>
 #include <osgDB/ReadFile>
 #include <osgParticle/ExplosionEffect>
 #include <osgParticle/ExplosionDebrisEffect>

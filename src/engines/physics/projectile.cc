@@ -28,21 +28,21 @@ Projectile::Projectile(
                         osg::Vec3d(0, 1, 0))));
 */
 float Projectile::get_r_float() {
-	float angle = acos(this->p.at(0));
-	float sign = asin(sqrt(pow(this->p.at(1), 2) + pow(this->p.at(2), 2)));
-	sign = (sign > 0) * 2 - 1;
+	float angle = acos(this->p.at(1));
+	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(2), 2)));
+	sign = (sign < 0) * 2 - 1;
 	return(angle);
 }
 float Projectile::get_y_float() {
-	float angle = acos(this->p.at(1));
-	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(2), 2)));
-	sign = (sign > 0) * 2 - 1;
+	float angle = acos(this->p.at(0));
+	float sign = asin(sqrt(pow(this->p.at(1), 2) + pow(this->p.at(2), 2)));
+	sign = (sign < 0) * 2 - 1;
 	return(angle);
 }
 float Projectile::get_p_float() {
 	float angle = acos(this->p.at(2));
 	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(1), 2)));
-	sign = (sign > 0) * 2 - 1;
+	sign = (sign < 0) * 2 - 1;
 	return(angle);
 }
 
