@@ -39,6 +39,7 @@ public class Menu {
 			 ge.registerFont(fnt0);
 		} catch (IOException|FontFormatException e) {
 				 e.printStackTrace();
+				 fnt0 = new Font("arial", Font.PLAIN, 50);
 		}
 	}
 
