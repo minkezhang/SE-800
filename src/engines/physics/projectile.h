@@ -38,6 +38,10 @@ class Projectile {
 		std::vector<float> get_v();		// get velocity
 		float get_a();				// get acceleration
 
+		float get_p_float();			// return in rad the pitch relative to { 0, 0, 1 }
+		float get_y_float();			// return in rad the yaw relative to { 0, 1, 0 }
+		float get_r_float();			// return in rad the roll relative to { 1, 0, 0 }
+
 		std::vector<float> get_p();		// get pitch axis
 		std::vector<float> get_y();		// get yaw axis
 		std::vector<float> get_r();		// get roll axis

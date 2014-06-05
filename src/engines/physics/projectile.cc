@@ -22,6 +22,14 @@ Projectile::Projectile(
 }
 
 // GET FUNCTIONS
+/*
+                        osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch * 180 / M_PI),
+                        osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
+                        osg::Vec3d(0, 1, 0))));
+*/
+float Projectile::get_p_float() { return(0); }
+float Projectile::get_r_float() { return(0); }
+float Projectile::get_y_float() { return(0); }
 
 int Projectile::get_id() { return this->id; }
 float Projectile::get_size() { return this->size; }
