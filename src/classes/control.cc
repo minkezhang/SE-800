@@ -133,6 +133,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_x));
 					if (net_utils->send_to_server(&packet))
 						std::cout << "Sent roll tilt control packet." << std::endl;
+					prev_x = bin_x;
 				}
 			}
 			{
@@ -149,6 +150,7 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(mouse_y));
 					if (net_utils->send_to_server(&packet))
 						std::cout << "Sent pitch tilt control packet." << std::endl;
+					prev_y = bin_y;
 				}
 			}
 				return false;
