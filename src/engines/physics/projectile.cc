@@ -31,19 +31,22 @@ float Projectile::get_r_float() {
 	float angle = acos(this->p.at(1));
 	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(2), 2)));
 	sign = (sign < 0) * 2 - 1;
-	return(angle);
+	cout << "r_float value: " << angle << endl;
+	return(angle*sign);
 }
 float Projectile::get_y_float() {
 	float angle = acos(this->p.at(0));
 	float sign = asin(sqrt(pow(this->p.at(1), 2) + pow(this->p.at(2), 2)));
 	sign = (sign < 0) * 2 - 1;
-	return(angle);
+	cout << "y_float value: " << angle << endl; 
+	return(angle*sign);
 }
 float Projectile::get_p_float() {
 	float angle = acos(this->p.at(2));
 	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(1), 2)));
 	sign = (sign < 0) * 2 - 1;
-	return(angle);
+	cout << "p_float value: " << angle << endl; 
+	return(angle*sign);
 }
 
 int Projectile::get_id() { return this->id; }
