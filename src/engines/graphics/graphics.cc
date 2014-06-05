@@ -172,51 +172,63 @@ void GraphicsEngine::send_update_req() {
 
 void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_matrix;
-	osg::Matrixd camera_rotation;
-	osg::Matrixd camera_trans;
+	osg::Matrixd cameraRotation;
+	osg::Matrixd cameraTrans;
+	osg::Matrixd rotmat;
+	osg::Matrixd ident;
 
-//    obj_transform->setPosition(obj_pos);
-
+	osg::Vec3f vpitch = this->main_ship->obj_pitch_vector;
+	osg::Vec3f vroll = this->main_ship->obj_roll_vector;
+	osg::Vec3f vyaw = this->main_ship->obj_yaw_vector;
+	
 
 	// Set tolerance on camera roll.
 	float camera_roll = this->main_ship->obj_roll * 180 / M_PI;
 	float camera_pitch = this->main_ship->obj_pitch * 180 / M_PI;
 	float camera_yaw = this->main_ship->obj_yaw * 180 / M_PI;
 
-	float offset_x = this->main_ship->obj_pitch_vector.x();
-	float offset_y = this->main_ship->obj_pitch_vector.y();
-	float offset_z = this->main_ship->obj_pitch_vector.z();
+	float pitch_x = vpitch.x();
+	float pitch_y = vpitch.y();
+	float pitch_z = vpitch.z();
+	float roll_x = vroll.x();
+	float roll_y = vroll.y();
+	float roll_z = vroll.z();
+	float yaw_x = vyaw.x();
+	float yaw_y = vyaw.y();
+	float yaw_z = vyaw.z();
+	
+	rotmat.set(pitch_x, pitch_y, pitch_z, 0,  roll_x, roll_y, roll_z, 0, yaw_x, yaw_y, yaw_z, 0, 0, 0, 0, 0);
+	ident.set(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
 
-	float mag = (1.0 / 40.0) * std::sqrt(offset_x * offset_x + offset_y * offset_y + offset_z * offset_z);
+	
+	float mag = (1.0 / 40.0) * std::sqrt(pitch_x * pitch_x + pitch_y * pitch_y + pitch_z * pitch_z);
 
-	float cam_x = this->main_ship->obj_pos.x() - offset_y / mag;
-	float cam_y = this->main_ship->obj_pos.y() - offset_x / mag;
-	float cam_z = this->main_ship->obj_pos.z() - offset_z / mag;
+	float cam_x = this->main_ship->obj_pos.x() - pitch_y / mag;
+	float cam_y = this->main_ship->obj_pos.y() - pitch_x / mag;
+	float cam_z = this->main_ship->obj_pos.z() - pitch_z / mag;
 
+	osg::Vec3f eye_t = {0,0,0};
+	osg::Vec3f up_t = {1,0,0};
+	osg::Vec3f center_t = {0,1,0};
+
+	this->viewer.getCamera()->setViewMatrixAsLookAt(eye_t, center_t, up_t);
+
+
+	cameraRotation.makeRotate(
+		osg::DegreesToRadians(0.0f), osg::Vec3(0,1,0), 			// roll
+          	osg::DegreesToRadians(0.0f), osg::Vec3(1,0,0),	 		// pitch
+          	osg::DegreesToRadians(0.0f), osg::Vec3(0,0,1)); 		// heading 
 /*
-	camera_rotation.makeRotate(
-		osg::DegreesToRadians(camera_roll	), osg::Vec3(0, 1, 0),		// roll
-		osg::DegreesToRadians(camera_pitch	), osg::Vec3(1, 0, 0),		// pitch
-		osg::DegreesToRadians(camera_yaw	), osg::Vec3(0, 0, 1)		// heading
-	);
+	cameraRotation.makeRotate(
+		osg::DegreesToRadians(-30.0f), osg::Vec3(pitch_x, roll_x, yaw_x), 			// roll
+          	osg::DegreesToRadians(-30.0f), osg::Vec3(pitch_z, roll_z, yaw_z),		 		// pitch
+          	osg::DegreesToRadians(-30.0f), osg::Vec3(pitch_y, roll_y, yaw_y));	 		// yaw
 */
-	camera_rotation.makeRotate(
-		osg::DegreesToRadians(0.0f	), osg::Vec3(0, 1, 0),		// roll
-		osg::DegreesToRadians(0.0f	), osg::Vec3(1, 0, 0),		// pitch
-		osg::DegreesToRadians(0.0f	), osg::Vec3(0, 0, 1)		// heading
-	);
+	// cameraTrans.makeTranslate(cam_x, cam_y, cam_z);
+	cameraTrans.makeTranslate(0, 0, 0);
 
-	std::cout << "mag -- " << mag << "; cam_x = " << cam_x << "; offset_x / mag = " << offset_x / mag << "; pos_x = " << this->main_ship->obj_pos.x() << std::endl;
-	std::cout << "mag -- " << mag << "; cam_y = " << cam_y << "; offset_y / mag = " << offset_y / mag << "; pos_y = " << this->main_ship->obj_pos.y() << std::endl;
-	std::cout << "mag -- " << mag << "; cam_z = " << cam_z << "; offset_z / mag = " << offset_z / mag << "; pos_z = " << this->main_ship->obj_pos.z() << std::endl;
-
-	// camera_trans.makeTranslate(cam_x, cam_y, cam_z);
-
-	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 40, this->main_ship->obj_pos.z());
-
-	camera_matrix = camera_rotation * camera_trans;
-
-	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
+//	camera_matrix = cameraRotation * cameraTrans;
+	camera_matrix = cameraRotation;
 	this->viewer.getCamera()->setViewMatrix((
 		camera_matrix.inverse(camera_matrix) * osg::Matrixd::rotate(-M_PI / 2.0, 1, 0, 0)));
 }
