@@ -49,6 +49,7 @@ public class Cred {
 		g.setColor(bot);
 		g2d.fill(body);
 		g.setColor(top);
+		g.setFont(new Font("arial", Font.PLAIN,20));
 		g.drawString("Credits:",body.x+5,body.y+30);
 		g.drawString("Steven Garcia:",body.x+5,body.y+80);
 		g.drawString("Eric Guan:",body.x+5,body.y+130);

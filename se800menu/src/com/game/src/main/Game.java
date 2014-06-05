@@ -24,6 +24,7 @@ public class Game extends Canvas implements Runnable {
 	public static final int SCALE = 2;
 	public final String TITLE = "SE-800";
 	public int mitem = 1;
+	public int[] pos = new int[] {0,0,0,0,0,0,0,0};//4 images 0-3 xs 4-7 ys
 	public JFrame frame;
 	public String color = "RED";
 	public int tiscounter = 0;
@@ -148,9 +149,10 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	private void tick(){
-		/*(State == STATE.GAME){
-			p.tick();
-		}*/
+		//bg4, pos[0], pos[4]
+		//bg3, pos[1], pos[5]
+		//bg2, pos[2], pos[6]
+		//background, pos[3], pos[7]
 	}
 	
 	private void render(){
@@ -161,12 +163,13 @@ public class Game extends Canvas implements Runnable {
 		}
 		Graphics g = bs.getDrawGraphics();
 		///////////////////
+		//drawImage(Image img, int x, int y, ImageObserver observer)
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-		
-		g.drawImage(bg4, 0, 0, null);
-		g.drawImage(bg3, 0, 0, null);
-		g.drawImage(bg2, 0, 0, null);
-		g.drawImage(background, 0, 0, null);
+		//We control the vertical and the horizontal
+		g.drawImage(bg4, pos[0], pos[4], null);
+		g.drawImage(bg3, pos[1], pos[5], null);
+		g.drawImage(bg2, pos[2], pos[6], null);
+		g.drawImage(background, pos[3], pos[7], null);
 		//////////////////
 		if(State == STATE.MENU){
 			menu.render(g,mitem);
@@ -400,6 +403,7 @@ public class Game extends Canvas implements Runnable {
 	
 		JFrame frame = new JFrame(game.TITLE);
 		frame.add(game);
+		//frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);
@@ -433,7 +437,7 @@ public class Game extends Canvas implements Runnable {
 			for(int r = 0; r < cclie.length;r++)
 				System.out.println(cclie[r]);
 			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
-			q.wait(100);//force client to wait
+			q.wait(1);//force client to wait
 
 		}
 		catch(Exception e)

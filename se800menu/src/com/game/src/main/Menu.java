@@ -31,7 +31,7 @@ public class Menu {
 		
 		Font fnt0 = null;//new Font("arial", Font.BOLD, 50);
 		try {
-			fnt0 = Font.createFont(Font.TRUETYPE_FONT, new File("me123.TTF"));
+			fnt0 = Font.createFont(Font.TRUETYPE_FONT, new File("me123.ttf"));
 			fnt0 = fnt0.deriveFont(Font.PLAIN,50);
 			GraphicsEnvironment ge = 
 					GraphicsEnvironment.getLocalGraphicsEnvironment();
