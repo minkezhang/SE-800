@@ -153,30 +153,9 @@ bool ClientControl::UIEventHandler::handle(const osgGA::GUIEventAdapter& ea, osg
 					prev_y = bin_y;
 				}
 			}
-				return false;
-				break;
+			return false;
+			break;
 		default:
-			{
-/*
-				NetPacket packet;
-				float tilt = 0;
-				if (this->is_mouse_move_roll) {
-					this->is_mouse_move_roll = false;
-					int action = Action::RESET_PITCH_TILT;
-					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(tilt));
-					if (net_utils->send_to_server(&packet))
-						std::cout << "Sent roll tilt control packet." << std::endl;
-				}
-
-				if (this->is_mouse_move_pitch) {
-					this->is_mouse_move_pitch = false;
-					int action = Action::RESET_ROLL_TILT;
-					PacketUtils::make_packet(&packet, PacketType::CONTROL_INPUT, (void *) &action, (void *) &(tilt));
-					if (net_utils->send_to_server(&packet))
-						std::cout << "Sent pitch tilt control packet." << std::endl;
-				}
-*/
-			}
 			return false;
 	}
 }

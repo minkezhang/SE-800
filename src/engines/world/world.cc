@@ -70,7 +70,8 @@ Ship *WorldEngine::join(Pilot *p) {
 	pos = { 5.0, (float) obj_count * 19, 6.0 };
 
 	this->obj_count_lock.lock();
-	Ship *s = new ShipCarrier(this->obj_count, pos);
+	Ship *s = new ShipCarrier(this->obj_count, { 5, 3 * 19.0, 2 });
+	// Ship *s = new ShipCarrier(this->obj_count, { 0, 0, 0 });
 	std::cout << "SPAWNED NEW SHIP OF ID " << this->obj_count << std::endl;
 	this->obj_count++;
 	this->obj_count_lock.unlock();

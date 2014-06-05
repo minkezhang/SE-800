@@ -180,22 +180,45 @@ void GraphicsEngine::update_camera() {
 
 	// Set tolerance on camera roll.
 	float camera_roll = this->main_ship->obj_roll * 180 / M_PI;
-	float ship_x = this->main_ship->obj_pos.x();
-	float ship_y = this->main_ship->obj_pos.y();
-	float ship_z = this->main_ship->obj_pos.z();
-	camera_roll -= camera_roll * .4;
+	float camera_pitch = this->main_ship->obj_pitch * 180 / M_PI;
+	float camera_yaw = this->main_ship->obj_yaw * 180 / M_PI;
 
+	float offset_x = this->main_ship->obj_pitch_vector.x();
+	float offset_y = this->main_ship->obj_pitch_vector.y();
+	float offset_z = this->main_ship->obj_pitch_vector.z();
+
+	float mag = (1.0 / 40.0) * std::sqrt(offset_x * offset_x + offset_y * offset_y + offset_z * offset_z);
+
+	float cam_x = this->main_ship->obj_pos.x() - offset_y / mag;
+	float cam_y = this->main_ship->obj_pos.y() - offset_x / mag;
+	float cam_z = this->main_ship->obj_pos.z() - offset_z / mag;
+
+/*
 	camera_rotation.makeRotate(
-		osg::DegreesToRadians(camera_roll), osg::Vec3(0, 1, 0),	// roll
-		osg::DegreesToRadians(10.0), osg::Vec3(1, 0, 0),	// pitch
-		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
+		osg::DegreesToRadians(camera_roll	), osg::Vec3(0, 1, 0),		// roll
+		osg::DegreesToRadians(camera_pitch	), osg::Vec3(1, 0, 0),		// pitch
+		osg::DegreesToRadians(camera_yaw	), osg::Vec3(0, 0, 1)		// heading
+	);
+*/
+	camera_rotation.makeRotate(
+		osg::DegreesToRadians(0.0f	), osg::Vec3(0, 1, 0),		// roll
+		osg::DegreesToRadians(0.0f	), osg::Vec3(1, 0, 0),		// pitch
+		osg::DegreesToRadians(0.0f	), osg::Vec3(0, 0, 1)		// heading
+	);
 
-	camera_trans.makeTranslate(this->main_ship->obj_pos.x() - ship_x, this->main_ship->obj_pos.y() - ship_y, this->main_ship->obj_pos.z() - ship_z);
+	std::cout << "mag -- " << mag << "; cam_x = " << cam_x << "; offset_x / mag = " << offset_x / mag << "; pos_x = " << this->main_ship->obj_pos.x() << std::endl;
+	std::cout << "mag -- " << mag << "; cam_y = " << cam_y << "; offset_y / mag = " << offset_y / mag << "; pos_y = " << this->main_ship->obj_pos.y() << std::endl;
+	std::cout << "mag -- " << mag << "; cam_z = " << cam_z << "; offset_z / mag = " << offset_z / mag << "; pos_z = " << this->main_ship->obj_pos.z() << std::endl;
+
+	// camera_trans.makeTranslate(cam_x, cam_y, cam_z);
+
+	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 40, this->main_ship->obj_pos.z());
 
 	camera_matrix = camera_rotation * camera_trans;
+
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
 	this->viewer.getCamera()->setViewMatrix((
-		camera_matrix.inverse(camera_matrix) * osg::Matrixd::rotate(-M_PI/2.0, 1, 0, 0)));
+		camera_matrix.inverse(camera_matrix) * osg::Matrixd::rotate(-M_PI / 2.0, 1, 0, 0)));
 }
 
 void GraphicsEngine::render() {
@@ -281,10 +304,19 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	if (obj.type() == ObjType::SHIP) {
 		// Ship is initally rotated such that camera sees its side -- it needs to be
 		// rotated such that camera sees its back.
+			/*
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
-			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch() * 180 / M_PI),
-			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
+			osg::Vec3d(0, 0, 1))) * (osg::Quat(osg::DegreesToRadians(20.0f + obj.pitch() * 180 / M_PI),
+			osg::Vec3d(1, 0, 0))) * (osg::Quat(osg::DegreesToRadians(obj.roll() * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
+			 */
+			obj_transform->setAttitude(
+				(
+					osg::Quat(osg::DegreesToRadians(0.0f), osg::Vec3d(0, 0, 1))
+				) * (
+					osg::Quat(osg::DegreesToRadians(0.0f), osg::Vec3d(1, 0, 0))
+				) * (
+					osg::Quat(osg::DegreesToRadians(0.0f), osg::Vec3d(0, 1, 0))));
 	} else if (obj.type() == ObjType::ASTEROID) {
 			obj_transform->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
 			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(obj.pitch() * 180 / M_PI),
@@ -333,8 +365,23 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	osg::Vec3 obj_pos(pos_vector.x(), pos_vector.y(), pos_vector.z());
 	ren_obj->trans_matrix->setPosition(osg::Vec3(obj_pos.x(), obj_pos.y(), obj_pos.z()));
 
+	osg::Vec3 a = ren_obj->trans_matrix->getPivotPoint();
+
+	// std::cout << a.x() << ":" << a.y() << ":" << a.z() << std::endl;
+
+	ren_obj->trans_matrix->setPivotPoint(osg::Vec3(1, 1, 1));// obj_pos.x(), obj_pos.y(), obj_pos.z()));
+
 	if (update_obj.type() == ObjType::SHIP) {
-		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		/*
+			ren_obj->trans_matrix->setAttitude(
+				(
+					osg::Quat(osg::DegreesToRadians(-90.0f), osg::Vec3d(0, 0, 1))
+				) * (
+					osg::Quat(osg::DegreesToRadians(0.0f), osg::Vec3d(1, 0, 0))
+				) * (
+					osg::Quat(osg::DegreesToRadians(0.0f), osg::Vec3d(0, 1, 0))));
+		 */
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f + ren_obj->obj_yaw * 180 / M_PI),
 		ren_obj->obj_yaw_vector))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch * 180 / M_PI),
 		ren_obj->obj_pitch_vector))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 		ren_obj->obj_roll_vector)));
