@@ -7,6 +7,7 @@
 #include "../../classes/ship.h"
 #include "../../classes/ship_instance.h"
 #include "../../classes/asteroid.h"
+#include "../../classes/group.h"
 
 WorldEngine::WorldEngine(SchedulingEngine *scheduler) : scheduler(scheduler) {
 	ai_engine = NULL;
@@ -39,7 +40,7 @@ void WorldEngine::ignite(char *mode) {
 // settings
 void WorldEngine::ignite(char *mode, int n_teams) {
 	for(int i = 0; i < n_teams; i++) {
-		this->add_team(new Team(i));
+		this->add_team(new Team());
 	}
 }
 
@@ -64,10 +65,10 @@ void WorldEngine::shutdown() {
  * 2) assign pilot to ship with pilot p
  * 3) return ship object
  */
-Ship *WorldEngine::join(Pilot *p) {
+Ship *WorldEngine::join(Pilot *p, std::vector<float> pos) {
 //	std::vector<float> pos { (float) (rand() % 10 + 1), (float) (rand() % 10 + 1), (float) (rand() % 10 + 1) };
-	std::vector<float> pos;
-	pos = { 5.0, (float) obj_count * 19, 6.0 };
+//	std::vector<float> pos;
+//	pos = { 5.0, (float) obj_count * 19, 6.0 };
 
 	this->obj_count_lock.lock();
 	Ship *s = new ShipCarrier(this->obj_count, pos);

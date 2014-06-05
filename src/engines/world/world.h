@@ -32,7 +32,7 @@ class WorldEngine : Engine {
 		void shutdown() override;
 
 		/* adds a new pilot into a <team, group> */
-		Ship *join(Pilot *pilot);
+		Ship *join(Pilot *pilot, std::vector<float> pos);
 
 		void set_ai_engine(AIEngine *ai_engine);
 		void set_physics_engine(PhysicsEngine *physics_engine);

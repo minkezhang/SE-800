@@ -107,10 +107,35 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 	// Get orientation of incremented acceleration
 	vector<float> acc2 = p->get_r();
 	// Iterate over dimensions
+
+	float forward_movement = 0;
+	if (p->get_type() == ObjType::SHIP){
+		forward_movement = 1 - p->get_p_dot();
+		std::cout << "FORWARD MOVEMENT IS " << forward_movement << std::endl;
+		std::cout << "THIS IS SHIP R DOT " << p->get_r_dot() << std::endl;
+		std::cout << "THIS IS SHIP P DOT " << p->get_p_dot() << std::endl;
+		std::cout << "THIS IS SHIP POS " << p->get_d().at(0) << " " << p->get_d().at(1) << " " << p->get_d().at(2) << std::endl;
+	};
+
+	
+
+	pos_next.at(0) = pos.at(0) + vel.at(0) * t + 10000 * (p->get_r_dot()*2) * t * t;
+	pos_next.at(1) = pos.at(1) + vel.at(1) * t + 100000 *  forward_movement * t * t;
+	if (p->get_type() == ObjType::SHIP) {
+		std::cout << "THIS IS NEW POS Y " << pos_next.at(1) << std::endl;
+		std::cout << "WITH FORWARD MOVMENT OF " << forward_movement << std::endl;
+	}
+	pos_next.at(2) = pos.at(2) + vel.at(2) * t + 10000 * (p->get_p_dot()*2) * t * t;
+
+	vel_next.at(0) = vel.at(0) + 2 * t * (p->get_r_dot() + p->get_r_dot());
+	vel_next.at(1) = vel.at(1) + 2 * t * (forward_movement + forward_movement);
+	vel_next.at(2) = vel.at(2) + 2 * t * (p->get_p_dot() + p->get_p_dot());
+/*
 	for (int i = 0; i < 3; i++) {
 		acc1.at(i) = acc1.at(i) * a;
 		acc2.at(i) = acc2.at(i) * a;
 		// Perform Verlet
+
 		pos_next.at(i) = pos.at(i) + vel.at(i) * t + 0.5 * acc1.at(i) * t * t;
 		vel_next.at(i) = vel.at(i) + 0.5 * t * (acc1.at(i) + acc2.at(i));
 
@@ -121,6 +146,7 @@ void PhysicsEngine::verlet_step(float t, Projectile *p) {
 			pos_next.at(i) -= this->environment->get_size().at(i);
 		}
 	}
+*/
 	// Write in vectors to projectile
 	p->set_d(pos_next);
 	p->set_v(vel_next);
@@ -211,3 +237,4 @@ void PhysicsEngine::cycle() {
 	}
 }
 void PhysicsEngine::shutdown() {}
+

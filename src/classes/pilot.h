@@ -15,7 +15,6 @@ class Group;
 class Pilot {
 	public:
 		Pilot(std::string name, int is_player);
-		~Pilot();
 
 		int get_id();
 		int get_is_player();
@@ -41,7 +40,9 @@ class Pilot {
 		 * consider ways in which to make scheduling this command more tractable
 		 */
 		virtual void control();	// override this
+	protected:
 
+		std::mutex ship_l;	// used to set and unset the pilot ship
 	private:
 		std::string name;	// pilot name -- set in constructor
 
@@ -51,7 +52,6 @@ class Pilot {
 
 		int is_player;		// is player | robot
 
-		std::mutex ship_l;	// used to set and unset the pilot ship
 };
 
 #endif

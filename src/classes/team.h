@@ -2,6 +2,7 @@
 #define _TEAM_H
 
 #include "../classes/group.h"
+#include <vector>
 
 /**
  * each team consists of some groups of ships and is uniquely identified by a team id
@@ -15,18 +16,20 @@ class Group;
 
 class Team {
 	public:
-		Team(int id);
+		Team();
 		~Team();
 
 		int get_id();
-		Group *get_groups();
+		std::vector<Group> get_groups();
+		int get_groupNum();
 
 		void add_group(Group *group);
 		void del_group(Group *group);
 
 	private:
 		int id;
-		Group *groups;
+		int groupNum;
+		std::vector<Group> groups;
 };
 
 #endif

@@ -18,7 +18,7 @@ Projectile::Projectile(
 		size(size),
 		p(p), r(r), y(y),
 		p_dot(p_dot), r_dot(r_dot),
-		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500), lifetime(lifetime) {
+		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500), lifetime(lifetime), color("WHITE") {
 }
 
 // GET FUNCTIONS
@@ -49,6 +49,7 @@ float Projectile::get_preset_p_dot() { return(this->preset_p_dot); }
 float Projectile::get_preset_r_dot() { return(this->preset_r_dot); }
 float Projectile::get_preset_max_vel() { return(this->preset_max_vel); }
 int Projectile::get_lifetime() { return(this->lifetime); }
+string Projectile::get_color() { return(this->color); }
 
 // SET FUNCTIONS
 
@@ -91,6 +92,8 @@ void Projectile::set_lifetime() {
 		this->is_destroyed = 1;
 	}
 }
+
+void Projectile::set_color(string color) { this->color = color; }
 
 void Projectile::damage(float tolerance) {
 	this->cur_tolerance -= tolerance;

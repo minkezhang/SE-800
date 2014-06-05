@@ -40,6 +40,11 @@ void PacketUtils::get_packet_payload(
 	 if (!objs_and_events_packet->ParseFromString(gen_packet.packet())) {
 		cerr << "Failed to parse objs and events packet." << endl;
 	 }
+	} else if (type == PacketType::CLIENT_INIT) {
+		protos::ClientInitPacket* client_init_packet = (protos::ClientInitPacket *) proto_packet;
+		if (!client_init_packet->ParseFromString(gen_packet.packet())) {
+			cerr << "Failed to parse client init packet." << endl;
+		}
 	} else if (type == PacketType::EVENT_ACK) {
 	 protos::EventAckPacket* event_ack_packet = (protos::EventAckPacket *) proto_packet;
 	 if (!event_ack_packet->ParseFromString(gen_packet.packet())) {
@@ -114,6 +119,18 @@ void PacketUtils::make_packet(
 		if (!objs_and_events_packet.SerializeToString(&serialized_packet)) {
 			cerr << "Could not serialize objs and event packet to string." << endl;
 		}
+	} else if (type == PacketType::CLIENT_INIT) {
+		// Read arguments
+		string *color = (string *) payload;
+
+		// Fill specific proto packet
+		protos::ClientInitPacket client_init_packet;
+		client_init_packet.set_color(*color);
+
+		// Serialize specific proto packet
+		if (!client_init_packet.SerializeToString(&serialized_packet)) {
+			cerr << "Could not serialize client init packet to string." << endl;
+		} 
 	} else if (type == PacketType::EVENT_ACK) {
 		// Read arguments
 		int *ack = (int *) payload;
@@ -217,4 +234,6 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 	yaw_vector->set_x(obj->get_y().at(0));
 	yaw_vector->set_y(obj->get_y().at(1));
 	yaw_vector->set_z(obj->get_y().at(2));
+
+	obj_packet->set_color(obj->get_color());
 }

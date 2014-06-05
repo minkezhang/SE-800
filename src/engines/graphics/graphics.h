@@ -28,6 +28,7 @@ class GraphicsEngine : public Engine {
 		osg::Vec3 obj_roll_vector;
 		osg::Vec3 obj_pitch_vector;
 		osg::Vec3 obj_yaw_vector;
+		osg::Vec4 color;
 		bool should_render;
 		osg::PositionAttitudeTransform* trans_matrix;
 	};
@@ -49,7 +50,7 @@ class GraphicsEngine : public Engine {
 		osg::Group *root;
 		ClientControl::UIEventHandler* ui_handler;
 		GameAudio *audio;
-		osg::Vec4 player_color;
+		std::string player_color;
 		rendered_obj *main_ship;
 		osgViewer::Viewer viewer;
 		string ship_mesh;
@@ -75,6 +76,7 @@ class GraphicsEngine : public Engine {
 
 		void set_light_source();
 		void set_shader();
+		osg::Vec4 color_map(std::string color); // Given a color string, computes a color vector.
 
 };
 

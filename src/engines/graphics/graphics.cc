@@ -26,25 +26,13 @@
 #include <osgParticle/ExplosionEffect>
 #include <osgParticle/ExplosionDebrisEffect>
 #include <osgViewer/ViewerBase>
+#include <osgText/Text>
 #include <ctime>
 #include <math.h>
 
 GraphicsEngine::GraphicsEngine(string color) {
 	// Define main color of ship.
-	if (color.compare("RED") == 0) {
-		this->player_color = osg::Vec4(1, 0, 0, 1);
-	} else if (color.compare("BLUE") == 0) {
-		this->player_color = osg::Vec4(0, 1, 1, 1);
-	} else if (color.compare("YELLOW") == 0) {
-		this->player_color = osg::Vec4(1, 1, 0, 1);
-	} else if (color.compare("GREEN") == 0) {
-		this->player_color = osg::Vec4(0, 1, 0, 1);
-	} else if (color.compare("ORANGE") == 0) {
-		this->player_color = osg::Vec4(1, 0.5, 0, 1);
-	} else {
-		// Set ship to white if unknown color provided.
-		this->player_color = osg::Vec4(1, 1, 1, 1);
-	}
+	this->player_color = color;
 }
 
 void GraphicsEngine::ignite() {
@@ -126,8 +114,15 @@ void GraphicsEngine::render_world() {
 }
 
 void GraphicsEngine::ship_init() {
-	protos::RenderedObj *ship = new protos::RenderedObj;
+	// SEND THE CLIENT INIT COLOR PACKET
+	NetPacket packet;
+	string color = this->player_color;
+	PacketUtils::make_packet(&packet, PacketType::CLIENT_INIT, (void *) &color, NULL);
+	if (!this->net_utils->send_to_server(&packet))
+		std::cout << "Could not send client init packet." << std::endl;
 
+
+	protos::RenderedObj *ship = new protos::RenderedObj;
 	// Wait for ship init packet to be received.
 	while (1) {
 		this->que_lock.lock();
@@ -241,7 +236,7 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 
 		osg::StateSet* state_set = new osg::StateSet();
 		osg::Material *mat = new osg::Material;
-		mat->setDiffuse(osg::Material::FRONT, this->player_color);
+		mat->setDiffuse(osg::Material::FRONT, color_map(obj.color()));
 //		mat->setSpecular(osg::Material::FRONT_AND_BACK, osg::Vec4(1.0, 1.0, 1.0, 1.0));
 //		mat->setAmbient(osg::Material::FRONT, osg::Vec4(0.25, 0.25, 0.25, 1.0));
 //		mat->setEmission(osg::Material::FRONT, osg::Vec4(0.0, 0.0, 0.0, 1.0));
@@ -297,6 +292,7 @@ GraphicsEngine::rendered_obj* GraphicsEngine::create_object(protos::RenderedObj 
 	ren_obj->obj_roll_vector = osg::Vec3(obj.roll_vector().x(), obj.roll_vector().y(), obj.roll_vector().z());
 	ren_obj->obj_pitch_vector = osg::Vec3(obj.pitch_vector().x(), obj.pitch_vector().y(), obj.pitch_vector().z());
 	ren_obj->obj_yaw_vector = osg::Vec3(obj.yaw().x(), obj.yaw().y(), obj.yaw().z());
+	ren_obj->color = color_map(obj.color());
 	ren_obj->should_render = true;
 	ren_obj->trans_matrix = obj_transform;
 	cur_objs.insert(std::pair<int, rendered_obj*>(obj.id(), ren_obj));
@@ -319,6 +315,7 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 	ren_obj->obj_roll_vector = osg::Vec3(update_obj.roll_vector().x(), update_obj.roll_vector().y(), update_obj.roll_vector().z());
 	ren_obj->obj_pitch_vector = osg::Vec3(update_obj.pitch_vector().x(), update_obj.pitch_vector().y(), update_obj.pitch_vector().z());
 	ren_obj->obj_yaw_vector = osg::Vec3(update_obj.yaw().x(), update_obj.yaw().y(), update_obj.yaw().z());
+	ren_obj->color = color_map(update_obj.color());
 	ren_obj->should_render = true;
 
 	protos::vector pos_vector = update_obj.pos();
@@ -410,6 +407,28 @@ void GraphicsEngine::update_rendered_objects() {
 			// TODO: Put in another function
 			if (not_rendered_obj == this->main_ship) {
 				this->viewer.removeEventHandler(this->ui_handler);
+				osgText::Text* lose_text = new osgText::Text();
+				osg::Geode* lose_text_geode = new osg::Geode();
+				lose_text_geode->addDrawable(lose_text);
+				osg::PositionAttitudeTransform* text_transform = new osg::PositionAttitudeTransform;
+				text_transform->addChild(lose_text_geode);
+				text_transform->setPosition(this->main_ship->obj_pos);
+				lose_text->setCharacterSize(15);
+				lose_text->setFont("../Assets/font.tff");
+				lose_text->setText("YOU LOSE");
+				lose_text->setAxisAlignment(osgText::Text::XZ_PLANE);
+				
+
+				// Set the text to render with alignment anchor and bounding box around it:
+//				lose_text->setDrawMode(osgText::Text::TEXT | osgText::Text::ALIGNMENT |
+//					osgText::Text::BOUNDINGBOX);
+				lose_text->setAlignment(osgText::Text::CENTER_TOP);
+				lose_text->setPosition(osg::Vec3(this->main_ship->obj_pos.x() - 25, this->main_ship->obj_pos.y() + 45, this->main_ship->obj_pos.z() + 20));
+				lose_text->setColor(osg::Vec4(1.0f, 1.0f, 1.0f, 1.0f));
+
+//				text_transform->setAttitude(osg::Quat(osg::DegreesToRadians(-90.0f),
+///			osg::Vec3d(1, 0, 0)));
+				this->root->addChild(text_transform);
 			}
 			remove_object(not_rendered_obj);
 		} else {
@@ -418,4 +437,21 @@ void GraphicsEngine::update_rendered_objects() {
 	}
 
 //	std::cout << "RENDERING " << updated << " OBJECTS" << std::endl;
+}
+
+osg::Vec4 GraphicsEngine::color_map(std::string color) {
+	if (color.compare("RED") == 0) {
+		return osg::Vec4(1, 0, 0, 1);
+	} else if (color.compare("BLUE") == 0) {
+		return osg::Vec4(0, 1, 1, 1);
+	} else if (color.compare("YELLOW") == 0) {
+		return osg::Vec4(1, 1, 0, 1);
+	} else if (color.compare("GREEN") == 0) {
+		return osg::Vec4(0, 1, 0, 1);
+	} else if (color.compare("ORANGE") == 0) {
+		return osg::Vec4(1, 0.5, 0, 1);
+	} else {
+		// Set ship to white if unknown color provided.
+		return osg::Vec4(1, 1, 1, 1);
+	}
 }

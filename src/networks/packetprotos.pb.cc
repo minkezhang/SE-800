@@ -35,6 +35,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* GeneralPacket_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   GeneralPacket_reflection_ = NULL;
+const ::google::protobuf::Descriptor* ClientInitPacket_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  ClientInitPacket_reflection_ = NULL;
 const ::google::protobuf::Descriptor* ShipInitPacket_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ShipInitPacket_reflection_ = NULL;
@@ -78,7 +81,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(vector));
   RenderedObj_descriptor_ = file->message_type(1);
-  static const int RenderedObj_offsets_[16] = {
+  static const int RenderedObj_offsets_[17] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, mass_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, type_),
@@ -94,6 +97,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, pitch_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, roll_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, yaw_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, color_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, weapon_index_),
   };
   RenderedObj_reflection_ =
@@ -156,7 +160,22 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(GeneralPacket));
-  ShipInitPacket_descriptor_ = file->message_type(5);
+  ClientInitPacket_descriptor_ = file->message_type(5);
+  static const int ClientInitPacket_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientInitPacket, color_),
+  };
+  ClientInitPacket_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      ClientInitPacket_descriptor_,
+      ClientInitPacket::default_instance_,
+      ClientInitPacket_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientInitPacket, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ClientInitPacket, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(ClientInitPacket));
+  ShipInitPacket_descriptor_ = file->message_type(6);
   static const int ShipInitPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ShipInitPacket, ship_),
   };
@@ -171,7 +190,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ShipInitPacket));
-  ObjsAndEventsPacket_descriptor_ = file->message_type(6);
+  ObjsAndEventsPacket_descriptor_ = file->message_type(7);
   static const int ObjsAndEventsPacket_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsPacket, obj_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsPacket, event_),
@@ -187,7 +206,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjsAndEventsPacket));
-  ObjsAndEventsReqPacket_descriptor_ = file->message_type(7);
+  ObjsAndEventsReqPacket_descriptor_ = file->message_type(8);
   static const int ObjsAndEventsReqPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ObjsAndEventsReqPacket, req_),
   };
@@ -202,7 +221,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ObjsAndEventsReqPacket));
-  EventAckPacket_descriptor_ = file->message_type(8);
+  EventAckPacket_descriptor_ = file->message_type(9);
   static const int EventAckPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(EventAckPacket, ack_),
   };
@@ -217,7 +236,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(EventAckPacket));
-  ControlInputPacket_descriptor_ = file->message_type(9);
+  ControlInputPacket_descriptor_ = file->message_type(10);
   static const int ControlInputPacket_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ControlInputPacket, control_),
   };
@@ -255,6 +274,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     GeneralPacket_descriptor_, &GeneralPacket::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    ClientInitPacket_descriptor_, &ClientInitPacket::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ShipInitPacket_descriptor_, &ShipInitPacket::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ObjsAndEventsPacket_descriptor_, &ObjsAndEventsPacket::default_instance());
@@ -279,6 +300,8 @@ void protobuf_ShutdownFile_packetprotos_2eproto() {
   delete ControlInput_reflection_;
   delete GeneralPacket::default_instance_;
   delete GeneralPacket_reflection_;
+  delete ClientInitPacket::default_instance_;
+  delete ClientInitPacket_reflection_;
   delete ShipInitPacket::default_instance_;
   delete ShipInitPacket_reflection_;
   delete ObjsAndEventsPacket::default_instance_;
@@ -299,7 +322,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022packetprotos.proto\022\006protos\")\n\006vector\022\t"
-    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\353\002\n\013Rend"
+    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\372\002\n\013Rend"
     "eredObj\022\n\n\002id\030\001 \002(\r\022\014\n\004mass\030\002 \002(\r\022\014\n\004typ"
     "e\030\003 \002(\r\022\014\n\004size\030\004 \002(\002\022\025\n\rcur_tolerance\030\005"
     " \002(\002\022\025\n\rmax_tolerance\030\006 \002(\002\022\024\n\014is_destro"
@@ -308,18 +331,19 @@ void protobuf_AddDesc_packetprotos_2eproto() {
     "(\002\022#\n\013roll_vector\030\013 \002(\0132\016.protos.vector\022"
     "$\n\014pitch_vector\030\014 \002(\0132\016.protos.vector\022\r\n"
     "\005pitch\030\r \002(\002\022\014\n\004roll\030\016 \002(\002\022\033\n\003yaw\030\017 \002(\0132"
-    "\016.protos.vector\022\024\n\014weapon_index\030\020 \001(\r\"\'\n"
-    "\005Event\022\n\n\002id\030\001 \002(\r\022\022\n\nevent_type\030\002 \002(\r\","
-    "\n\014ControlInput\022\016\n\006action\030\001 \002(\r\022\014\n\004tilt\030\002"
-    " \001(\002\"E\n\rGeneralPacket\022\022\n\npacketType\030\001 \002("
-    "\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010packetId\030\003 \001(\t\"3\n\016S"
-    "hipInitPacket\022!\n\004ship\030\001 \002(\0132\023.protos.Ren"
-    "deredObj\"U\n\023ObjsAndEventsPacket\022 \n\003obj\030\001"
-    " \003(\0132\023.protos.RenderedObj\022\034\n\005event\030\002 \003(\013"
-    "2\r.protos.Event\"%\n\026ObjsAndEventsReqPacke"
-    "t\022\013\n\003req\030\001 \002(\r\"\035\n\016EventAckPacket\022\013\n\003ack\030"
-    "\001 \002(\r\";\n\022ControlInputPacket\022%\n\007control\030\001"
-    " \002(\0132\024.protos.ControlInput", 866);
+    "\016.protos.vector\022\r\n\005color\030\020 \002(\t\022\024\n\014weapon"
+    "_index\030\021 \001(\r\"\'\n\005Event\022\n\n\002id\030\001 \002(\r\022\022\n\neve"
+    "nt_type\030\002 \002(\r\",\n\014ControlInput\022\016\n\006action\030"
+    "\001 \002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n\rGeneralPacket\022\022\n\n"
+    "packetType\030\001 \002(\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010pack"
+    "etId\030\003 \001(\t\"!\n\020ClientInitPacket\022\r\n\005color\030"
+    "\001 \002(\t\"3\n\016ShipInitPacket\022!\n\004ship\030\001 \002(\0132\023."
+    "protos.RenderedObj\"U\n\023ObjsAndEventsPacke"
+    "t\022 \n\003obj\030\001 \003(\0132\023.protos.RenderedObj\022\034\n\005e"
+    "vent\030\002 \003(\0132\r.protos.Event\"%\n\026ObjsAndEven"
+    "tsReqPacket\022\013\n\003req\030\001 \002(\r\"\035\n\016EventAckPack"
+    "et\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInputPacket\022%\n"
+    "\007control\030\001 \002(\0132\024.protos.ControlInput", 916);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -327,6 +351,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
   Event::default_instance_ = new Event();
   ControlInput::default_instance_ = new ControlInput();
   GeneralPacket::default_instance_ = new GeneralPacket();
+  ClientInitPacket::default_instance_ = new ClientInitPacket();
   ShipInitPacket::default_instance_ = new ShipInitPacket();
   ObjsAndEventsPacket::default_instance_ = new ObjsAndEventsPacket();
   ObjsAndEventsReqPacket::default_instance_ = new ObjsAndEventsReqPacket();
@@ -337,6 +362,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
   Event::default_instance_->InitAsDefaultInstance();
   ControlInput::default_instance_->InitAsDefaultInstance();
   GeneralPacket::default_instance_->InitAsDefaultInstance();
+  ClientInitPacket::default_instance_->InitAsDefaultInstance();
   ShipInitPacket::default_instance_->InitAsDefaultInstance();
   ObjsAndEventsPacket::default_instance_->InitAsDefaultInstance();
   ObjsAndEventsReqPacket::default_instance_->InitAsDefaultInstance();
@@ -653,6 +679,7 @@ const int RenderedObj::kPitchVectorFieldNumber;
 const int RenderedObj::kPitchFieldNumber;
 const int RenderedObj::kRollFieldNumber;
 const int RenderedObj::kYawFieldNumber;
+const int RenderedObj::kColorFieldNumber;
 const int RenderedObj::kWeaponIndexFieldNumber;
 #endif  // !_MSC_VER
 
@@ -692,6 +719,7 @@ void RenderedObj::SharedCtor() {
   pitch_ = 0;
   roll_ = 0;
   yaw_ = NULL;
+  color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   weapon_index_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -701,6 +729,9 @@ RenderedObj::~RenderedObj() {
 }
 
 void RenderedObj::SharedDtor() {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    delete color_;
+  }
   if (this != default_instance_) {
     delete pos_;
     delete vel_;
@@ -760,6 +791,13 @@ void RenderedObj::Clear() {
     if (has_yaw()) {
       if (yaw_ != NULL) yaw_->::protos::vector::Clear();
     }
+    if (has_color()) {
+      if (color_ != &::google::protobuf::internal::kEmptyString) {
+        color_->clear();
+      }
+    }
+  }
+  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     weapon_index_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -997,12 +1035,29 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(128)) goto parse_weapon_index;
+        if (input->ExpectTag(130)) goto parse_color;
         break;
       }
 
-      // optional uint32 weapon_index = 16;
+      // required string color = 16;
       case 16: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_color:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_color()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->color().data(), this->color().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(136)) goto parse_weapon_index;
+        break;
+      }
+
+      // optional uint32 weapon_index = 17;
+      case 17: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_weapon_index:
@@ -1115,9 +1170,18 @@ void RenderedObj::SerializeWithCachedSizes(
       15, this->yaw(), output);
   }
 
-  // optional uint32 weapon_index = 16;
+  // required string color = 16;
+  if (has_color()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->color().data(), this->color().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      16, this->color(), output);
+  }
+
+  // optional uint32 weapon_index = 17;
   if (has_weapon_index()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(16, this->weapon_index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(17, this->weapon_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1213,9 +1277,19 @@ void RenderedObj::SerializeWithCachedSizes(
         15, this->yaw(), target);
   }
 
-  // optional uint32 weapon_index = 16;
+  // required string color = 16;
+  if (has_color()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->color().data(), this->color().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        16, this->color(), target);
+  }
+
+  // optional uint32 weapon_index = 17;
   if (has_weapon_index()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(16, this->weapon_index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(17, this->weapon_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1324,7 +1398,16 @@ int RenderedObj::ByteSize() const {
           this->yaw());
     }
 
-    // optional uint32 weapon_index = 16;
+    // required string color = 16;
+    if (has_color()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->color());
+    }
+
+  }
+  if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
+    // optional uint32 weapon_index = 17;
     if (has_weapon_index()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
@@ -1405,6 +1488,11 @@ void RenderedObj::MergeFrom(const RenderedObj& from) {
     if (from.has_yaw()) {
       mutable_yaw()->::protos::vector::MergeFrom(from.yaw());
     }
+    if (from.has_color()) {
+      set_color(from.color());
+    }
+  }
+  if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
     if (from.has_weapon_index()) {
       set_weapon_index(from.weapon_index());
     }
@@ -1425,7 +1513,7 @@ void RenderedObj::CopyFrom(const RenderedObj& from) {
 }
 
 bool RenderedObj::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00007fff) != 0x00007fff) return false;
+  if ((_has_bits_[0] & 0x0000ffff) != 0x0000ffff) return false;
 
   if (has_pos()) {
     if (!this->pos().IsInitialized()) return false;
@@ -1462,6 +1550,7 @@ void RenderedObj::Swap(RenderedObj* other) {
     std::swap(pitch_, other->pitch_);
     std::swap(roll_, other->roll_);
     std::swap(yaw_, other->yaw_);
+    std::swap(color_, other->color_);
     std::swap(weapon_index_, other->weapon_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -2284,6 +2373,232 @@ void GeneralPacket::Swap(GeneralPacket* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = GeneralPacket_descriptor_;
   metadata.reflection = GeneralPacket_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int ClientInitPacket::kColorFieldNumber;
+#endif  // !_MSC_VER
+
+ClientInitPacket::ClientInitPacket()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void ClientInitPacket::InitAsDefaultInstance() {
+}
+
+ClientInitPacket::ClientInitPacket(const ClientInitPacket& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void ClientInitPacket::SharedCtor() {
+  _cached_size_ = 0;
+  color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+ClientInitPacket::~ClientInitPacket() {
+  SharedDtor();
+}
+
+void ClientInitPacket::SharedDtor() {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    delete color_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void ClientInitPacket::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* ClientInitPacket::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ClientInitPacket_descriptor_;
+}
+
+const ClientInitPacket& ClientInitPacket::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_packetprotos_2eproto();
+  return *default_instance_;
+}
+
+ClientInitPacket* ClientInitPacket::default_instance_ = NULL;
+
+ClientInitPacket* ClientInitPacket::New() const {
+  return new ClientInitPacket;
+}
+
+void ClientInitPacket::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_color()) {
+      if (color_ != &::google::protobuf::internal::kEmptyString) {
+        color_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool ClientInitPacket::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required string color = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_color()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->color().data(), this->color().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void ClientInitPacket::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required string color = 1;
+  if (has_color()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->color().data(), this->color().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->color(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* ClientInitPacket::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required string color = 1;
+  if (has_color()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->color().data(), this->color().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->color(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int ClientInitPacket::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required string color = 1;
+    if (has_color()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->color());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void ClientInitPacket::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const ClientInitPacket* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ClientInitPacket*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void ClientInitPacket::MergeFrom(const ClientInitPacket& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_color()) {
+      set_color(from.color());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void ClientInitPacket::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void ClientInitPacket::CopyFrom(const ClientInitPacket& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool ClientInitPacket::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
+
+  return true;
+}
+
+void ClientInitPacket::Swap(ClientInitPacket* other) {
+  if (other != this) {
+    std::swap(color_, other->color_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata ClientInitPacket::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = ClientInitPacket_descriptor_;
+  metadata.reflection = ClientInitPacket_reflection_;
   return metadata;
 }
 

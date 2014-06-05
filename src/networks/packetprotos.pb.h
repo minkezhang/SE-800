@@ -38,6 +38,7 @@ class RenderedObj;
 class Event;
 class ControlInput;
 class GeneralPacket;
+class ClientInitPacket;
 class ShipInitPacket;
 class ObjsAndEventsPacket;
 class ObjsAndEventsReqPacket;
@@ -317,10 +318,22 @@ class RenderedObj : public ::google::protobuf::Message {
   inline ::protos::vector* release_yaw();
   inline void set_allocated_yaw(::protos::vector* yaw);
 
-  // optional uint32 weapon_index = 16;
+  // required string color = 16;
+  inline bool has_color() const;
+  inline void clear_color();
+  static const int kColorFieldNumber = 16;
+  inline const ::std::string& color() const;
+  inline void set_color(const ::std::string& value);
+  inline void set_color(const char* value);
+  inline void set_color(const char* value, size_t size);
+  inline ::std::string* mutable_color();
+  inline ::std::string* release_color();
+  inline void set_allocated_color(::std::string* color);
+
+  // optional uint32 weapon_index = 17;
   inline bool has_weapon_index() const;
   inline void clear_weapon_index();
-  static const int kWeaponIndexFieldNumber = 16;
+  static const int kWeaponIndexFieldNumber = 17;
   inline ::google::protobuf::uint32 weapon_index() const;
   inline void set_weapon_index(::google::protobuf::uint32 value);
 
@@ -356,6 +369,8 @@ class RenderedObj : public ::google::protobuf::Message {
   inline void clear_has_roll();
   inline void set_has_yaw();
   inline void clear_has_yaw();
+  inline void set_has_color();
+  inline void clear_has_color();
   inline void set_has_weapon_index();
   inline void clear_has_weapon_index();
 
@@ -376,10 +391,11 @@ class RenderedObj : public ::google::protobuf::Message {
   float pitch_;
   float roll_;
   ::protos::vector* yaw_;
+  ::std::string* color_;
   ::google::protobuf::uint32 weapon_index_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(16 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
 
   friend void  protobuf_AddDesc_packetprotos_2eproto();
   friend void protobuf_AssignDesc_packetprotos_2eproto();
@@ -683,6 +699,93 @@ class GeneralPacket : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static GeneralPacket* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ClientInitPacket : public ::google::protobuf::Message {
+ public:
+  ClientInitPacket();
+  virtual ~ClientInitPacket();
+
+  ClientInitPacket(const ClientInitPacket& from);
+
+  inline ClientInitPacket& operator=(const ClientInitPacket& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ClientInitPacket& default_instance();
+
+  void Swap(ClientInitPacket* other);
+
+  // implements Message ----------------------------------------------
+
+  ClientInitPacket* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ClientInitPacket& from);
+  void MergeFrom(const ClientInitPacket& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string color = 1;
+  inline bool has_color() const;
+  inline void clear_color();
+  static const int kColorFieldNumber = 1;
+  inline const ::std::string& color() const;
+  inline void set_color(const ::std::string& value);
+  inline void set_color(const char* value);
+  inline void set_color(const char* value, size_t size);
+  inline ::std::string* mutable_color();
+  inline ::std::string* release_color();
+  inline void set_allocated_color(::std::string* color);
+
+  // @@protoc_insertion_point(class_scope:protos.ClientInitPacket)
+ private:
+  inline void set_has_color();
+  inline void clear_has_color();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* color_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_packetprotos_2eproto();
+  friend void protobuf_AssignDesc_packetprotos_2eproto();
+  friend void protobuf_ShutdownFile_packetprotos_2eproto();
+
+  void InitAsDefaultInstance();
+  static ClientInitPacket* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1601,15 +1704,85 @@ inline void RenderedObj::set_allocated_yaw(::protos::vector* yaw) {
   }
 }
 
-// optional uint32 weapon_index = 16;
-inline bool RenderedObj::has_weapon_index() const {
+// required string color = 16;
+inline bool RenderedObj::has_color() const {
   return (_has_bits_[0] & 0x00008000u) != 0;
 }
-inline void RenderedObj::set_has_weapon_index() {
+inline void RenderedObj::set_has_color() {
   _has_bits_[0] |= 0x00008000u;
 }
-inline void RenderedObj::clear_has_weapon_index() {
+inline void RenderedObj::clear_has_color() {
   _has_bits_[0] &= ~0x00008000u;
+}
+inline void RenderedObj::clear_color() {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    color_->clear();
+  }
+  clear_has_color();
+}
+inline const ::std::string& RenderedObj::color() const {
+  return *color_;
+}
+inline void RenderedObj::set_color(const ::std::string& value) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(value);
+}
+inline void RenderedObj::set_color(const char* value) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(value);
+}
+inline void RenderedObj::set_color(const char* value, size_t size) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RenderedObj::mutable_color() {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  return color_;
+}
+inline ::std::string* RenderedObj::release_color() {
+  clear_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = color_;
+    color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RenderedObj::set_allocated_color(::std::string* color) {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    delete color_;
+  }
+  if (color) {
+    set_has_color();
+    color_ = color;
+  } else {
+    clear_has_color();
+    color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional uint32 weapon_index = 17;
+inline bool RenderedObj::has_weapon_index() const {
+  return (_has_bits_[0] & 0x00010000u) != 0;
+}
+inline void RenderedObj::set_has_weapon_index() {
+  _has_bits_[0] |= 0x00010000u;
+}
+inline void RenderedObj::clear_has_weapon_index() {
+  _has_bits_[0] &= ~0x00010000u;
 }
 inline void RenderedObj::clear_weapon_index() {
   weapon_index_ = 0u;
@@ -1882,6 +2055,80 @@ inline void GeneralPacket::set_allocated_packetid(::std::string* packetid) {
   } else {
     clear_has_packetid();
     packetid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// ClientInitPacket
+
+// required string color = 1;
+inline bool ClientInitPacket::has_color() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ClientInitPacket::set_has_color() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ClientInitPacket::clear_has_color() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ClientInitPacket::clear_color() {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    color_->clear();
+  }
+  clear_has_color();
+}
+inline const ::std::string& ClientInitPacket::color() const {
+  return *color_;
+}
+inline void ClientInitPacket::set_color(const ::std::string& value) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(value);
+}
+inline void ClientInitPacket::set_color(const char* value) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(value);
+}
+inline void ClientInitPacket::set_color(const char* value, size_t size) {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  color_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ClientInitPacket::mutable_color() {
+  set_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    color_ = new ::std::string;
+  }
+  return color_;
+}
+inline ::std::string* ClientInitPacket::release_color() {
+  clear_has_color();
+  if (color_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = color_;
+    color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ClientInitPacket::set_allocated_color(::std::string* color) {
+  if (color_ != &::google::protobuf::internal::kEmptyString) {
+    delete color_;
+  }
+  if (color) {
+    set_has_color();
+    color_ = color;
+  } else {
+    clear_has_color();
+    color_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

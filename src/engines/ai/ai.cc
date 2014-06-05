@@ -1,4 +1,6 @@
 #include "ai.h"
+#include "../../classes/robot.h"
+#include <map>
 
 AIEngine::AIEngine() {}
 
@@ -21,6 +23,9 @@ void AIEngine::del_pilot(Pilot *p) {
 
 void AIEngine::ignite() {}
 void AIEngine::cycle() {
+	for (std::map<int, Pilot *>::iterator i = this->robots.begin(); i != this->robots.end(); ++i) {
+		((Robot *)(*i).second)->act();
+	}
 	// cycle through robots and calculate strategies
 	// AQCUIRE PILOT SHIP_LOCK BEFORE CALCULATING STRATEGIES
 	// RELEASE AFTERWARDS

@@ -19,6 +19,7 @@ enum PacketType {
 	SHIP_INIT,
 	OBJS_AND_EVENTS,
 	// Packets client can send:
+	CLIENT_INIT,
 	EVENT_ACK,
 	OBJS_AND_EVENTS_REQ,
 	CONTROL_INPUT

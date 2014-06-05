@@ -7,6 +7,7 @@
 #include "../classes/player.h"
 #include "../classes/event.h"
 #include "../engines/world/world.h"
+#include "../classes/robot.h"
 
 #include <iostream>
 #include <pthread.h>
@@ -142,16 +143,10 @@ void * Server::serve_client(void *args) {
 	WorldEngine *world = sockets->world;
 	CleanupEngine *cleanup = sockets->cleanup;
 
-	// Send a ship init packet to client.
 	Player *p = new Player("Name", client_socketfd);
-	Ship *ship = world->join(p);
+	Ship *ship = world->join(p, { 15*client_socketfd, 5, 0 });
 	world->get_physics_engine()->get_environment()->add_projectile(ship);
 	p->set_ship(ship);
-	protos::RenderedObj ship_packet;
-	PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
-	NetPacket packet;
-	PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
-	serv_utils.send_to_client(&packet, client_socketfd);
 
 	// Receive UI updates from client.
 	int bufLen = 6000;
@@ -193,7 +188,33 @@ void * Server::serve_client(void *args) {
 				int payload_size = packet_size - sizeof(uint32_t) - sizeof(uint32_t);
 				std::string payload(buildBuf + sizeof(uint32_t) + sizeof(uint32_t), payload_size);
 
-				if (packet_type == PacketType::CONTROL_INPUT) {
+				if (packet_type == PacketType::CLIENT_INIT) {
+					protos::ClientInitPacket client_init_packet;
+					client_init_packet.ParseFromString(payload);
+					std::cout << "GOT COLOR OF " << client_init_packet.color() << std::endl;
+
+					ship->set_color(client_init_packet.color());
+					protos::RenderedObj ship_packet;
+					PacketUtils::fill_obj_packet(&ship_packet, ship, ObjType::SHIP);
+					NetPacket packet;
+					PacketUtils::make_packet(&packet, PacketType::SHIP_INIT, (void *) ship, NULL);
+					serv_utils.send_to_client(&packet, client_socketfd);
+
+					Robot *robot = new Robot(world->get_physics_engine()->get_environment());
+					Ship *robot_ship = world->join(robot, { 30, 25, 0 });
+					world->get_physics_engine()->get_environment()->add_projectile(robot_ship);
+					robot->set_ship(robot_ship);
+					world->get_physics_engine()->toggle_a(robot_ship->get_id(), 1.0);
+					world->get_ai_engine()->add_pilot(robot);
+/*
+					Robot *robot_two = new Robot(world->get_physics_engine()->get_environment());
+					Ship *robot_ship_two = world->join(robot_two, { 30, 15, 6 });
+					world->get_physics_engine()->get_environment()->add_projectile(robot_ship_two);
+					robot_two->set_ship(robot_ship_two);
+					world->get_physics_engine()->toggle_a(robot_ship_two->get_id(), 1.0);
+					world->get_ai_engine()->add_pilot(robot_two);
+*/
+				} else if (packet_type == PacketType::CONTROL_INPUT) {
 					protos::ControlInput control_input_packet;
 					control_input_packet.ParseFromString(payload);
 					if (control_input_packet.action() == Action::ACCEL) {

@@ -74,6 +74,7 @@ void GameAudio::background_audio_init() {
 		musicSoundState->setStream(musicStream);
 		// Make it an ambient (heard everywhere) sound
 		musicSoundState->setAmbient(true);
+		musicSoundState->setGain(0.6f);
 		// Loop the sound forever
 		musicSoundState->setLooping(true);
 		// Start playing the music!

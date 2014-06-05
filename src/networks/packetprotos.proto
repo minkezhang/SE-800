@@ -26,8 +26,9 @@ message RenderedObj {
 	required float pitch = 13;
 	required float roll = 14;
 	required vector yaw = 15;
+	required string color = 16;
 	
-	optional uint32 weapon_index = 16;
+	optional uint32 weapon_index = 17;
 }
 
 message Event {
@@ -47,6 +48,10 @@ message GeneralPacket {
 	required uint32 packetType = 1;  // contains id of packet type
 	optional bytes packet = 2;  // serialized protobuf message that corresponds to packetType
 	optional string packetId = 3;  // packet id
+}
+
+message ClientInitPacket {
+	required string color = 1;
 }
 
 message ShipInitPacket {

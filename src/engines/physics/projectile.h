@@ -6,6 +6,7 @@
  */
 
 #include <vector>
+#include <string>
 
 enum ObjType {
 	SHIP,
@@ -54,6 +55,7 @@ class Projectile {
 		float get_preset_max_vel();
 
 		int get_lifetime();
+		std::string get_color();
 
 		/**
 		 * the following should not be called outside the physics engine
@@ -76,6 +78,7 @@ class Projectile {
 		void set_is_processed();		// can only be set to TRUE by the network -- the network should then proceed to BROADCAST event to all clients
 
 		void set_lifetime();
+		void set_color(std::string color);
 
 		void damage(float tolerance);		// decrement the object tolerance by the input
 
@@ -113,6 +116,7 @@ class Projectile {
 		float preset_max_vel;
 
 		int lifetime;				// number of ticks to simulate in the engine -- set to -1 for infinite lifetime (until destroyed)
+		std::string color;
 };
 
 #endif

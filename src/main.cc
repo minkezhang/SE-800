@@ -4,6 +4,7 @@
 #include <thread>
 #include <unistd.h>
 #include <pthread.h>
+#include <ctime>
 
 #include <signal.h>
 #include <execinfo.h>
@@ -90,13 +91,11 @@ int main(int argc, char **argv) {
 		cal_c = new Calendar(30, c);
 		scheduler.add_calendar(cal_c);
 
-		for(int i = 0; i < 0; i++) {
-			world->get_physics_engine()->get_environment()->add_projectile(world->join(NULL));
-		}
+		srand(time(NULL));
 
 		// Initializing asteroids (TODO): Move this to world engine ignite?
-		for (int i = 0; i < 1; i++) {
-			std::vector<float> pos { (float) 10, (float) 40, (float) 17 };
+		for (int i = 0; i < 25; i++) {
+			std::vector<float> pos { (float) (rand() % (50 - 10) + 10), (float) (rand() % (150 - 60) + 60), (float) (float) (rand() % (50 - 17) + 17) };
 			world->obj_count_lock.lock();
 			Asteroid *a = new Asteroid(world->obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
 			world->obj_count++;
@@ -106,7 +105,7 @@ int main(int argc, char **argv) {
 
 
 		for (int i = 0; i < 1; i++) {
-			std::vector<float> pos { (float) 15, (float) 35, (float) 17 };
+			std::vector<float> pos { (float) 15, (float) 70, (float) 17 };
 			world->obj_count_lock.lock();
 			Asteroid *a = new Asteroid(world->obj_count, 1, 10, pos, (rand() % (4 - 1) + 1), 0, 0);
 			world->obj_count++;
