@@ -175,8 +175,14 @@ void GraphicsEngine::update_camera() {
 	osg::Matrixd camera_rotation;
 	osg::Matrixd camera_trans;
 
+//    obj_transform->setPosition(obj_pos);
+
+
 	// Set tolerance on camera roll.
 	float camera_roll = this->main_ship->obj_roll * 180 / M_PI;
+	float ship_x = this->main_ship->obj_pos.x();
+	float ship_y = this->main_ship->obj_pos.y();
+	float ship_z = this->main_ship->obj_pos.z();
 	camera_roll -= camera_roll * .4;
 
 	camera_rotation.makeRotate(
@@ -184,7 +190,7 @@ void GraphicsEngine::update_camera() {
 		osg::DegreesToRadians(10.0), osg::Vec3(1, 0, 0),	// pitch
 		osg::DegreesToRadians(0.0), osg::Vec3(0, 0, 1));	// heading
 
-	camera_trans.makeTranslate(this->main_ship->obj_pos.x(), this->main_ship->obj_pos.y() - 39, this->main_ship->obj_pos.z());
+	camera_trans.makeTranslate(this->main_ship->obj_pos.x() - ship_x, this->main_ship->obj_pos.y() - ship_y, this->main_ship->obj_pos.z() - ship_z);
 
 	camera_matrix = camera_rotation * camera_trans;
 	osg::Matrixd inverse = camera_matrix.inverse(camera_matrix);
@@ -327,6 +333,19 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 
 	if (update_obj.type() == ObjType::SHIP) {
 		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
+		ren_obj->obj_yaw_vector))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch * 180 / M_PI),
+		ren_obj->obj_pitch_vector))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
+		ren_obj->obj_roll_vector)));
+	} else if (update_obj.type() == ObjType::ASTEROID) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(0.0f),
+                ren_obj->obj_yaw_vector))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_pitch * 180 / M_PI),
+                ren_obj->obj_pitch_vector))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
+                ren_obj->obj_roll_vector)));
+	}
+
+/*
+	if (update_obj.type() == ObjType::SHIP) {
+		ren_obj->trans_matrix->setAttitude((osg::Quat(osg::DegreesToRadians(-90.0f),
 			osg::Vec3d(0, 0, 1)))*(osg::Quat(osg::DegreesToRadians(20.0f + ren_obj->obj_pitch * 180 / M_PI),
 			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
@@ -336,6 +355,7 @@ void GraphicsEngine::update_object_transform(rendered_obj *ren_obj, protos::Rend
 			osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
 			osg::Vec3d(0, 1, 0))));
 	}
+*/
 }
 
 void GraphicsEngine::reset_rendered_objects() {
