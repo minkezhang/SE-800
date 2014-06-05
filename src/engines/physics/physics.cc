@@ -106,16 +106,21 @@ void PhysicsEngine::verlet_step(float t, Projectile*p) {
   vector<float> roll = p->get_r();
   vector<float> pitch = p->get_p();
   vector<float> yaw = p->get_y();
+  
   this->apply_rotation(r_angle*t, 0, p);
   this->apply_rotation(p_angle*t, 1, p);
   vector<float> new_orient = p->get_r();
-  
+
   // Reorient velocity
   float vx = vel.at(0);
   float vy = vel.at(1);
   float vz = vel.at(2);
   float mag = sqrt(vx*vx + vy*vy + vz*vz);
 
+  p->tot_p_rot += p_angle*t;
+  p->tot_r_rot += r_angle*t;
+  p->set_acc_p(p_angle*t);
+  p->set_acc_r(r_angle*t);
 
   // Iterate over
   int i = 0;

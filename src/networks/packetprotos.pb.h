@@ -324,10 +324,24 @@ class RenderedObj : public ::google::protobuf::Message {
   inline float yaw() const;
   inline void set_yaw(float value);
 
-  // optional uint32 weapon_index = 17;
+  // required float acc_p = 17;
+  inline bool has_acc_p() const;
+  inline void clear_acc_p();
+  static const int kAccPFieldNumber = 17;
+  inline float acc_p() const;
+  inline void set_acc_p(float value);
+
+  // required float acc_r = 18;
+  inline bool has_acc_r() const;
+  inline void clear_acc_r();
+  static const int kAccRFieldNumber = 18;
+  inline float acc_r() const;
+  inline void set_acc_r(float value);
+
+  // optional uint32 weapon_index = 19;
   inline bool has_weapon_index() const;
   inline void clear_weapon_index();
-  static const int kWeaponIndexFieldNumber = 17;
+  static const int kWeaponIndexFieldNumber = 19;
   inline ::google::protobuf::uint32 weapon_index() const;
   inline void set_weapon_index(::google::protobuf::uint32 value);
 
@@ -365,6 +379,10 @@ class RenderedObj : public ::google::protobuf::Message {
   inline void clear_has_roll();
   inline void set_has_yaw();
   inline void clear_has_yaw();
+  inline void set_has_acc_p();
+  inline void clear_has_acc_p();
+  inline void set_has_acc_r();
+  inline void clear_has_acc_r();
   inline void set_has_weapon_index();
   inline void clear_has_weapon_index();
 
@@ -386,10 +404,12 @@ class RenderedObj : public ::google::protobuf::Message {
   float pitch_;
   float roll_;
   float yaw_;
+  float acc_p_;
+  float acc_r_;
   ::google::protobuf::uint32 weapon_index_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(17 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(19 + 31) / 32];
 
   friend void  protobuf_AddDesc_packetprotos_2eproto();
   friend void protobuf_AssignDesc_packetprotos_2eproto();
@@ -1633,15 +1653,59 @@ inline void RenderedObj::set_yaw(float value) {
   yaw_ = value;
 }
 
-// optional uint32 weapon_index = 17;
-inline bool RenderedObj::has_weapon_index() const {
+// required float acc_p = 17;
+inline bool RenderedObj::has_acc_p() const {
   return (_has_bits_[0] & 0x00010000u) != 0;
 }
-inline void RenderedObj::set_has_weapon_index() {
+inline void RenderedObj::set_has_acc_p() {
   _has_bits_[0] |= 0x00010000u;
 }
-inline void RenderedObj::clear_has_weapon_index() {
+inline void RenderedObj::clear_has_acc_p() {
   _has_bits_[0] &= ~0x00010000u;
+}
+inline void RenderedObj::clear_acc_p() {
+  acc_p_ = 0;
+  clear_has_acc_p();
+}
+inline float RenderedObj::acc_p() const {
+  return acc_p_;
+}
+inline void RenderedObj::set_acc_p(float value) {
+  set_has_acc_p();
+  acc_p_ = value;
+}
+
+// required float acc_r = 18;
+inline bool RenderedObj::has_acc_r() const {
+  return (_has_bits_[0] & 0x00020000u) != 0;
+}
+inline void RenderedObj::set_has_acc_r() {
+  _has_bits_[0] |= 0x00020000u;
+}
+inline void RenderedObj::clear_has_acc_r() {
+  _has_bits_[0] &= ~0x00020000u;
+}
+inline void RenderedObj::clear_acc_r() {
+  acc_r_ = 0;
+  clear_has_acc_r();
+}
+inline float RenderedObj::acc_r() const {
+  return acc_r_;
+}
+inline void RenderedObj::set_acc_r(float value) {
+  set_has_acc_r();
+  acc_r_ = value;
+}
+
+// optional uint32 weapon_index = 19;
+inline bool RenderedObj::has_weapon_index() const {
+  return (_has_bits_[0] & 0x00040000u) != 0;
+}
+inline void RenderedObj::set_has_weapon_index() {
+  _has_bits_[0] |= 0x00040000u;
+}
+inline void RenderedObj::clear_has_weapon_index() {
+  _has_bits_[0] &= ~0x00040000u;
 }
 inline void RenderedObj::clear_weapon_index() {
   weapon_index_ = 0u;

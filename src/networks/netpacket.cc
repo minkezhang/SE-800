@@ -204,6 +204,9 @@ void PacketUtils::fill_obj_packet(protos::RenderedObj *obj_packet, Projectile* o
 	obj_packet->set_roll(obj->get_r_float());
 	obj_packet->set_yaw(obj->get_y_float());
 
+	obj_packet->set_acc_p(obj->get_acc_p());
+	obj_packet->set_acc_r(obj->get_acc_r());
+
 	protos::vector *roll_vector = obj_packet->mutable_roll_vector();
 	roll_vector->set_x(obj->get_r().at(0));
 	roll_vector->set_y(obj->get_r().at(1));

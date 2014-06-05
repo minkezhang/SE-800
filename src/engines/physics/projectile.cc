@@ -19,6 +19,9 @@ Projectile::Projectile(
 		p(p), r(r), y(y),
 		p_dot(p_dot), r_dot(r_dot),
 		preset_a(preset_a), preset_p_dot(preset_p_dot), preset_r_dot(preset_r_dot), preset_max_vel(1500), lifetime(lifetime) {
+	this->tot_p_rot = 0;
+	this->tot_r_rot = 0;
+	this->tot_y_rot = 0;
 }
 
 // GET FUNCTIONS
@@ -28,29 +31,51 @@ Projectile::Projectile(
  * osg::Vec3d(0, 1, 0))));
  */
 float Projectile::get_r_float() {
-	float angle = acos(this->p.at(1));
-	return(angle);
-/*
-	float angle = acos(this->r.at(1));
-	return(angle * sign);
- */
+	float tot_angle = this->tot_r_rot;
+	this->tot_r_rot = 0;
+	return(tot_angle);
 }
+
 float Projectile::get_y_float() {
-	float angle = acos(this->p.at(0));
-	return(angle);
-/*
-	float angle = acos(this->r.at(0));
-	return(angle * sign);
- */
+	return 0.0f;
 }
+
 float Projectile::get_p_float() {
-	float angle = acos( (this->d.at(0) * this->r.at(0) + this->d.at(1) * this->r.at(1) + this->d.at(2) * this->r.at(2)) / sqrt(pow(this->d.at(0), 2) + pow(this->d.at(1), 2) + pow(this->d.at(2), 2)) );
-	return(angle);
-/*
-	float angle = acos(this->r.at(2));
-	return(angle * sign);
- */
+	float tot_angle = this->tot_r_rot;
+	this->tot_r_rot = 0;
+	return(tot_angle);
 }
+
+float Projectile::get_acc_p() {
+	return(this->acc_p);
+}
+
+float Projectile::get_acc_r() {
+	return(this->acc_r);
+}
+
+void Projectile::set_acc_p(float pangle) {
+	float accumulator = this->acc_p;
+	accumulator += pangle;
+	if (accumulator > M_PI) {
+		accumulator -= 2*M_PI;
+	} else if (accumulator < -M_PI) {
+		accumulator += 2*M_PI;
+	}
+	this->acc_p = accumulator;
+}
+
+void Projectile::set_acc_r(float rangle) {
+	float accumulator = this->acc_r;
+	accumulator += rangle;
+	if (accumulator > M_PI) {
+		accumulator -= 2*M_PI;
+	} else if (accumulator < -M_PI) {
+		accumulator += 2*M_PI;
+	}
+	this->acc_r = accumulator;
+}
+
 
 int Projectile::get_id() { return this->id; }
 float Projectile::get_size() { return this->size; }

@@ -42,6 +42,18 @@ class Projectile {
 		float get_y_float();			// return in rad the yaw relative to { 0, 1, 0 }
 		float get_r_float();			// return in rad the roll relative to { 1, 0, 0 }
 
+		float tot_p_rot;
+		float tot_r_rot;
+		float tot_y_rot;
+
+		float acc_p;
+		float acc_r;
+
+		void set_acc_p(float pangle);
+		void set_acc_r(float rangle);
+		float get_acc_p();
+		float get_acc_r();
+
 		std::vector<float> get_p();		// get pitch axis
 		std::vector<float> get_y();		// get yaw axis
 		std::vector<float> get_r();		// get roll axis

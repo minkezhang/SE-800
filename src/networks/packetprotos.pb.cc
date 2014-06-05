@@ -78,7 +78,7 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(vector));
   RenderedObj_descriptor_ = file->message_type(1);
-  static const int RenderedObj_offsets_[17] = {
+  static const int RenderedObj_offsets_[19] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, mass_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, type_),
@@ -95,6 +95,8 @@ void protobuf_AssignDesc_packetprotos_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, pitch_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, roll_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, yaw_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, acc_p_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, acc_r_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RenderedObj, weapon_index_),
   };
   RenderedObj_reflection_ =
@@ -300,7 +302,7 @@ void protobuf_AddDesc_packetprotos_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022packetprotos.proto\022\006protos\")\n\006vector\022\t"
-    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\377\002\n\013Rend"
+    "\n\001x\030\001 \002(\002\022\t\n\001y\030\002 \002(\002\022\t\n\001z\030\003 \002(\002\"\235\003\n\013Rend"
     "eredObj\022\n\n\002id\030\001 \002(\r\022\014\n\004mass\030\002 \002(\r\022\014\n\004typ"
     "e\030\003 \002(\r\022\014\n\004size\030\004 \002(\002\022\025\n\rcur_tolerance\030\005"
     " \002(\002\022\025\n\rmax_tolerance\030\006 \002(\002\022\024\n\014is_destro"
@@ -309,19 +311,19 @@ void protobuf_AddDesc_packetprotos_2eproto() {
     "(\002\022#\n\013roll_vector\030\013 \002(\0132\016.protos.vector\022"
     "$\n\014pitch_vector\030\014 \002(\0132\016.protos.vector\022\"\n"
     "\nyaw_vector\030\r \002(\0132\016.protos.vector\022\r\n\005pit"
-    "ch\030\016 \002(\002\022\014\n\004roll\030\017 \002(\002\022\013\n\003yaw\030\020 \002(\002\022\024\n\014w"
-    "eapon_index\030\021 \001(\r\"\'\n\005Event\022\n\n\002id\030\001 \002(\r\022\022"
-    "\n\nevent_type\030\002 \002(\r\",\n\014ControlInput\022\016\n\006ac"
-    "tion\030\001 \002(\r\022\014\n\004tilt\030\002 \001(\002\"E\n\rGeneralPacke"
-    "t\022\022\n\npacketType\030\001 \002(\r\022\016\n\006packet\030\002 \001(\014\022\020\n"
-    "\010packetId\030\003 \001(\t\"3\n\016ShipInitPacket\022!\n\004shi"
-    "p\030\001 \002(\0132\023.protos.RenderedObj\"U\n\023ObjsAndE"
-    "ventsPacket\022 \n\003obj\030\001 \003(\0132\023.protos.Render"
-    "edObj\022\034\n\005event\030\002 \003(\0132\r.protos.Event\"%\n\026O"
-    "bjsAndEventsReqPacket\022\013\n\003req\030\001 \002(\r\"\035\n\016Ev"
-    "entAckPacket\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInpu"
-    "tPacket\022%\n\007control\030\001 \002(\0132\024.protos.Contro"
-    "lInput", 886);
+    "ch\030\016 \002(\002\022\014\n\004roll\030\017 \002(\002\022\013\n\003yaw\030\020 \002(\002\022\r\n\005a"
+    "cc_p\030\021 \002(\002\022\r\n\005acc_r\030\022 \002(\002\022\024\n\014weapon_inde"
+    "x\030\023 \001(\r\"\'\n\005Event\022\n\n\002id\030\001 \002(\r\022\022\n\nevent_ty"
+    "pe\030\002 \002(\r\",\n\014ControlInput\022\016\n\006action\030\001 \002(\r"
+    "\022\014\n\004tilt\030\002 \001(\002\"E\n\rGeneralPacket\022\022\n\npacke"
+    "tType\030\001 \002(\r\022\016\n\006packet\030\002 \001(\014\022\020\n\010packetId\030"
+    "\003 \001(\t\"3\n\016ShipInitPacket\022!\n\004ship\030\001 \002(\0132\023."
+    "protos.RenderedObj\"U\n\023ObjsAndEventsPacke"
+    "t\022 \n\003obj\030\001 \003(\0132\023.protos.RenderedObj\022\034\n\005e"
+    "vent\030\002 \003(\0132\r.protos.Event\"%\n\026ObjsAndEven"
+    "tsReqPacket\022\013\n\003req\030\001 \002(\r\"\035\n\016EventAckPack"
+    "et\022\013\n\003ack\030\001 \002(\r\";\n\022ControlInputPacket\022%\n"
+    "\007control\030\001 \002(\0132\024.protos.ControlInput", 916);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "packetprotos.proto", &protobuf_RegisterTypes);
   vector::default_instance_ = new vector();
@@ -656,6 +658,8 @@ const int RenderedObj::kYawVectorFieldNumber;
 const int RenderedObj::kPitchFieldNumber;
 const int RenderedObj::kRollFieldNumber;
 const int RenderedObj::kYawFieldNumber;
+const int RenderedObj::kAccPFieldNumber;
+const int RenderedObj::kAccRFieldNumber;
 const int RenderedObj::kWeaponIndexFieldNumber;
 #endif  // !_MSC_VER
 
@@ -696,6 +700,8 @@ void RenderedObj::SharedCtor() {
   pitch_ = 0;
   roll_ = 0;
   yaw_ = 0;
+  acc_p_ = 0;
+  acc_r_ = 0;
   weapon_index_ = 0u;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -767,6 +773,8 @@ void RenderedObj::Clear() {
     yaw_ = 0;
   }
   if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
+    acc_p_ = 0;
+    acc_r_ = 0;
     weapon_index_ = 0u;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1020,12 +1028,44 @@ bool RenderedObj::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(136)) goto parse_weapon_index;
+        if (input->ExpectTag(141)) goto parse_acc_p;
         break;
       }
 
-      // optional uint32 weapon_index = 17;
+      // required float acc_p = 17;
       case 17: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_acc_p:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &acc_p_)));
+          set_has_acc_p();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(149)) goto parse_acc_r;
+        break;
+      }
+
+      // required float acc_r = 18;
+      case 18: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_acc_r:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &acc_r_)));
+          set_has_acc_r();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(152)) goto parse_weapon_index;
+        break;
+      }
+
+      // optional uint32 weapon_index = 19;
+      case 19: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_weapon_index:
@@ -1143,9 +1183,19 @@ void RenderedObj::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(16, this->yaw(), output);
   }
 
-  // optional uint32 weapon_index = 17;
+  // required float acc_p = 17;
+  if (has_acc_p()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(17, this->acc_p(), output);
+  }
+
+  // required float acc_r = 18;
+  if (has_acc_r()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(18, this->acc_r(), output);
+  }
+
+  // optional uint32 weapon_index = 19;
   if (has_weapon_index()) {
-    ::google::protobuf::internal::WireFormatLite::WriteUInt32(17, this->weapon_index(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteUInt32(19, this->weapon_index(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1246,9 +1296,19 @@ void RenderedObj::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(16, this->yaw(), target);
   }
 
-  // optional uint32 weapon_index = 17;
+  // required float acc_p = 17;
+  if (has_acc_p()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(17, this->acc_p(), target);
+  }
+
+  // required float acc_r = 18;
+  if (has_acc_r()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(18, this->acc_r(), target);
+  }
+
+  // optional uint32 weapon_index = 19;
   if (has_weapon_index()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(17, this->weapon_index(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(19, this->weapon_index(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1364,7 +1424,17 @@ int RenderedObj::ByteSize() const {
 
   }
   if (_has_bits_[16 / 32] & (0xffu << (16 % 32))) {
-    // optional uint32 weapon_index = 17;
+    // required float acc_p = 17;
+    if (has_acc_p()) {
+      total_size += 2 + 4;
+    }
+
+    // required float acc_r = 18;
+    if (has_acc_r()) {
+      total_size += 2 + 4;
+    }
+
+    // optional uint32 weapon_index = 19;
     if (has_weapon_index()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::UInt32Size(
@@ -1450,6 +1520,12 @@ void RenderedObj::MergeFrom(const RenderedObj& from) {
     }
   }
   if (from._has_bits_[16 / 32] & (0xffu << (16 % 32))) {
+    if (from.has_acc_p()) {
+      set_acc_p(from.acc_p());
+    }
+    if (from.has_acc_r()) {
+      set_acc_r(from.acc_r());
+    }
     if (from.has_weapon_index()) {
       set_weapon_index(from.weapon_index());
     }
@@ -1470,7 +1546,7 @@ void RenderedObj::CopyFrom(const RenderedObj& from) {
 }
 
 bool RenderedObj::IsInitialized() const {
-  if ((_has_bits_[0] & 0x0000ffff) != 0x0000ffff) return false;
+  if ((_has_bits_[0] & 0x0003ffff) != 0x0003ffff) return false;
 
   if (has_pos()) {
     if (!this->pos().IsInitialized()) return false;
@@ -1508,6 +1584,8 @@ void RenderedObj::Swap(RenderedObj* other) {
     std::swap(pitch_, other->pitch_);
     std::swap(roll_, other->roll_);
     std::swap(yaw_, other->yaw_);
+    std::swap(acc_p_, other->acc_p_);
+    std::swap(acc_r_, other->acc_r_);
     std::swap(weapon_index_, other->weapon_index_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

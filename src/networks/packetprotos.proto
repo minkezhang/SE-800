@@ -27,8 +27,11 @@ message RenderedObj {
 	required float pitch = 14;
 	required float roll = 15;
 	required float yaw = 16;
+
+	required float acc_p = 17;
+	required float acc_r = 18;
 	
-	optional uint32 weapon_index = 17;
+	optional uint32 weapon_index = 19;
 }
 
 message Event {

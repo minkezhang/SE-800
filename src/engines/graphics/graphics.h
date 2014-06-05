@@ -31,6 +31,8 @@ class GraphicsEngine : public Engine {
 		osg::Vec3 obj_roll_vector;
 		osg::Vec3 obj_pitch_vector;
 		osg::Vec3 obj_yaw_vector;
+		float acc_p;
+		float acc_r;
 		bool should_render;
 		osg::PositionAttitudeTransform* trans_matrix;
 	};
