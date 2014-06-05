@@ -151,7 +151,7 @@ public class Game extends Canvas implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if(delta >=1){
-				System.out.println("ticking");
+				//System.out.println("ticking");
 				tick();
 				//System.out.println("tock");
 				//updates++;
@@ -159,7 +159,7 @@ public class Game extends Canvas implements Runnable {
 			}
 			//System.out.println("Start Render");
 			render();
-			System.out.println("Stop Render");
+			//System.out.println("Stop Render");
 			//frames++;
 			
 			if(System.currentTimeMillis() - timer > 1000){
@@ -168,9 +168,9 @@ public class Game extends Canvas implements Runnable {
 				//updates = 0;
 				//frames = 0;
 			}
-			System.out.println(running);
+			//System.out.println(running);
 		}
-		System.out.println("STAHP!");
+		//System.out.println("STAHP!");
 		stop();
 	}
 	
@@ -183,6 +183,7 @@ public class Game extends Canvas implements Runnable {
 				//bg3, pos[9], pos[13]
 				//bg2, pos[10], pos[14]
 				//background, pos[11], pos[15]
+		//System.out.println("TKP1");
 		if(tickcount%30==0){
 			pos[3]--;
 			pos[11]--;
@@ -195,19 +196,22 @@ public class Game extends Canvas implements Runnable {
 			pos[0]--;
 			pos[8]--;
 		}
+		//System.out.println("TKP2");
 		for(int q=0;q<11;q++){
-			if(pos[q]==4)
+			if(q==4)
 				q=8;
 			if(pos[q]<(-imgsize)){//assuming all images the same size
 				pos[q]=imgsize;
 			}
+			//System.out.println(q);
 		}
 		tickcount++;
+		//System.out.println("TKP3");
 		if(tickcount>60){
-			//tickcount = 0;
-			for(int i = 0; i < pos.length;i++)
-				System.out.print("|"+pos[i]+"|");
-			System.out.println(tickcount);
+			tickcount = 0;
+			//for(int i = 0; i < pos.length;i++)
+				//System.out.print("|"+pos[i]+"|");
+			//System.out.println(tickcount);
 		}
 		//System.out.println(tickcount);
 	}
