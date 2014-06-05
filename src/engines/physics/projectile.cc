@@ -27,9 +27,24 @@ Projectile::Projectile(
                         osg::Vec3d(1, 0, 0)))*(osg::Quat(osg::DegreesToRadians(ren_obj->obj_roll * 180 / M_PI),
                         osg::Vec3d(0, 1, 0))));
 */
-float Projectile::get_p_float() { return(0); }
-float Projectile::get_r_float() { return(0); }
-float Projectile::get_y_float() { return(0); }
+float Projectile::get_r_float() {
+	float angle = acos(this->p.at(0));
+	float sign = asin(sqrt(pow(this->p.at(1), 2) + pow(this->p.at(2), 2)));
+	sign = (sign > 0) * 2 - 1;
+	return(angle);
+}
+float Projectile::get_y_float() {
+	float angle = acos(this->p.at(1));
+	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(2), 2)));
+	sign = (sign > 0) * 2 - 1;
+	return(angle);
+}
+float Projectile::get_p_float() {
+	float angle = acos(this->p.at(2));
+	float sign = asin(sqrt(pow(this->p.at(0), 2) + pow(this->p.at(1), 2)));
+	sign = (sign > 0) * 2 - 1;
+	return(angle);
+}
 
 int Projectile::get_id() { return this->id; }
 float Projectile::get_size() { return this->size; }
