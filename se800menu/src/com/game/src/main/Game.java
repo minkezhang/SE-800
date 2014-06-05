@@ -151,6 +151,7 @@ public class Game extends Canvas implements Runnable {
 			delta += (now - lastTime) / ns;
 			lastTime = now;
 			if(delta >=1){
+				System.out.println("ticking");
 				tick();
 				//System.out.println("tock");
 				//updates++;
