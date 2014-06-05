@@ -13,12 +13,17 @@ public class Play {
 	public Rectangle servme = new Rectangle(210,70,75,40);
 	public Rectangle clieme = new Rectangle(310,70,75,40);
 	public Rectangle porten = new Rectangle(210,140,80,40);
-	public Rectangle addren = new Rectangle(210,210,80,40);
+	public Rectangle addrn1 = new Rectangle(210,210,80,40);
+	public Rectangle addrn2 = new Rectangle(310,210,80,40);
+	public Rectangle addrn3 = new Rectangle(410,210,80,40);
+	public Rectangle addrn4 = new Rectangle(510,210,80,40);
 	public Rectangle cred = new Rectangle(210,280,60,40);
 	public Rectangle cblu = new Rectangle(290,280,60,40);
 	public Rectangle cgre = new Rectangle(370,280,60,40);
 	public Rectangle cyel = new Rectangle(450,280,60,40);
 	public Rectangle corg = new Rectangle(530,280,60,40);
+	public Rectangle bgmb = new Rectangle(600,20,20,20);
+	public Rectangle selbgmb = new Rectangle(600,20,20,20);
 	
 	// RED, BLUE, GREEN, YELLOW, ORANGE
 	
@@ -38,6 +43,12 @@ public class Play {
 		Color top = new Color(250, 125, 125, 105);
 		//Color bot = new Color(0,0,0,175);
 		Color high = new Color(125, 250, 250, 195);
+		
+		if(this.game.bgmon == true){
+		g.setColor(top);
+		g2d.draw(selbgmb);
+		g2d.fill(selbgmb);
+		}
 		g.setColor(high);
 		switch(key){
 		case 1:
@@ -67,41 +78,58 @@ public class Play {
 		case 5:
 			select.x = 210;
 			select.y = 210;
-
 			select.width = 80;
 			select.height = 40;
 			break;
 		case 6:
+			select.x = 310;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 7:
+			select.x = 410;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 8:
+			select.x = 510;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 9:
 			select.x = 208;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 7:
+		case 10:
 			select.x = 288;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 8:
+		case 11:
 			select.x = 368;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 9:
+		case 12:
 			select.x = 448;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 10:
+		case 13:
 			select.x = 528;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 11:
+		case 14:
 			select.x = 210;
 			select.y = 350;
 			select.width = 110;
@@ -110,15 +138,47 @@ public class Play {
 		}
 		g2d.draw(select);
 		g2d.fill(select);
-		
+		//////////
 		g.setColor(top);
-		
+		Font fntt = new Font("arial", Font.BOLD, 30);
+		g.setFont(fntt);
+		//port number
+		g.drawString(Integer.toString(this.game.portnum[0]),porten.x+6,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[1]),porten.x+24,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[2]),porten.x+42,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[3]),porten.x+60,porten.y+32);
+		//address 1
+		g.drawString(Integer.toString(this.game.addr1[0]),addrn1.x+6,addrn1.y+32);
+		g.drawString(Integer.toString(this.game.addr1[1]),addrn1.x+24,addrn1.y+32);
+		g.drawString(Integer.toString(this.game.addr1[2]),addrn1.x+42,addrn1.y+32);
+		//g.drawString("0",addrn1.x+60,addrn1.y+32);
+		//address 2
+		g.drawString(Integer.toString(this.game.addr1[0]),addrn2.x+6,addrn2.y+32);
+		g.drawString(Integer.toString(this.game.addr2[1]),addrn2.x+24,addrn2.y+32);
+		g.drawString(Integer.toString(this.game.addr2[2]),addrn2.x+42,addrn2.y+32);
+		//g.drawString("0",addrn2.x+60,addrn2.y+32);
+		//address 3
+		g.drawString(Integer.toString(this.game.addr3[0]),addrn3.x+6,addrn3.y+32);
+		g.drawString(Integer.toString(this.game.addr3[1]),addrn3.x+24,addrn3.y+32);
+		g.drawString(Integer.toString(this.game.addr3[2]),addrn3.x+42,addrn3.y+32);
+		//g.drawString("0",addrn3.x+60,addrn3.y+32);
+		//address 4
+		g.drawString(Integer.toString(this.game.addr4[0]),addrn4.x+6,addrn4.y+32);
+		g.drawString(Integer.toString(this.game.addr4[1]),addrn4.x+24,addrn4.y+32);
+		g.drawString(Integer.toString(this.game.addr4[2]),addrn4.x+42,addrn4.y+32);
+		//g.drawString("0",addrn4.x+60,addrn4.y+32);
+		//////////
+		g.setColor(top);
+		Font fnt0 = new Font("arial", Font.PLAIN, 15);
+		g.setFont(fnt0);
+		g.drawString("BGM",bgmb.x-38,bgmb.y+16);
+		g2d.draw(bgmb);
 		Font fnt1 = new Font("arial", Font.BOLD, 30);
 		g.setFont(fnt1);
 		g.drawString("<<Back",back.x+1,back.y+36);
 		g.drawString("Host Type",servme.x-200,servme.y+30);
 		g.drawString("Port",porten.x-200,porten.y+30);
-		g.drawString("Address",addren.x-200,addren.y+30);
+		g.drawString("Address",addrn1.x-200,addrn1.y+30);
 		g.drawString("Ship Color",cred.x-200,cred.y+30);
 		g.drawString("Submit",submit.x+4,submit.y+36);
 		g2d.draw(back);
@@ -137,7 +197,10 @@ public class Play {
 		g.drawString("Serv",servme.x+4,servme.y+30);
 		g.drawString("Peer",clieme.x+4,servme.y+30);
 		g2d.draw(porten);
-		g2d.draw(addren);
+		g2d.draw(addrn1);
+		g2d.draw(addrn2);
+		g2d.draw(addrn3);
+		g2d.draw(addrn4);
 		if(this.game.color == "RED")
 			g.setColor(new Color(255, 50, 50, 255));
 		else

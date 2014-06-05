@@ -11,7 +11,14 @@ public class Cred {
 	public Rectangle back = new Rectangle(10,10,110,50);
 	public Rectangle body = new Rectangle(10,100,Game.WIDTH/2 + 360,Game.HEIGHT/2+230);
 	public Rectangle select = new Rectangle(10,10,110,50);
+	public Rectangle bgmb = new Rectangle(600,20,20,20);
+	public Rectangle selbgmb = new Rectangle(600,20,20,20);
 	
+	Game game;
+	
+	public Cred(Game game){
+		this.game = game;
+	}
 	
 	public void render(Graphics g, int key){
 		Graphics2D g2d = (Graphics2D) g;
@@ -19,13 +26,21 @@ public class Cred {
 		Color top = new Color(250, 125, 125, 105);
 		Color bot = new Color(0,0,0,175);
 		Color high = new Color(125, 250, 250, 195);
+		if(this.game.bgmon == true){
+			g.setColor(top);
+			g2d.draw(selbgmb);
+			g2d.fill(selbgmb);
+			}
 		if(key==1){
 		g.setColor(high);
 		g2d.draw(select);
 		g2d.fill(select);
 		}
 		g.setColor(top);
-		
+		Font fnt0 = new Font("arial", Font.PLAIN, 15);
+		g.setFont(fnt0);
+		g.drawString("BGM",bgmb.x-38,bgmb.y+16);
+		g2d.draw(bgmb);
 		Font fnt1 = new Font("arial", Font.BOLD, 30);
 		g.setFont(fnt1);
 		g.drawString("<<Back",back.x+1,back.y+36);

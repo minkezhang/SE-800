@@ -1,6 +1,7 @@
 package com.game.src.main;
 
 //import java.awt.Rectangle;
+//import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -42,7 +43,15 @@ public class MouseInput implements MouseListener{
 		public Rectangle quitbut = new Rectangle(Game.WIDTH/2 +120,350,100,50);
 		public Rectangle back = new Rectangle(10,10,110,50);
 		 */
-		
+		if(mx >= 600 && mx <= 620 && my >= 20 && my <= 40)
+			if(this.game.bgmon==true){
+				this.game.bgmon = false;
+				this.game.clip.stop();
+			}
+			else{
+				this.game.bgmon = true;
+				this.game.clip.start();
+			}
 		if(Game.State == STATE.MENU){
 		if(mx >= Game.WIDTH / 2 + 120 && mx <= Game.WIDTH/2 + 220){
 			if(my >= 150 && my <= 200){
@@ -69,6 +78,7 @@ public class MouseInput implements MouseListener{
 	public Rectangle cyel = new Rectangle(450,280,60,40);
 	public Rectangle corg = new Rectangle(530,280,60,40);
 	public Rectangle submit = new Rectangle(210,350,110,50);
+	public Rectangle bgmb = new Rectangle(600,20,20,20);
 		*/
 		}else if(Game.State == STATE.PLAY){
 			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60)
@@ -78,9 +88,9 @@ public class MouseInput implements MouseListener{
 			else if(mx >= 310 && mx <= 385 && my >= 70 && my <= 110)
 				this.game.host = false;
 			else if(mx >= 210 && mx <= 290 && my >= 140 && my <= 180)
-				this.game.host = this.game.host;//noop
+				this.game.host = this.game.host;//allows number entry
 			else if(mx >= 210 && mx <= 290 && my >= 210 && my <= 250)
-				this.game.host = this.game.host;//noop
+				this.game.host = this.game.host;//allows number entry
 			else if(mx >= 210 && mx <= 270 && my >= 280 && my <= 320)
 				this.game.color = "RED";
 			else if(mx >= 290 && mx <= 350 && my >= 280 && my <= 320)
@@ -91,8 +101,15 @@ public class MouseInput implements MouseListener{
 				this.game.color = "YELLOW";
 			else if(mx >= 530 && mx <= 590 && my >= 280 && my <= 320)
 				this.game.color = "ORANGE";
-			else if(mx >= 210 && mx <= 320 && my >= 350 && my <= 400)
+			else if(mx >= 210 && mx <= 320 && my >= 350 && my <= 400){
+				this.game.port = Integer.toString(this.game.intmerge(this.game.portnum));
+				this.game.sadr1 = Integer.toString(this.game.intmerge(this.game.addr1));
+				this.game.sadr2 = Integer.toString(this.game.intmerge(this.game.addr2));
+				this.game.sadr3 = Integer.toString(this.game.intmerge(this.game.addr3));
+				this.game.sadr4 = Integer.toString(this.game.intmerge(this.game.addr4));
+				this.game.addr = this.game.sadr1+"."+this.game.sadr2+"."+this.game.sadr3+"."+this.game.sadr4;
 				this.game.openGAME(this.game.port,this.game.addr,this.game.color);
+			}
 		}else if(Game.State == STATE.CREDITS){
 			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60)
 				Game.State = STATE.MENU;
