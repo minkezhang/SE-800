@@ -1,8 +1,11 @@
 package com.game.src.main;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -10,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
 //import java.util.Arrays;
+
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -24,24 +28,26 @@ public class Game extends Canvas implements Runnable {
 	public static final int SCALE = 2;
 	public final String TITLE = "SE-800";
 	public int mitem = 1;
-	public int[] pos = new int[] {0,0,0,0,0,0,0,0};//4 images 0-3 xs 4-7 ys
+	public int tickcount = 0;
+	public int[] pos = new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};//8 images 0-3 xs 4-7 ys 8-15= duplicates
 	public JFrame frame;
 	public String color = "RED";
 	public int tiscounter = 0;
-	public int[] addr1 = new int[] {1,2,1};
+	public int[] addr1 = new int[] {1,2,7};
 	public int[] addr2 = new int[] {0,0,0};
 	public int[] addr3 = new int[] {0,0,0};
 	public int[] addr4 = new int[] {0,0,1};
-	public String sadr1 = "121";
+	public String sadr1 = "127";
 	public String sadr2 = "0";
 	public String sadr3 = "0";
 	public String sadr4 = "1";
 	public int[] portnum = new int[] {8,0,0,0};
-	public String addr = "121.0.0.1";
+	public String addr = "127.0.0.1";
 	public String port = "8000";
 	public boolean host = true;
 	public boolean bgmon = true;
 	public Clip clip;
+	public Rectangle clear = new Rectangle(0,0,WIDTH*SCALE,HEIGHT*SCALE);
 	private boolean running = false;
 	private Thread thread;
 	
@@ -50,6 +56,10 @@ public class Game extends Canvas implements Runnable {
 	private BufferedImage bg2 = null;
 	private BufferedImage bg3 = null;
 	private BufferedImage bg4 = null;
+	private BufferedImage background2 = null;
+	private BufferedImage bg22 = null;
+	private BufferedImage bg32 = null;
+	private BufferedImage bg42 = null;
 	
 	//private Player p;
 	private Menu menu;//main menu
@@ -64,6 +74,14 @@ public class Game extends Canvas implements Runnable {
 			bg2 = loader.loadImage("/sb4.png");
 			bg3 = loader.loadImage("/sb3.png");
 			bg4 = loader.loadImage("/sb2.png");
+			background2 = loader.loadImage("/sb5.png");
+			bg22 = loader.loadImage("/sb4.png");
+			bg32 = loader.loadImage("/sb3.png");
+			bg42 = loader.loadImage("/sb2.png");
+			pos[11] = background2.getWidth();
+			pos[10] = bg22.getWidth();
+			pos[9] = bg32.getWidth();
+			pos[8] = bg42.getWidth();
 		}catch(IOException e){
 			//e.printStackTrace();
 		}
@@ -153,6 +171,30 @@ public class Game extends Canvas implements Runnable {
 		//bg3, pos[1], pos[5]
 		//bg2, pos[2], pos[6]
 		//background, pos[3], pos[7]
+		//bg4, pos[8], pos[12]
+				//bg3, pos[9], pos[13]
+				//bg2, pos[10], pos[14]
+				//background, pos[11], pos[15]
+		if(tickcount%30==0){
+			pos[3]--;
+			pos[11]--;
+		}
+		if(tickcount%60==0){
+			pos[2]--;
+			pos[10]--;
+			pos[1]--;
+			pos[9]--;
+			pos[0]--;
+			pos[8]--;
+		}
+		for(int q=0;q>11;q++){
+			if(pos[q]==4)
+				q=8;
+			if(pos[q]>(-bg42.getWidth())){//assuming all images the same size
+				pos[q]=bg42.getWidth();
+			}
+		}
+		tickcount++;
 	}
 	
 	private void render(){
@@ -162,6 +204,10 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = bs.getDrawGraphics();
+		Graphics2D g2d = (Graphics2D) g;
+		g.setColor(Color.BLACK);
+		g2d.draw(clear);
+		g2d.fill(clear);
 		///////////////////
 		//drawImage(Image img, int x, int y, ImageObserver observer)
 		g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
@@ -170,6 +216,10 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(bg3, pos[1], pos[5], null);
 		g.drawImage(bg2, pos[2], pos[6], null);
 		g.drawImage(background, pos[3], pos[7], null);
+		g.drawImage(bg42, pos[8], pos[4], null);
+		g.drawImage(bg32, pos[9], pos[5], null);
+		g.drawImage(bg22, pos[10], pos[6], null);
+		g.drawImage(background2, pos[11], pos[7], null);
 		//////////////////
 		if(State == STATE.MENU){
 			menu.render(g,mitem);
