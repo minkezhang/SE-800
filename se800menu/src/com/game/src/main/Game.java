@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
+import java.util.Arrays;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,9 +26,16 @@ public class Game extends Canvas implements Runnable {
 	public int mitem = 1;
 	public JFrame frame;
 	public String color = "RED";
+	public int[] addr1 = new int[] {1,2,1};
+	public int[] addr2 = new int[] {0,0,0};
+	public int[] addr3 = new int[] {0,0,0};
+	public int[] addr4 = new int[] {0,0,1};
+	public int[] portnum = new int[] {8,0,0,0};
 	public String addr = "121.0.0.1";
 	public String port = "8000";
 	public boolean host = true;
+	public boolean bgmon = true;
+	public Clip clip;
 	private boolean running = false;
 	private Thread thread;
 	
@@ -55,17 +63,18 @@ public class Game extends Canvas implements Runnable {
 		}
 		this.addKeyListener(new KeyInput(this));
 		this.addMouseListener(new MouseInput(this));
-		menu = new Menu();
-		cred = new Cred();
+		menu = new Menu(this);
+		cred = new Cred(this);
 		play = new Play(this);
 	    try {
 	    	File bgmf = new File("sdly.wav");
 	        AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bgmf);
 	        Clip clip = AudioSystem.getClip();
-	        clip.open(audioInputStream);
-	        clip.loop(Clip.LOOP_CONTINUOUSLY);
+	        this.clip = clip;
+	        this.clip.open(audioInputStream);
+	        this.clip.loop(Clip.LOOP_CONTINUOUSLY);
 	        //Thread.sleep(10000);
-	        clip.start();
+	        this.clip.start();
 	    } catch(Exception ex) {
 	        //System.out.println("Error with playing sound.");
 	        //ex.printStackTrace();
@@ -196,7 +205,9 @@ public class Game extends Canvas implements Runnable {
 				mitem += 1;
 				if(mitem>11)
 					mitem = 1;
-			} else if(key == KeyEvent.VK_ENTER ||
+			} else if(key == KeyEvent.VK_ALPHANUMERIC){
+				//mitem = mitem;
+			}else if(key == KeyEvent.VK_ENTER ||
 					key == KeyEvent.VK_CONTROL||
 					key == KeyEvent.VK_SPACE){
 				switch(mitem){
@@ -210,10 +221,13 @@ public class Game extends Canvas implements Runnable {
 					host = false;
 					break;
 				case 4:
-					port = "8000";
+					port = Arrays.toString(portnum);
 					break;
 				case 5:
-					addr = "121.0.0.1";
+					addr = Arrays.toString(addr1)
+					+"."+Arrays.toString(addr2)
+					+"."+Arrays.toString(addr3)
+					+"."+Arrays.toString(addr4);
 					break;
 				case 6:
 					color = "RED";
@@ -284,11 +298,13 @@ public class Game extends Canvas implements Runnable {
 		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
 		//Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
 		//Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
-			String[] cserv = {"./se800","server", "6667"};
+			String[] cserv = {"./se800","server", port};
 			String[] cclie = {"./se800","client", port, addr, color};
 			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
-			@SuppressWarnings("unused")
-			Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			if(this.host == true){
+				@SuppressWarnings("unused")
+				Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
+			}
 			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			q.wait(100);//force client to wait
 

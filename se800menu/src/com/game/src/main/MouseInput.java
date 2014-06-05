@@ -1,6 +1,7 @@
 package com.game.src.main;
 
 //import java.awt.Rectangle;
+//import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -42,7 +43,15 @@ public class MouseInput implements MouseListener{
 		public Rectangle quitbut = new Rectangle(Game.WIDTH/2 +120,350,100,50);
 		public Rectangle back = new Rectangle(10,10,110,50);
 		 */
-		
+		if(mx >= 600 && mx <= 620 && my >= 20 && my <= 40)
+			if(this.game.bgmon==true){
+				this.game.bgmon = false;
+				this.game.clip.stop();
+			}
+			else{
+				this.game.bgmon = true;
+				this.game.clip.start();
+			}
 		if(Game.State == STATE.MENU){
 		if(mx >= Game.WIDTH / 2 + 120 && mx <= Game.WIDTH/2 + 220){
 			if(my >= 150 && my <= 200){
@@ -69,6 +78,7 @@ public class MouseInput implements MouseListener{
 	public Rectangle cyel = new Rectangle(450,280,60,40);
 	public Rectangle corg = new Rectangle(530,280,60,40);
 	public Rectangle submit = new Rectangle(210,350,110,50);
+	public Rectangle bgmb = new Rectangle(600,20,20,20);
 		*/
 		}else if(Game.State == STATE.PLAY){
 			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60)
