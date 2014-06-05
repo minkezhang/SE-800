@@ -53,9 +53,9 @@ std::vector<Projectile *> Environment::get_neighbors(Projectile *p) {
 	std::vector<Projectile *> neighbors;
 
 	std::vector<int> id = this->get_grid(p)->get_id();
-	for(int i = -1; i < 2; i++) {
-		for(int j = -1; j < 2; j++) {
-			for(int k = -1; k < 2; k++) {
+	for(int i = -5; i < 6; i++) {
+		for(int j = -5; j < 6; j++) {
+			for(int k = -5; k < 6; k++) {
 				Grid *g = this->get_grid({ id.at(0) + i, id.at(1) + j, id.at(2) + k });
 				std::vector<Projectile *> clippable = g->get_clippable();
 				std::vector<Projectile *> unclippable = g->get_unclippable();
