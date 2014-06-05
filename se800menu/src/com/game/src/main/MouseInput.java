@@ -88,9 +88,9 @@ public class MouseInput implements MouseListener{
 			else if(mx >= 310 && mx <= 385 && my >= 70 && my <= 110)
 				this.game.host = false;
 			else if(mx >= 210 && mx <= 290 && my >= 140 && my <= 180)
-				this.game.host = this.game.host;//noop
+				this.game.host = this.game.host;//allows number entry
 			else if(mx >= 210 && mx <= 290 && my >= 210 && my <= 250)
-				this.game.host = this.game.host;//noop
+				this.game.host = this.game.host;//allows number entry
 			else if(mx >= 210 && mx <= 270 && my >= 280 && my <= 320)
 				this.game.color = "RED";
 			else if(mx >= 290 && mx <= 350 && my >= 280 && my <= 320)
@@ -101,8 +101,15 @@ public class MouseInput implements MouseListener{
 				this.game.color = "YELLOW";
 			else if(mx >= 530 && mx <= 590 && my >= 280 && my <= 320)
 				this.game.color = "ORANGE";
-			else if(mx >= 210 && mx <= 320 && my >= 350 && my <= 400)
+			else if(mx >= 210 && mx <= 320 && my >= 350 && my <= 400){
+				this.game.port = Integer.toString(this.game.intmerge(this.game.portnum));
+				this.game.sadr1 = Integer.toString(this.game.intmerge(this.game.addr1));
+				this.game.sadr2 = Integer.toString(this.game.intmerge(this.game.addr2));
+				this.game.sadr3 = Integer.toString(this.game.intmerge(this.game.addr3));
+				this.game.sadr4 = Integer.toString(this.game.intmerge(this.game.addr4));
+				this.game.addr = this.game.sadr1+"."+this.game.sadr2+"."+this.game.sadr3+"."+this.game.sadr4;
 				this.game.openGAME(this.game.port,this.game.addr,this.game.color);
+			}
 		}else if(Game.State == STATE.CREDITS){
 			if(mx >= 10 && mx <= 120 && my >= 10 && my <= 60)
 				Game.State = STATE.MENU;

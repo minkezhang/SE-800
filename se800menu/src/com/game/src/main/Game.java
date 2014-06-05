@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ProcessBuilder.Redirect;
-import java.util.Arrays;
+//import java.util.Arrays;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -30,6 +30,10 @@ public class Game extends Canvas implements Runnable {
 	public int[] addr2 = new int[] {0,0,0};
 	public int[] addr3 = new int[] {0,0,0};
 	public int[] addr4 = new int[] {0,0,1};
+	public String sadr1 = "121";
+	public String sadr2 = "0";
+	public String sadr3 = "0";
+	public String sadr4 = "1";
 	public int[] portnum = new int[] {8,0,0,0};
 	public String addr = "121.0.0.1";
 	public String port = "8000";
@@ -174,6 +178,38 @@ public class Game extends Canvas implements Runnable {
 		bs.show();
 	}
 	
+	public int intmerge(int[] array){
+		int fS = 0;
+		for (int i = 0; i < array.length; i++)
+			fS += array[i] * Math.pow(10, array.length-i-1);
+		return fS;
+	}
+	
+	public int key2int(int k){
+		int key = k;
+		if(key == KeyEvent.VK_0)
+			return 0;
+		if(key == KeyEvent.VK_1)
+			return 1;
+		if(key == KeyEvent.VK_2)
+			return 2;
+		if(key == KeyEvent.VK_3)
+			return 3;
+		if(key == KeyEvent.VK_4)
+			return 4;
+		if(key == KeyEvent.VK_5)
+			return 5;
+		if(key == KeyEvent.VK_6)
+			return 6;
+		if(key == KeyEvent.VK_7)
+			return 7;
+		if(key == KeyEvent.VK_8)
+			return 8;
+		if(key == KeyEvent.VK_9)
+			return 9;
+		return 0;
+	}
+	
 	public void keyPressed(KeyEvent e){
 		int key = e.getKeyCode();
 		
@@ -200,13 +236,70 @@ public class Game extends Canvas implements Runnable {
 			if(key == KeyEvent.VK_UP){
 				mitem -= 1;
 				if(mitem<1)
-					mitem = 11;
+					mitem = 14;
 			} else if(key == KeyEvent.VK_DOWN){
 				mitem += 1;
-				if(mitem>11)
+				if(mitem>14)
 					mitem = 1;
-			} else if(key == KeyEvent.VK_ALPHANUMERIC){
-				//mitem = mitem;
+			} else if(mitem >= 4 && mitem <=8
+					||key == KeyEvent.VK_0
+					||key == KeyEvent.VK_1
+					||key == KeyEvent.VK_2
+					||key == KeyEvent.VK_3
+					||key == KeyEvent.VK_4
+					||key == KeyEvent.VK_5
+					||key == KeyEvent.VK_6
+					||key == KeyEvent.VK_7
+					||key == KeyEvent.VK_8
+					||key == KeyEvent.VK_9){
+				int u = 0;
+				switch(mitem){
+				case 4://port
+					portnum[u] = key2int(key);
+					u++;
+					if(u>=4){
+						mitem++;
+						u=0;
+						port = Integer.toString(intmerge(portnum));
+					}
+					break;
+				case 5://addr 1
+					addr1[u] = key2int(key);
+					u++;
+					if(u>=3){
+						mitem++;
+						u=0;
+						sadr1 = Integer.toString(intmerge(addr1));
+					}
+					break;
+				case 6://addr 2
+					addr2[u] = key2int(key);
+					u++;
+					if(u>=3){
+						mitem++;
+						u=0;
+						sadr2 = Integer.toString(intmerge(addr2));
+					}
+					break;
+				case 7://addr 3
+					addr3[u] = key2int(key);
+					u++;
+					if(u>=3){
+						mitem++;
+						u=0;
+						sadr3 = Integer.toString(intmerge(addr3));
+					}
+					break;
+				case 8://addr 4
+					addr4[u] = key2int(key);
+					u++;
+					if(u>=3){
+						mitem++;
+						u=0;
+						sadr4 = Integer.toString(intmerge(addr4));
+					}
+					break;
+				}
 			}else if(key == KeyEvent.VK_ENTER ||
 					key == KeyEvent.VK_CONTROL||
 					key == KeyEvent.VK_SPACE){
@@ -221,30 +314,58 @@ public class Game extends Canvas implements Runnable {
 					host = false;
 					break;
 				case 4:
-					port = Arrays.toString(portnum);
+					port = Integer.toString(intmerge(portnum));
 					break;
 				case 5:
-					addr = Arrays.toString(addr1)
-					+"."+Arrays.toString(addr2)
-					+"."+Arrays.toString(addr3)
-					+"."+Arrays.toString(addr4);
+					sadr1 = Integer.toString(intmerge(addr1));
+					sadr2 = Integer.toString(intmerge(addr2));
+					sadr3 = Integer.toString(intmerge(addr3));
+					sadr4 = Integer.toString(intmerge(addr4));
+					addr = sadr1+"."+sadr2+"."+sadr3+"."+sadr4;
 					break;
 				case 6:
-					color = "RED";
+					sadr1 = Integer.toString(intmerge(addr1));
+					sadr2 = Integer.toString(intmerge(addr2));
+					sadr3 = Integer.toString(intmerge(addr3));
+					sadr4 = Integer.toString(intmerge(addr4));
+					addr = sadr1+"."+sadr2+"."+sadr3+"."+sadr4;
 					break;
 				case 7:
-					color = "BLUE";
+					sadr1 = Integer.toString(intmerge(addr1));
+					sadr2 = Integer.toString(intmerge(addr2));
+					sadr3 = Integer.toString(intmerge(addr3));
+					sadr4 = Integer.toString(intmerge(addr4));
+					addr = sadr1+"."+sadr2+"."+sadr3+"."+sadr4;
 					break;
 				case 8:
-					color = "GREEN";
+					sadr1 = Integer.toString(intmerge(addr1));
+					sadr2 = Integer.toString(intmerge(addr2));
+					sadr3 = Integer.toString(intmerge(addr3));
+					sadr4 = Integer.toString(intmerge(addr4));
+					addr = sadr1+"."+sadr2+"."+sadr3+"."+sadr4;
 					break;
 				case 9:
-					color = "YELLOW";
+					color = "RED";
 					break;
 				case 10:
-					color = "ORANGE";
+					color = "BLUE";
 					break;
 				case 11:
+					color = "GREEN";
+					break;
+				case 12:
+					color = "YELLOW";
+					break;
+				case 13:
+					color = "ORANGE";
+					break;
+				case 14:
+					port = Integer.toString(intmerge(portnum));
+					sadr1 = Integer.toString(intmerge(addr1));
+					sadr2 = Integer.toString(intmerge(addr2));
+					sadr3 = Integer.toString(intmerge(addr3));
+					sadr4 = Integer.toString(intmerge(addr4));
+					addr = sadr1+"."+sadr2+"."+sadr3+"."+sadr4;
 					this.openGAME(port,addr,color);
 					break;
 				}
@@ -298,13 +419,19 @@ public class Game extends Canvas implements Runnable {
 		//Process p = rt.exec("C:\\Windows\\System32\\notepad.exe");
 		//Process p = Runtime.getRuntime().exec(new String[] {"./se800", "server", "6667"});
 		//Process q = Runtime.getRuntime().exec(new String[] {"./se800", "client", "6667", "127.0.0.1"});
+			
 			String[] cserv = {"./se800","server", port};
 			String[] cclie = {"./se800","client", port, addr, color};
 			//String[] test = {"C:\\Windows\\System32\\notepad.exe","k1"};
 			if(this.host == true){
+				//for(int w = 0; w < cserv.length;w++)
+					//System.out.println(cserv[w]);
 				@SuppressWarnings("unused")
 				Process p = new ProcessBuilder(cserv).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			}
+			
+			//for(int r = 0; r < cclie.length;r++)
+				//System.out.println(cclie[r]);
 			Process q = new ProcessBuilder(cclie).redirectError(Redirect.INHERIT).redirectOutput(Redirect.INHERIT).start();
 			q.wait(100);//force client to wait
 

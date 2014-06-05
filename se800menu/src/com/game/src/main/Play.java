@@ -43,36 +43,7 @@ public class Play {
 		Color top = new Color(250, 125, 125, 105);
 		//Color bot = new Color(0,0,0,175);
 		Color high = new Color(125, 250, 250, 195);
-		//////////
-		g.setColor(top);
-		Font fntt = new Font("arial", Font.BOLD, 30);
-		g.setFont(fntt);
-		//port number
-		g.drawString("0",porten.x+6,porten.y+32);
-		g.drawString("0",porten.x+24,porten.y+32);
-		g.drawString("0",porten.x+42,porten.y+32);
-		g.drawString("0",porten.x+60,porten.y+32);
-		//address 1
-		g.drawString("0",addrn1.x+6,addrn1.y+32);
-		g.drawString("0",addrn1.x+24,addrn1.y+32);
-		g.drawString("0",addrn1.x+42,addrn1.y+32);
-		//g.drawString("0",addrn1.x+60,addrn1.y+32);
-		//address 2
-		g.drawString("0",addrn2.x+6,addrn2.y+32);
-		g.drawString("0",addrn2.x+24,addrn2.y+32);
-		g.drawString("0",addrn2.x+42,addrn2.y+32);
-		//g.drawString("0",addrn2.x+60,addrn2.y+32);
-		//address 3
-		g.drawString("0",addrn3.x+6,addrn3.y+32);
-		g.drawString("0",addrn3.x+24,addrn3.y+32);
-		g.drawString("0",addrn3.x+42,addrn3.y+32);
-		//g.drawString("0",addrn3.x+60,addrn3.y+32);
-		//address 4
-		g.drawString("0",addrn4.x+6,addrn4.y+32);
-		g.drawString("0",addrn4.x+24,addrn4.y+32);
-		g.drawString("0",addrn4.x+42,addrn4.y+32);
-		//g.drawString("0",addrn4.x+60,addrn4.y+32);
-		//////////
+		
 		if(this.game.bgmon == true){
 		g.setColor(top);
 		g2d.draw(selbgmb);
@@ -107,41 +78,58 @@ public class Play {
 		case 5:
 			select.x = 210;
 			select.y = 210;
-
 			select.width = 80;
 			select.height = 40;
 			break;
 		case 6:
+			select.x = 310;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 7:
+			select.x = 410;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 8:
+			select.x = 510;
+			select.y = 210;
+			select.width = 80;
+			select.height = 40;
+			break;
+		case 9:
 			select.x = 208;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 7:
+		case 10:
 			select.x = 288;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 8:
+		case 11:
 			select.x = 368;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 9:
+		case 12:
 			select.x = 448;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 10:
+		case 13:
 			select.x = 528;
 			select.y = 278;
 			select.width = 64;
 			select.height = 44;
 			break;
-		case 11:
+		case 14:
 			select.x = 210;
 			select.y = 350;
 			select.width = 110;
@@ -150,7 +138,36 @@ public class Play {
 		}
 		g2d.draw(select);
 		g2d.fill(select);
-		
+		//////////
+		g.setColor(top);
+		Font fntt = new Font("arial", Font.BOLD, 30);
+		g.setFont(fntt);
+		//port number
+		g.drawString(Integer.toString(this.game.portnum[0]),porten.x+6,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[1]),porten.x+24,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[2]),porten.x+42,porten.y+32);
+		g.drawString(Integer.toString(this.game.portnum[3]),porten.x+60,porten.y+32);
+		//address 1
+		g.drawString(Integer.toString(this.game.addr1[0]),addrn1.x+6,addrn1.y+32);
+		g.drawString(Integer.toString(this.game.addr1[1]),addrn1.x+24,addrn1.y+32);
+		g.drawString(Integer.toString(this.game.addr1[2]),addrn1.x+42,addrn1.y+32);
+		//g.drawString("0",addrn1.x+60,addrn1.y+32);
+		//address 2
+		g.drawString(Integer.toString(this.game.addr1[0]),addrn2.x+6,addrn2.y+32);
+		g.drawString(Integer.toString(this.game.addr2[1]),addrn2.x+24,addrn2.y+32);
+		g.drawString(Integer.toString(this.game.addr2[2]),addrn2.x+42,addrn2.y+32);
+		//g.drawString("0",addrn2.x+60,addrn2.y+32);
+		//address 3
+		g.drawString(Integer.toString(this.game.addr3[0]),addrn3.x+6,addrn3.y+32);
+		g.drawString(Integer.toString(this.game.addr3[1]),addrn3.x+24,addrn3.y+32);
+		g.drawString(Integer.toString(this.game.addr3[2]),addrn3.x+42,addrn3.y+32);
+		//g.drawString("0",addrn3.x+60,addrn3.y+32);
+		//address 4
+		g.drawString(Integer.toString(this.game.addr4[0]),addrn4.x+6,addrn4.y+32);
+		g.drawString(Integer.toString(this.game.addr4[1]),addrn4.x+24,addrn4.y+32);
+		g.drawString(Integer.toString(this.game.addr4[2]),addrn4.x+42,addrn4.y+32);
+		//g.drawString("0",addrn4.x+60,addrn4.y+32);
+		//////////
 		g.setColor(top);
 		Font fnt0 = new Font("arial", Font.PLAIN, 15);
 		g.setFont(fnt0);
